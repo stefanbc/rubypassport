@@ -16,3 +16,13 @@ html, body, #root {
   h2 { @apply font-bold tracking-tight leading-tight; }
   h3 { @apply font-semibold tracking-tight leading-snug; }
 }
+
+/* Simple fade-in animation for newly rendered images */
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  animation: fade-in 380ms ease-out;
+}

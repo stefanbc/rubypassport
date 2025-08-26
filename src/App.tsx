@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem } from 'lucide-react';
+import { Camera, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2 } from 'lucide-react';
 
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,6 +29,7 @@ function App() {
   const [photosPerPage, setPhotosPerPage] = useState<typeof PHOTO_COUNTS[number]>(4);
   const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(true);
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
+  const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
   const selectedFormat = FORMATS.find(f => f.id === selectedFormatId)!;
   // Human-proportional guide sizing (kept stable across formats)
   const guideOvalWidthPct = 42;     // Approximate face width relative to frame width
@@ -59,6 +60,7 @@ function App() {
         try {
           await video.play();
           console.log('Video playing');
+          setIsCameraLoading(false);
         } catch (playError) {
           console.error('Error playing video:', playError);
         }
@@ -88,6 +90,7 @@ function App() {
     try {
       setError('');
       console.log('Starting camera...');
+      setIsCameraLoading(true);
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: 1280 },
@@ -104,6 +107,7 @@ function App() {
       console.error('Error accessing camera:', err);
       setError(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`);
       setIsCameraOn(false);
+      setIsCameraLoading(false);
     }
   };
 
@@ -341,7 +345,7 @@ function App() {
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {/* Guidelines (Left) */}
-          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col">
+          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
             <h3 className="text-lg font-semibold text-red-400 mb-1">Passport Photo Guidelines</h3>
             <p className="text-xs text-gray-400 mb-4">Follow these for most country standards.</p>
             <div className="grid grid-cols-1 gap-6">
@@ -391,7 +395,7 @@ function App() {
           </div>
 
           {/* Camera Section (Center) */}
-          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col">
+          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
             <h2 className="text-xl font-semibold text-red-400 mb-4">Camera Preview</h2>
             <div className="mb-4 flex items-center gap-3">
               <label className="text-gray-300 text-sm w-32" htmlFor="format">Photo format</label>
@@ -464,10 +468,19 @@ function App() {
                   </div>
                 </>
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <Camera size={48} className="mx-auto mb-2 opacity-50" />
-                    <p>Camera not started</p>
+                <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+                  <div className="flex flex-col items-center">
+                    {isCameraLoading ? (
+                      <>
+                        <Loader2 size={32} className="animate-spin mb-2 text-red-500" />
+                        <p className="text-sm text-gray-400">Starting camera…</p>
+                      </>
+                    ) : (
+                      <>
+                        <Camera size={42} className="mx-auto mb-2 opacity-70" />
+                        <p className="text-sm text-gray-400">Camera not started</p>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -477,23 +490,24 @@ function App() {
               {!isCameraOn ? (
                 <button
                   onClick={startCamera}
-                  className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors shadow-lg"
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={isCameraLoading}
                 >
-                  <Camera size={20} />
-                  Start Camera
+                  {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
+                  {isCameraLoading ? 'Starting…' : 'Start Camera'}
                 </button>
               ) : (
                 <>
                   <button
                     onClick={capturePhoto}
-                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors shadow-lg"
+                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                   >
                     <CheckCircle size={20} />
                     Capture Photo
                   </button>
                   <button
                     onClick={stopCamera}
-                    className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors shadow-lg"
+                    className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                   >
                     Stop
                   </button>
@@ -503,7 +517,7 @@ function App() {
           </div>
 
           {/* Result Section (Right) */}
-          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col">
+          <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
             <h2 className="text-xl font-semibold text-red-400 mb-4">Passport Photo</h2>
             <div className="mb-4 flex flex-col gap-3">
               <div className="flex items-center gap-3">
@@ -562,7 +576,7 @@ function App() {
                   <img
                     src={capturedImage}
                     alt="Passport portrait"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover fade-in"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -582,21 +596,21 @@ function App() {
               <div className="space-y-3">
                 <button
                   onClick={downloadImage}
-                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                 >
                   <Download size={20} />
                   Download Photo ({selectedFormat.widthPx}×{selectedFormat.heightPx}px)
                 </button>
                 <button
                   onClick={openPrintPreview}
-                  className="w-full flex items-center justify-center gap-2 bg-red-700 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-red-700 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                 >
                   <Printer size={20} />
                   Print Preview ({selectedFormat.printWidthIn.toFixed(2)}×{selectedFormat.printHeightIn.toFixed(2)} in)
                 </button>
                 <button
                   onClick={retakePhoto}
-                  className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                 >
                   <RotateCcw size={20} />
                   Retake Photo
