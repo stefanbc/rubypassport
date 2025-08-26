@@ -330,7 +330,7 @@ function App() {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
               <Gem size={18} className="text-white" />
             </div>
-            <div className="leading-tight">
+            <div className="leading-tight select-none">
               <div className="text-white font-semibold tracking-tight">RubyPassport</div>
               <div className="text-[11px] text-red-300/80">Passport Photo Generator</div>
             </div>
@@ -346,7 +346,7 @@ function App() {
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {/* Guidelines (Left) */}
           <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-            <h3 className="text-lg font-semibold text-red-400 mb-1">Passport Photo Guidelines</h3>
+            <h2 className="text-xl font-semibold text-red-400 mb-1 select-none">Passport Photo Guidelines</h2>
             <p className="text-xs text-gray-400 mb-4">Follow these for most country standards.</p>
             <div className="grid grid-cols-1 gap-6">
               <div>
@@ -386,7 +386,7 @@ function App() {
                   <li>• Prefer mid-tone clothing (not white)</li>
                 </ul>
               </div>
-              <div className="mt-1 rounded-md bg-gray-800/60 border border-gray-700 p-3">
+              <div className="mt-1 rounded-md bg-zinc-800/60 border border-red-900/40 p-3">
                 <p className="text-xs text-gray-300">
                   Tip: Align your face within the outer oval. The eye line should be near the guide.
                 </p>
@@ -396,9 +396,9 @@ function App() {
 
           {/* Camera Section (Center) */}
           <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-            <h2 className="text-xl font-semibold text-red-400 mb-4">Camera Preview</h2>
+            <h2 className="text-xl font-semibold text-red-400 mb-4 select-none">Camera Preview</h2>
             <div className="mb-4 flex items-center gap-3">
-              <label className="text-gray-300 text-sm w-32" htmlFor="format">Photo format</label>
+              <label className="text-gray-300 text-sm w-32 select-none" htmlFor="format">Photo format</label>
               <select
                 id="format"
                 value={selectedFormatId}
@@ -462,8 +462,9 @@ function App() {
                   <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
                   <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
                   <div className="absolute bottom-4 left-4 right-4">
-                    <p className="text-white text-sm bg-black bg-opacity-70 rounded px-2 py-1 text-center">
-                      Align your face with the oval guide • Eyes on the horizontal line
+                    <p className="text-white text-xs bg-black bg-opacity-40 rounded px-2 py-1 text-center select-none">
+                      Align your face with the oval guide<br />
+                      Eyes on the horizontal line
                     </p>
                   </div>
                 </>
@@ -478,7 +479,7 @@ function App() {
                     ) : (
                       <>
                         <Camera size={42} className="mx-auto mb-2 opacity-70" />
-                        <p className="text-sm text-gray-400">Camera not started</p>
+                        <p className="select-none text-sm text-gray-400">Camera not started</p>
                       </>
                     )}
                   </div>
@@ -518,10 +519,10 @@ function App() {
 
           {/* Result Section (Right) */}
           <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-            <h2 className="text-xl font-semibold text-red-400 mb-4">Passport Photo</h2>
+            <h2 className="text-xl font-semibold text-red-400 mb-4 select-none">Passport Photo</h2>
             <div className="mb-4 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40" htmlFor="personName">Person name</label>
+                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="personName">Person name</label>
                 <input
                   id="personName"
                   value={personName}
@@ -531,7 +532,7 @@ function App() {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40" htmlFor="photosPerPage">Photos per page</label>
+                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="photosPerPage">Photos per page</label>
                 <select
                   id="photosPerPage"
                   value={photosPerPage}
@@ -544,7 +545,7 @@ function App() {
                 </select>
               </div>
               <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40" htmlFor="autoFit">Auto-fit 10×15 cm</label>
+                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="autoFit">Auto-fit 10×15 cm</label>
                 <input
                   id="autoFit"
                   type="checkbox"
@@ -555,7 +556,7 @@ function App() {
                 <span className="text-xs text-gray-400">Overrides count to best fit on 10×15cm</span>
               </div>
               <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40" htmlFor="watermark">Official watermark</label>
+                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="watermark">Official watermark</label>
                 <input
                   id="watermark"
                   type="checkbox"
@@ -580,7 +581,7 @@ function App() {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-gray-500">
+                    <div className="select-none text-center text-gray-500">
                       <div className="mx-auto mb-3 border-2 border-dashed border-red-900/40 rounded-md"
                            style={{ width: '40%', height: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 40}%` }}
                       />
