@@ -177,7 +177,7 @@ function App() {
       context.textBaseline = 'middle';
 
       // Create a tiled pattern of watermark text sized to avoid overlaps
-      const text = 'RUBYPASSPORT';
+      const text = 'RUBY PASSPORT';
       const metrics = context.measureText(text);
       const textWidth = Math.max(metrics.width, fontSize * 6);
       const stepX = textWidth + fontSize * 1.25; // horizontal spacing
@@ -325,7 +325,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4">
       <div className="max-w-screen-2xl mx-auto">
-        <div className="mb-3 flex items-center justify-center">
+        <div className="mb-3 flex items-center">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
               <Gem size={18} className="text-white" />
@@ -531,44 +531,9 @@ function App() {
                   className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 placeholder-red-400 focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
               </div>
-              <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="photosPerPage">Photos per page</label>
-                <select
-                  id="photosPerPage"
-                  value={photosPerPage}
-                  onChange={(e) => setPhotosPerPage(Number(e.target.value) as typeof photosPerPage)}
-                  className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
-                >
-                  {PHOTO_COUNTS.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="autoFit">Auto-fit 10×15 cm</label>
-                <input
-                  id="autoFit"
-                  type="checkbox"
-                  checked={autoFit10x15}
-                  onChange={(e) => setAutoFit10x15(e.target.checked)}
-                  className="h-4 w-4 accent-red-600"
-                />
-                <span className="text-xs text-gray-400">Overrides count to best fit on 10×15cm</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="watermark">Official watermark</label>
-                <input
-                  id="watermark"
-                  type="checkbox"
-                  checked={watermarkEnabled}
-                  onChange={(e) => setWatermarkEnabled(e.target.checked)}
-                  className="h-4 w-4 accent-red-600"
-                />
-                <span className="text-xs text-gray-400">Barely visible overlay on generated photo</span>
-              </div>
             </div>
 
-            <div className="w-full">
+            <div className="w-full mb-4">
               <div
                 className="relative bg-neutral-950 rounded-lg overflow-hidden mb-4 border border-red-800/50 ring-1 ring-white/5"
                 style={{ paddingTop: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 100}%` }}
@@ -583,13 +548,24 @@ function App() {
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="select-none text-center text-gray-500">
                       <div className="mx-auto mb-3 border-2 border-dashed border-red-900/40 rounded-md"
-                           style={{ width: '40%', height: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 40}%` }}
+                        style={{ width: '40%', height: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 40}%` }}
                       />
                       <p className="text-sm">Your photo will appear here</p>
                       <p className="text-xs text-gray-500 mt-1">{selectedFormat.label}</p>
                     </div>
                   </div>
                 )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="watermark">Official watermark</label>
+                <input
+                  id="watermark"
+                  type="checkbox"
+                  checked={watermarkEnabled}
+                  onChange={(e) => setWatermarkEnabled(e.target.checked)}
+                  className="h-4 w-4 accent-red-600"
+                />
+                <span className="text-xs text-gray-400">Barely visible overlay on generated photo</span>
               </div>
             </div>
 
@@ -609,6 +585,30 @@ function App() {
                   <Printer size={20} />
                   Print Preview ({selectedFormat.printWidthIn.toFixed(2)}×{selectedFormat.printHeightIn.toFixed(2)} in)
                 </button>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="photosPerPage">Photos per page</label>
+                  <select
+                    id="photosPerPage"
+                    value={photosPerPage}
+                    onChange={(e) => setPhotosPerPage(Number(e.target.value) as typeof photosPerPage)}
+                    className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
+                  >
+                    {PHOTO_COUNTS.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm sm:w-40 select-none" htmlFor="autoFit">Auto-fit 10×15 cm</label>
+                  <input
+                    id="autoFit"
+                    type="checkbox"
+                    checked={autoFit10x15}
+                    onChange={(e) => setAutoFit10x15(e.target.checked)}
+                    className="h-4 w-4 accent-red-600"
+                  />
+                  <span className="text-xs text-gray-400">Overrides count to best fit on 10×15cm</span>
+                </div>
                 <button
                   onClick={retakePhoto}
                   className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
