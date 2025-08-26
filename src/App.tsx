@@ -391,6 +391,12 @@ function App() {
                   Tip: Align your face within the outer oval. The eye line should be near the guide.
                 </p>
               </div>
+              <div className="mt-1 rounded-md bg-zinc-800/60 border border-red-900/40 p-3">
+                <p className="text-xs text-gray-300">
+                  <span className="font-semibold">Your Privacy Matters</span><br />
+                  This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you’re done, they’re gone.
+                </p>
+              </div>
             </div>
           </div>
 
