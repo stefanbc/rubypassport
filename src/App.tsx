@@ -1,13 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2 } from 'lucide-react';
+import { Camera, Computer, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2, Info } from 'lucide-react';
+
+type Toast = {
+  id: number;
+  message: string;
+  type: 'error' | 'info' | 'success';
+};
 
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
   // Supported passport/ID photo formats
   const FORMATS = [
@@ -22,11 +29,13 @@ function App() {
     { id: 'br_50x70', label: 'Brazil 50×70 mm (~591×827 px)', widthPx: 591, heightPx: 827, printWidthIn: 50 / 25.4, printHeightIn: 70 / 25.4 },
     { id: 'mx_25x30', label: 'Mexico 25×30 mm (~295×354 px)', widthPx: 295, heightPx: 354, printWidthIn: 25 / 25.4, printHeightIn: 30 / 25.4 }
   ] as const;
+  type FormatId = typeof FORMATS[number]['id'];
 
-  const [selectedFormatId, setSelectedFormatId] = useState<typeof FORMATS[number]['id']>('eu_35x45');
+  const [selectedFormatId, setSelectedFormatId] = useState<FormatId>('eu_35x45');
   const [personName, setPersonName] = useState<string>('');
   const PHOTO_COUNTS = [1, 2, 4, 6, 8, 10, 12] as const;
-  const [photosPerPage, setPhotosPerPage] = useState<typeof PHOTO_COUNTS[number]>(4);
+  type PhotoCount = typeof PHOTO_COUNTS[number];
+  const [photosPerPage, setPhotosPerPage] = useState<PhotoCount>(4);
   const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(true);
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
@@ -37,6 +46,54 @@ function App() {
   const innerOvalWidthPct = Math.round(guideOvalWidthPct * 0.72);  // Head oval narrower than face boundary
   const innerOvalHeightPct = Math.round(guideOvalHeightPct * 0.80); // Head oval shorter than face boundary
   const eyeLineTopPct = 45;         // Eye line ~45% from top
+
+  const removeToast = (id: number) => {
+    setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
+  };
+
+  const addToast = (message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
+    const id = Date.now() + Math.random();
+    setToasts(prevToasts => [...prevToasts, { id, message, type }]);
+    if (duration > 0) {
+      setTimeout(() => {
+        removeToast(id);
+      }, duration);
+    }
+  };
+
+  const applyWatermark = (context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
+    context.save();
+    const diagonalRadians = -25 * Math.PI / 180;
+    const baseSize = Math.min(targetWidth, targetHeight);
+    const fontSize = Math.max(14, Math.floor(baseSize * 0.075));
+    context.font = `600 ${fontSize}px 'EB Garamond', 'Garamond', 'Times New Roman', serif`;
+    context.fillStyle = 'rgba(255,255,255,0.04)';
+    context.strokeStyle = 'rgba(255,255,255,0.03)';
+    context.lineWidth = Math.max(0.4, Math.floor(fontSize * 0.02));
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+
+    // Create a tiled pattern of watermark text sized to avoid overlaps
+    const text = '💎 RUBY PASSPORT';
+    const metrics = context.measureText(text);
+    const textWidth = Math.max(metrics.width, fontSize * 6);
+    const stepX = textWidth + fontSize * 1.25; // horizontal spacing
+    const stepY = fontSize * 2.6; // vertical spacing
+
+    context.translate(targetWidth / 2, targetHeight / 2);
+    context.rotate(diagonalRadians);
+    // Draw staggered grid centered, covering full area
+    let row = 0;
+    for (let y = -targetHeight; y <= targetHeight; y += stepY) {
+      const xOffset = (row % 2 === 0) ? 0 : stepX / 2;
+      for (let x = -targetWidth; x <= targetWidth; x += stepX) {
+        context.fillText(text, x + xOffset, y);
+        context.strokeText(text, x + xOffset, y);
+      }
+      row++;
+    }
+    context.restore();
+  };
 
   useEffect(() => {
     return () => {
@@ -61,8 +118,12 @@ function App() {
           await video.play();
           console.log('Video playing');
           setIsCameraLoading(false);
-        } catch (playError) {
-          console.error('Error playing video:', playError);
+        } catch (playError: unknown) {
+          if (playError instanceof Error) {
+            addToast(`Could not start video playback: ${playError.message}`, 'error');
+          } else {
+            addToast('Could not start video playback.', 'error');
+          }
         }
       };
 
@@ -74,8 +135,8 @@ function App() {
       video.addEventListener('canplay', handleCanPlay);
 
       // Force play attempt
-      video.play().catch(playError => {
-        console.log('Initial play failed, waiting for metadata:', playError);
+      video.play().catch(() => {
+        addToast('Waiting for camera permissions...', 'info');
       });
 
       // Cleanup event listeners
@@ -88,8 +149,7 @@ function App() {
 
   const startCamera = async () => {
     try {
-      setError('');
-      console.log('Starting camera...');
+      addToast('Starting camera...', 'info');
       setIsCameraLoading(true);
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -104,8 +164,7 @@ function App() {
       setStream(mediaStream);
       setIsCameraOn(true);
     } catch (err) {
-      console.error('Error accessing camera:', err);
-      setError(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      addToast(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
       setIsCameraOn(false);
       setIsCameraLoading(false);
     }
@@ -165,42 +224,84 @@ function App() {
 
     // Apply watermark if enabled
     if (watermarkEnabled) {
-      context.save();
-      const diagonalRadians = -25 * Math.PI / 180;
-      const baseSize = Math.min(targetWidth, targetHeight);
-      const fontSize = Math.max(14, Math.floor(baseSize * 0.075));
-      context.font = `600 ${fontSize}px 'EB Garamond', 'Garamond', 'Times New Roman', serif`;
-      context.fillStyle = 'rgba(255,255,255,0.04)';
-      context.strokeStyle = 'rgba(255,255,255,0.03)';
-      context.lineWidth = Math.max(0.4, Math.floor(fontSize * 0.02));
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-
-      // Create a tiled pattern of watermark text sized to avoid overlaps
-      const text = '💎 RUBY PASSPORT';
-      const metrics = context.measureText(text);
-      const textWidth = Math.max(metrics.width, fontSize * 6);
-      const stepX = textWidth + fontSize * 1.25; // horizontal spacing
-      const stepY = fontSize * 2.6; // vertical spacing
-
-      context.translate(targetWidth / 2, targetHeight / 2);
-      context.rotate(diagonalRadians);
-      // Draw staggered grid centered, covering full area
-      let row = 0;
-      for (let y = -targetHeight; y <= targetHeight; y += stepY) {
-        const xOffset = (row % 2 === 0) ? 0 : stepX / 2;
-        for (let x = -targetWidth; x <= targetWidth; x += stepX) {
-          context.fillText(text, x + xOffset, y);
-          context.strokeText(text, x + xOffset, y);
-        }
-        row++;
-      }
-      context.restore();
+      applyWatermark(context, targetWidth, targetHeight);
     }
 
     // Convert to high-quality image
     const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
     setCapturedImage(imageDataUrl);
+    addToast('Photo captured successfully!', 'success');
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      addToast('Please select a valid image file.', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result !== 'string') {
+        addToast('Failed to read image data.', 'error');
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        if (!canvasRef.current) return;
+
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        if (!context) return;
+
+        const targetWidth = selectedFormat.widthPx;
+        const targetHeight = selectedFormat.heightPx;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        const imageAspectRatio = img.width / img.height;
+        const canvasAspectRatio = targetWidth / targetHeight;
+
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceWidth = img.width;
+        let sourceHeight = img.height;
+
+        if (imageAspectRatio > canvasAspectRatio) {
+          sourceHeight = img.height;
+          sourceWidth = sourceHeight * canvasAspectRatio;
+          sourceX = (img.width - sourceWidth) / 2;
+        } else {
+          sourceWidth = img.width;
+          sourceHeight = sourceWidth / canvasAspectRatio;
+          sourceY = (img.height - sourceHeight) / 2;
+        }
+
+        context.drawImage(
+          img,
+          sourceX, sourceY, sourceWidth, sourceHeight,
+          0, 0, targetWidth, targetHeight
+        );
+
+        if (watermarkEnabled) {
+          applyWatermark(context, targetWidth, targetHeight);
+        }
+
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        setCapturedImage(imageDataUrl);
+        addToast('Image uploaded successfully!', 'success');
+      };
+      img.onerror = () => addToast('Failed to load the selected image.', 'error');
+      img.src = result;
+    };
+    reader.onerror = () => addToast('Failed to read the selected file.', 'error');
+    reader.readAsDataURL(file);
+
+    // Reset file input value to allow selecting the same file again
+    e.target.value = '';
   };
 
   const downloadImage = () => {
@@ -212,12 +313,17 @@ function App() {
     link.download = `${namePart}passport-${selectedFormat.id}-${selectedFormat.widthPx}x${selectedFormat.heightPx}-${Date.now()}.jpg`;
     link.href = capturedImage;
     link.click();
+    addToast('Image downloaded!', 'success');
   };
 
   const openPrintPreview = () => {
     if (!capturedImage) return;
+    addToast('Preparing print preview...', 'info');
     const printWin = window.open('', '_blank');
-    if (!printWin) return;
+    if (!printWin) {
+      addToast('Could not open print window. Please disable your pop-up blockers.', 'error');
+      return;
+    }
     const widthIn = selectedFormat.printWidthIn;
     const heightIn = selectedFormat.printHeightIn;
     // Paper size: 10x15 cm (approx 3.94 x 5.91 in)
@@ -325,7 +431,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4">
       <div className="max-w-screen-2xl mx-auto">
-        <div className="mb-3 flex items-center">
+        <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
               <Gem size={18} className="text-white" />
@@ -335,13 +441,24 @@ function App() {
               <div className="text-[11px] text-red-300/80">Passport Photo Generator</div>
             </div>
           </div>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-900 border border-red-600 text-red-200 rounded-lg">
-            {error}
+          {/* Toast Container */}
+          <div className="space-y-2">
+            {toasts.map((toast) => (
+              <div
+                key={toast.id}
+                className={`relative flex items-center text-sm transition-all duration-300 ease-in-out select-none ${toast.type === 'error' ? 'text-red-600' : toast.type === 'success' ? 'text-green-600' : 'text-blue-600'
+                  }`}
+              >
+                <div className="mr-3">
+                  {toast.type === 'error' && <XCircle size={20} />}
+                  {toast.type === 'success' && <CheckCircle size={20} />}
+                  {toast.type === 'info' && <Info size={20} />}
+                </div>
+                <span className="flex-1">{toast.message}</span>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {/* Guidelines (Left) */}
@@ -408,7 +525,7 @@ function App() {
               <select
                 id="format"
                 value={selectedFormatId}
-                onChange={(e) => setSelectedFormatId(e.target.value as typeof selectedFormatId)}
+                onChange={(e) => setSelectedFormatId(e.target.value as FormatId)}
                 className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
               >
                 {FORMATS.map(f => (
@@ -495,26 +612,36 @@ function App() {
 
             <div className="flex gap-3">
               {!isCameraOn ? (
-                <button
-                  onClick={startCamera}
-                  className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
-                  disabled={isCameraLoading}
-                >
-                  {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
-                  {isCameraLoading ? 'Starting…' : 'Start Camera'}
-                </button>
+                <>
+                  <button
+                    onClick={startCamera}
+                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                    disabled={isCameraLoading}
+                  >
+                    {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
+                    {isCameraLoading ? 'Starting…' : 'Start Camera'}
+                  </button>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded-lg hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                    disabled={isCameraLoading}
+                  >
+                    <Computer size={20} />
+                    Upload Image
+                  </button>
+                </>
               ) : (
                 <>
                   <button
                     onClick={capturePhoto}
-                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
+                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                   >
                     <CheckCircle size={20} />
                     Capture Photo
                   </button>
                   <button
                     onClick={stopCamera}
-                    className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
+                    className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                   >
                     Stop
                   </button>
@@ -579,14 +706,14 @@ function App() {
               <div className="space-y-3">
                 <button
                   onClick={downloadImage}
-                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                 >
                   <Download size={20} />
                   Download Photo ({selectedFormat.widthPx}×{selectedFormat.heightPx}px)
                 </button>
                 <button
                   onClick={openPrintPreview}
-                  className="w-full flex items-center justify-center gap-2 bg-red-700 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-red-700 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                 >
                   <Printer size={20} />
                   Print Preview ({selectedFormat.printWidthIn.toFixed(2)}×{selectedFormat.printHeightIn.toFixed(2)} in)
@@ -596,7 +723,7 @@ function App() {
                   <select
                     id="photosPerPage"
                     value={photosPerPage}
-                    onChange={(e) => setPhotosPerPage(Number(e.target.value) as typeof photosPerPage)}
+                    onChange={(e) => setPhotosPerPage(Number(e.target.value) as PhotoCount)}
                     className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
                   >
                     {PHOTO_COUNTS.map(c => (
@@ -617,7 +744,7 @@ function App() {
                 </div>
                 <button
                   onClick={retakePhoto}
-                  className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                 >
                   <RotateCcw size={20} />
                   Retake Photo
@@ -627,11 +754,13 @@ function App() {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-between w-full gap-3">
-          <div className="flex items-center w-full justify-between gap-3">
-            <p className="text-xs text-gray-400">© {new Date().getFullYear()} RubyPassport</p>
-            <p className="text-xs text-gray-400">Made with ❤️ by <a href="https://stefancosma.xyz" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">Stefan</a></p>
-            <p className="text-xs text-gray-400">
+        <div className="mt-6 pt-4 border-t border-red-900/20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <p className="text-xs text-gray-400 md:text-left">© {new Date().getFullYear()} RubyPassport. All rights reserved. Part of the <a href="https://www.rubytriathlon.com/" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">Ruby Triathlon</a> project.</p>
+            <p className="text-xs text-gray-400 md:text-center">
+              Made with ❤️ by <a href="https://stefancosma.xyz" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">Stefan</a>
+            </p>
+            <p className="text-xs text-gray-400 md:text-right">
               <a href="https://github.com/stefanbc/rubypassport" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="inline-block align-text-bottom mr-1" aria-hidden="true">
                   <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
@@ -641,10 +770,17 @@ function App() {
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Hidden canvas for photo processing */}
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+        {/* Hidden canvas for photo processing */}
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          accept="image/*"
+          onChange={handleFileSelect}
+        />
+      </div>
     </div>
   );
 }
