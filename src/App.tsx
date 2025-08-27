@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { Camera, Computer, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2, Info } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Camera, Computer, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2, Info, Maximize, Minimize } from 'lucide-react';
 
 type Toast = {
   id: number;
@@ -14,6 +14,7 @@ function App() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   // Supported passport/ID photo formats
@@ -94,6 +95,31 @@ function App() {
     }
     context.restore();
   };
+
+  const handleFullscreenChange = useCallback(() => {
+    setIsFullscreen(!!document.fullscreenElement);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [handleFullscreenChange]);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        addToast(
+          `Error attempting to enable full-screen mode: ${err.message}`,
+          'error'
+        );
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
 
   useEffect(() => {
     return () => {
@@ -429,7 +455,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4 flex items-center justify-center">
       <div className="max-w-screen-2xl mx-auto">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -441,22 +467,31 @@ function App() {
               <div className="text-[11px] text-red-300/80">Passport Photo Generator</div>
             </div>
           </div>
-          {/* Toast Container */}
-          <div className="space-y-2">
-            {toasts.map((toast) => (
-              <div
-                key={toast.id}
-                className={`relative flex items-center text-sm transition-all duration-300 ease-in-out select-none ${toast.type === 'error' ? 'text-red-600' : toast.type === 'success' ? 'text-green-600' : 'text-blue-600'
-                  }`}
-              >
-                <div className="mr-3">
-                  {toast.type === 'error' && <XCircle size={20} />}
-                  {toast.type === 'success' && <CheckCircle size={20} />}
-                  {toast.type === 'info' && <Info size={20} />}
+          <div className="flex items-center gap-4">
+            {/* Toast Container */}
+            <div className="space-y-2">
+              {toasts.map((toast) => (
+                <div
+                  key={toast.id}
+                  className={`relative flex items-center text-sm transition-all duration-300 ease-in-out select-none ${toast.type === 'error' ? 'text-red-600' : toast.type === 'success' ? 'text-green-600' : 'text-gray-200'
+                    }`}
+                >
+                  <div className="mr-3">
+                    {toast.type === 'error' && <XCircle size={20} />}
+                    {toast.type === 'success' && <CheckCircle size={20} />}
+                    {toast.type === 'info' && <Info size={20} />}
+                  </div>
+                  <span className="flex-1">{toast.message}</span>
                 </div>
-                <span className="flex-1">{toast.message}</span>
-              </div>
-            ))}
+              ))}
+            </div>
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 rounded-full text-gray-400 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+              title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+            >
+              {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+            </button>
           </div>
         </div>
 
@@ -545,7 +580,7 @@ function App() {
                     autoPlay
                     playsInline
                     muted
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
                   />
                   {/* Guide overlay (responsive to selected format) */}
                   <div className="absolute inset-0 pointer-events-none">
@@ -675,7 +710,7 @@ function App() {
                   <img
                     src={capturedImage}
                     alt="Passport portrait"
-                    className="absolute inset-0 w-full h-full object-cover fade-in"
+                    className="absolute inset-0 w-full h-full object-cover fade-in transform -scale-x-100"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -761,6 +796,9 @@ function App() {
               Made with ❤️ by <a href="https://stefancosma.xyz" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">Stefan</a>
             </p>
             <p className="text-xs text-gray-400 md:text-right">
+              {import.meta.env.VITE_GIT_COMMIT_HASH && (
+                <span className="mr-2">v{import.meta.env.VITE_GIT_COMMIT_HASH.substring(0, 7)}</span>
+              )}
               <a href="https://github.com/stefanbc/rubypassport" className="text-red-300/80 hover:text-red-300" target="_blank" rel="noopener noreferrer">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="inline-block align-text-bottom mr-1" aria-hidden="true">
                   <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
