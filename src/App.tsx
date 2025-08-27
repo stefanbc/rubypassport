@@ -710,7 +710,7 @@ function App() {
                   <img
                     src={capturedImage}
                     alt="Passport portrait"
-                    className="absolute inset-0 w-full h-full object-cover fade-in transform -scale-x-100"
+                    className="absolute inset-0 w-full h-full object-cover fade-in"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
