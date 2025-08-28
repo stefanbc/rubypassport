@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Camera, Computer, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2, Info, Maximize, Minimize } from 'lucide-react';
+import { Camera, Computer, Download, RotateCcw, CheckCircle, Printer, XCircle, Sun, Gem, Loader2, Info, Maximize, Minimize, PlusCircle, Trash2, Pencil } from 'lucide-react';
 
 type Toast = {
   id: number;
@@ -7,9 +7,19 @@ type Toast = {
   type: 'error' | 'info' | 'success';
 };
 
+type Format = {
+  id: string;
+  label: string;
+  widthPx: number;
+  heightPx: number;
+  printWidthIn: number;
+  printHeightIn: number;
+};
+
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [baseImage, setBaseImage] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +28,7 @@ function App() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   // Supported passport/ID photo formats
-  const FORMATS = [
+  const FORMATS: readonly Format[] = [
     { id: 'us_2x2', label: 'US 2x2 in (600×600 px)', widthPx: 600, heightPx: 600, printWidthIn: 2, printHeightIn: 2 },
     { id: 'eu_35x45', label: 'EU/UK 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
     { id: 'ca_50x70', label: 'Canada 50×70 mm (~591×827 px)', widthPx: 591, heightPx: 827, printWidthIn: 50 / 25.4, printHeightIn: 70 / 25.4 },
@@ -29,18 +39,31 @@ function App() {
     { id: 'au_35x45', label: 'Australia 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
     { id: 'br_50x70', label: 'Brazil 50×70 mm (~591×827 px)', widthPx: 591, heightPx: 827, printWidthIn: 50 / 25.4, printHeightIn: 70 / 25.4 },
     { id: 'mx_25x30', label: 'Mexico 25×30 mm (~295×354 px)', widthPx: 295, heightPx: 354, printWidthIn: 25 / 25.4, printHeightIn: 30 / 25.4 }
-  ] as const;
-  type FormatId = typeof FORMATS[number]['id'];
+  ];
+  type PredefinedFormatId = typeof FORMATS[number]['id'];
+  type FormatId = PredefinedFormatId | string;
 
+  const [customFormats, setCustomFormats] = useState<Format[]>([]);
   const [selectedFormatId, setSelectedFormatId] = useState<FormatId>('eu_35x45');
   const [personName, setPersonName] = useState<string>('');
   const PHOTO_COUNTS = [1, 2, 4, 6, 8, 10, 12] as const;
   type PhotoCount = typeof PHOTO_COUNTS[number];
-  const [photosPerPage, setPhotosPerPage] = useState<PhotoCount>(4);
-  const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(true);
+  const [photosPerPage, setPhotosPerPage] = useState<PhotoCount>(6);
+  const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(false);
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
-  const selectedFormat = FORMATS.find(f => f.id === selectedFormatId)!;
+  const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
+  const [editingFormat, setEditingFormat] = useState<Format | null>(null);
+  const [newFormat, setNewFormat] = useState({
+    label: '',
+    widthPx: '',
+    heightPx: '',
+    printWidthMm: '',
+    printHeightMm: '',
+  });
+
+  const allFormats: Format[] = [...FORMATS, ...customFormats];
+  const selectedFormat = allFormats.find(f => f.id === selectedFormatId)!;
   // Human-proportional guide sizing (kept stable across formats)
   const guideOvalWidthPct = 42;     // Approximate face width relative to frame width
   const guideOvalHeightPct = 64;    // Approximate face height relative to frame height
@@ -104,6 +127,73 @@ function App() {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [handleFullscreenChange]);
+
+  useEffect(() => {
+    try {
+      const savedFormats = localStorage.getItem('rubyPassportCustomFormats');
+      if (savedFormats) {
+        const parsed = JSON.parse(savedFormats);
+        if (Array.isArray(parsed)) {
+          setCustomFormats(parsed);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load custom formats from localStorage', error);
+      addToast('Could not load custom formats.', 'error');
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rubyPassportCustomFormats', JSON.stringify(customFormats));
+    } catch (error) {
+      console.error('Failed to save custom formats to localStorage', error);
+      addToast('Could not save custom formats.', 'error');
+    }
+  }, [customFormats]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowCustomFormatForm(false);
+        setEditingFormat(null);
+      }
+    };
+
+    if (showCustomFormatForm) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showCustomFormatForm]);
+
+  useEffect(() => {
+    if (!baseImage) {
+      setCapturedImage(null);
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      if (!canvasRef.current) return;
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      if (!context) return;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      if (watermarkEnabled) {
+        applyWatermark(context, img.width, img.height);
+      }
+
+      setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
+    };
+    img.src = baseImage;
+  }, [baseImage, watermarkEnabled]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -248,14 +338,9 @@ function App() {
       0, 0, targetWidth, targetHeight
     );
 
-    // Apply watermark if enabled
-    if (watermarkEnabled) {
-      applyWatermark(context, targetWidth, targetHeight);
-    }
-
     // Convert to high-quality image
-    const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-    setCapturedImage(imageDataUrl);
+    const imageDataUrl = canvas.toDataURL('image/jpeg', 1);
+    setBaseImage(imageDataUrl);
     addToast('Photo captured successfully!', 'success');
   };
 
@@ -312,12 +397,8 @@ function App() {
           0, 0, targetWidth, targetHeight
         );
 
-        if (watermarkEnabled) {
-          applyWatermark(context, targetWidth, targetHeight);
-        }
-
         const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        setCapturedImage(imageDataUrl);
+        setBaseImage(imageDataUrl);
         addToast('Image uploaded successfully!', 'success');
       };
       img.onerror = () => addToast('Failed to load the selected image.', 'error');
@@ -450,13 +531,124 @@ function App() {
     waitForImages();
   };
 
+  const handleEditClick = (formatToEdit: Format) => {
+    setEditingFormat(formatToEdit);
+    setNewFormat({
+      label: formatToEdit.label,
+      widthPx: String(formatToEdit.widthPx),
+      heightPx: String(formatToEdit.heightPx),
+      printWidthMm: (formatToEdit.printWidthIn * 25.4).toFixed(2),
+      printHeightMm: (formatToEdit.printHeightIn * 25.4).toFixed(2),
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingFormat(null);
+    setNewFormat({
+      label: '',
+      widthPx: '',
+      heightPx: '',
+      printWidthMm: '',
+      printHeightMm: '',
+    });
+  };
+
+  const handleUpdateCustomFormat = () => {
+    if (!editingFormat) return;
+
+    const { label, widthPx, heightPx, printWidthMm, printHeightMm } = newFormat;
+    if (!label.trim() || !widthPx || !heightPx || !printWidthMm || !printHeightMm) {
+      addToast('Please fill all custom format fields.', 'error');
+      return;
+    }
+
+    const updatedFormat: Format = {
+      id: editingFormat.id,
+      label: label.trim(),
+      widthPx: parseInt(widthPx, 10),
+      heightPx: parseInt(heightPx, 10),
+      printWidthIn: parseFloat(printWidthMm) / 25.4,
+      printHeightIn: parseFloat(printHeightMm) / 25.4,
+    };
+
+    if (
+      isNaN(updatedFormat.widthPx) || updatedFormat.widthPx <= 0 ||
+      isNaN(updatedFormat.heightPx) || updatedFormat.heightPx <= 0 ||
+      isNaN(updatedFormat.printWidthIn) || updatedFormat.printWidthIn <= 0 ||
+      isNaN(updatedFormat.printHeightIn) || updatedFormat.printHeightIn <= 0
+    ) {
+      addToast('Invalid number values for format. All dimensions must be positive.', 'error');
+      return;
+    }
+
+    setCustomFormats(prev => prev.map(f => (f.id === editingFormat.id ? updatedFormat : f)));
+    addToast(`Updated custom format: ${label}`, 'success');
+
+    // If the currently selected format was the one being edited, ensure it remains selected
+    // (though the id doesn't change, this is good practice if it could)
+    if (selectedFormatId === editingFormat.id) {
+      setSelectedFormatId(updatedFormat.id);
+    }
+
+    handleCancelEdit(); // Reset form and editing state
+  };
+
+  const handleAddCustomFormat = () => {
+    const { label, widthPx, heightPx, printWidthMm, printHeightMm } = newFormat;
+    if (!label.trim() || !widthPx || !heightPx || !printWidthMm || !printHeightMm) {
+      addToast('Please fill all custom format fields.', 'error');
+      return;
+    }
+
+    const newCustomFormat: Format = {
+      id: `custom_${Date.now()}`,
+      label: label.trim(),
+      widthPx: parseInt(widthPx, 10),
+      heightPx: parseInt(heightPx, 10),
+      printWidthIn: parseFloat(printWidthMm) / 25.4,
+      printHeightIn: parseFloat(printHeightMm) / 25.4,
+    };
+
+    if (
+      isNaN(newCustomFormat.widthPx) || newCustomFormat.widthPx <= 0 ||
+      isNaN(newCustomFormat.heightPx) || newCustomFormat.heightPx <= 0 ||
+      isNaN(newCustomFormat.printWidthIn) || newCustomFormat.printWidthIn <= 0 ||
+      isNaN(newCustomFormat.printHeightIn) || newCustomFormat.printHeightIn <= 0
+    ) {
+      addToast('Invalid number values for format. All dimensions must be positive.', 'error');
+      return;
+    }
+
+    setCustomFormats(prev => [...prev, newCustomFormat]);
+    addToast(`Added custom format: ${label}`, 'success');
+    setNewFormat({
+      label: '',
+      widthPx: '',
+      heightPx: '',
+      printWidthMm: '',
+      printHeightMm: '',
+    });
+    setSelectedFormatId(newCustomFormat.id);
+  };
+
+  const handleDeleteCustomFormat = (idToDelete: string) => {
+    if (editingFormat && editingFormat.id === idToDelete) {
+      handleCancelEdit(); // Reset form if deleting the item being edited
+    }
+    setCustomFormats(prev => prev.filter(f => f.id !== idToDelete));
+    if (selectedFormatId === idToDelete) {
+      setSelectedFormatId('eu_35x45'); // reset to a default
+    }
+    addToast('Custom format removed.', 'success');
+  };
+
   const retakePhoto = () => {
-    setCapturedImage(null);
+    setBaseImage(null);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4 flex items-center justify-center">
-      <div className="max-w-screen-2xl mx-auto">
+      <div className={`max-w-screen-2xl mx-auto ${showCustomFormatForm ? 'blur-xs' : ''}`}>
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
@@ -554,7 +746,13 @@ function App() {
 
           {/* Camera Section (Center) */}
           <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-            <h2 className="text-xl font-semibold text-red-400 mb-4 select-none">Camera Preview</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-red-400 select-none">Camera Preview</h2>
+              <button onClick={() => setShowCustomFormatForm(true)} className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded-lg hover:bg-zinc-800 cursor-pointer">
+                <PlusCircle size={16} />
+                Manage Formats
+              </button>
+            </div>
             <div className="mb-4 flex items-center gap-3">
               <label className="text-gray-300 text-sm w-32 select-none" htmlFor="format">Photo format</label>
               <select
@@ -563,9 +761,18 @@ function App() {
                 onChange={(e) => setSelectedFormatId(e.target.value as FormatId)}
                 className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
               >
-                {FORMATS.map(f => (
-                  <option key={f.id} value={f.id}>{f.label}</option>
-                ))}
+                <optgroup label="Standard Formats">
+                  {FORMATS.map(f => (
+                    <option key={f.id} value={f.id}>{f.label}</option>
+                  ))}
+                </optgroup>
+                {customFormats.length > 0 && (
+                  <optgroup label="Custom Formats">
+                    {customFormats.map(f => (
+                      <option key={f.id} value={f.id}>{f.label}</option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
             </div>
 
@@ -739,13 +946,22 @@ function App() {
 
             {capturedImage && (
               <div className="space-y-3">
-                <button
-                  onClick={downloadImage}
-                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
-                >
-                  <Download size={20} />
-                  Download Photo ({selectedFormat.widthPx}×{selectedFormat.heightPx}px)
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={downloadImage}
+                    className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                  >
+                    <Download size={20} />
+                    Download
+                  </button>
+                  <button
+                    onClick={retakePhoto}
+                    className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                  >
+                    <RotateCcw size={20} />
+                    Retake
+                  </button>
+                </div>
                 <button
                   onClick={openPrintPreview}
                   className="w-full flex items-center justify-center gap-2 bg-red-700 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
@@ -777,13 +993,6 @@ function App() {
                   />
                   <span className="text-xs text-gray-400">Overrides count to best fit on 10×15cm</span>
                 </div>
-                <button
-                  onClick={retakePhoto}
-                  className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
-                >
-                  <RotateCcw size={20} />
-                  Retake Photo
-                </button>
               </div>
             )}
           </div>
@@ -819,6 +1028,79 @@ function App() {
           onChange={handleFileSelect}
         />
       </div>
+
+      {/* Custom Format Dialog */}
+      {showCustomFormatForm && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => { setShowCustomFormatForm(false); handleCancelEdit(); }}>
+          <div className="bg-zinc-900 rounded-xl shadow-2xl p-8 border border-red-800/50 ring-1 ring-white/10 w-full max-w-lg relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => { setShowCustomFormatForm(false); handleCancelEdit(); }}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors cursor-pointer"
+              aria-label="Close custom format dialog"
+            >
+              <XCircle size={24} />
+            </button>
+            <h2 className="text-2xl font-semibold text-red-400 mb-6 select-none">Manage Custom Formats</h2>
+
+            <div className="mb-6 p-4 bg-zinc-800/50 rounded-lg border border-red-900/40">
+              <h3 className="text-lg font-semibold text-gray-200 mb-3 select-none">{editingFormat ? 'Edit Format' : 'Add New Format'}</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatLabel">Label</label>
+                  <input id="modalNewFormatLabel" value={newFormat.label} onChange={e => setNewFormat({ ...newFormat, label: e.target.value })} placeholder="e.g. Custom 4x6" className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatWidthPx">Width (px)</label>
+                  <input id="modalNewFormatWidthPx" type="number" value={newFormat.widthPx} onChange={e => setNewFormat({ ...newFormat, widthPx: e.target.value })} placeholder="e.g. 600" className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatHeightPx">Height (px)</label>
+                  <input id="modalNewFormatHeightPx" type="number" value={newFormat.heightPx} onChange={e => setNewFormat({ ...newFormat, heightPx: e.target.value })} placeholder="e.g. 900" className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatPrintWidthMm">Print W (mm)</label>
+                  <input id="modalNewFormatPrintWidthMm" type="number" value={newFormat.printWidthMm} onChange={e => setNewFormat({ ...newFormat, printWidthMm: e.target.value })} placeholder="e.g. 101.6" className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatPrintHeightMm">Print H (mm)</label>
+                  <input id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm} onChange={e => setNewFormat({ ...newFormat, printHeightMm: e.target.value })} placeholder="e.g. 152.4" className="flex-1 bg-black text-white text-sm px-3 py-2 rounded-lg border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600" />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button onClick={editingFormat ? handleUpdateCustomFormat : handleAddCustomFormat} className="flex-1 flex items-center justify-center gap-2 bg-red-800 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors cursor-pointer">
+                    {editingFormat ? 'Update Format' : 'Add Format'}
+                  </button>
+                  {editingFormat && (
+                    <button onClick={handleCancelEdit} className="flex-1 flex items-center justify-center gap-2 bg-zinc-600 text-white py-2 px-4 rounded-lg hover:bg-zinc-500 transition-colors cursor-pointer">
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {customFormats.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-gray-200 mb-2">Your Custom Formats</h3>
+                <ul className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                  {customFormats.map(format => (
+                    <li key={format.id} className="flex items-center justify-between text-sm text-gray-300 bg-zinc-800/50 p-2 rounded-md hover:bg-zinc-700/50 transition-colors">
+                      <span>{format.label} ({format.widthPx}x{format.heightPx}px)</span>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => handleEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors" title="Edit format">
+                          <Pencil size={16} />
+                        </button>
+                        <button onClick={() => handleDeleteCustomFormat(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors" title="Delete format">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
