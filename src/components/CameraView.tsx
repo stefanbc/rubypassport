@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { Camera, Computer, Loader2, CheckCircle, PlusCircle } from 'lucide-react';
+import { Camera, Computer, Loader2, CheckCircle, SlidersHorizontal } from 'lucide-react';
 import { Format } from '../types';
 
 type CameraViewProps = {
@@ -38,10 +38,10 @@ export function CameraView({
         <h2 className="text-xl font-semibold text-red-400 select-none">Preview</h2>
         <button
           onClick={onManageFormatsClick}
-          className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded hover:bg-zinc-800 cursor-pointer"
+          className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded bg-zinc-800 hover:bg-zinc-700 cursor-pointer"
           title="Change format or manage custom formats"
         >
-          <PlusCircle size={16} />
+          <SlidersHorizontal size={16} />
           <span className="select-none">{selectedFormat.label}</span>
         </button>
       </div>

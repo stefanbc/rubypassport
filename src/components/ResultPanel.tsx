@@ -33,7 +33,7 @@ export function ResultPanel({
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-red-400 select-none">Result</h2>
         {capturedImage && !isProcessingImage && (
-          <button onClick={onRetake} className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded hover:bg-zinc-800 cursor-pointer">
+          <button onClick={onRetake} className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded bg-zinc-800 hover:bg-zinc-700 cursor-pointer">
             <Trash2 size={16} />
             Retake
           </button>
@@ -41,7 +41,7 @@ export function ResultPanel({
       </div>
 
       <div
-        className="relative bg-black rounded overflow-hidden mb-4"
+        className="relative bg-black rounded overflow-hidden mb-4 ring-1 ring-red-900/40"
         style={{ paddingTop: `${(heightPx / widthPx) * 100}%`, contain: 'strict' }}
       >
         {isProcessingImage ? (
