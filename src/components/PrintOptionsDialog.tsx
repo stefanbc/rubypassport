@@ -1,0 +1,88 @@
+import { XCircle, Printer } from 'lucide-react';
+import { Format, PhotoCount, PHOTO_COUNTS } from '../types';
+
+type PrintOptionsDialogProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    onPrint: () => void;
+    photosPerPage: PhotoCount;
+    onPhotosPerPageChange: (count: PhotoCount) => void;
+    autoFit10x15: boolean;
+    onAutoFitChange: (fit: boolean) => void;
+    selectedFormat: Format;
+};
+
+export function PrintOptionsDialog({
+    isOpen,
+    onClose,
+    onPrint,
+    photosPerPage,
+    onPhotosPerPageChange,
+    autoFit10x15,
+    onAutoFitChange,
+    selectedFormat,
+}: PrintOptionsDialogProps) {
+    if (!isOpen) return null;
+
+    const handlePrint = () => {
+        onPrint();
+        onClose();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div className="bg-zinc-900 rounded-lg shadow-2xl p-8 border border-red-800/50 ring-1 ring-white/10 w-full max-w-md relative" onClick={(e) => e.stopPropagation()}>
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    aria-label="Close print options dialog"
+                >
+                    <XCircle size={24} />
+                </button>
+                <h2 className="text-2xl font-semibold text-red-400 mb-6 select-none">Print Options</h2>
+
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                        <label className="text-gray-300 text-sm w-40 select-none" htmlFor="photosPerPageDialog">Photos per page</label>
+                        <select
+                            id="photosPerPageDialog"
+                            value={photosPerPage}
+                            onChange={(e) => onPhotosPerPageChange(Number(e.target.value) as PhotoCount)}
+                            className="flex-1 bg-black text-white text-sm px-3 py-2 rounded border border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-600"
+                            disabled={autoFit10x15}
+                        >
+                            {PHOTO_COUNTS.map(c => (
+                                <option key={c} value={c}>{c}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <label className="text-gray-300 text-sm w-40 select-none" htmlFor="autoFitDialog">Auto-fit 10×15 cm</label>
+                        <input
+                            id="autoFitDialog"
+                            type="checkbox"
+                            checked={autoFit10x15}
+                            onChange={(e) => onAutoFitChange(e.target.checked)}
+                            className="h-4 w-4 accent-red-600 text-red-600 bg-gray-700 border-gray-600 rounded focus:ring-red-600 ring-offset-zinc-800 focus:ring-2 cursor-pointer"
+                        />
+                    </div>
+                    <p className="text-xs text-gray-400">
+                        {autoFit10x15
+                            ? 'Count is determined automatically to fit the paper.'
+                            : `Prints on a standard sheet. Your photo size is ${selectedFormat.printWidthIn.toFixed(2)}×${selectedFormat.printHeightIn.toFixed(2)} in.`}
+                    </p>
+                </div>
+
+                <div className="flex gap-3 pt-8">
+                    <button onClick={onClose} className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-2 px-4 rounded hover:bg-zinc-600 transition-colors cursor-pointer">
+                        Cancel
+                    </button>
+                    <button onClick={handlePrint} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer">
+                        <Printer size={18} />
+                        Print Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

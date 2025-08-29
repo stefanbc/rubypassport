@@ -5,7 +5,14 @@ import { Header } from './components/Header';
 import { Guidelines } from './components/Guidelines';
 import { CameraView } from './components/CameraView';
 import { ResultPanel } from './components/ResultPanel';
+import { PrintOptionsDialog } from './components/PrintOptionsDialog';
 import { Footer } from './components/Footer';
+
+// A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
+declare class ImageCapture {
+  constructor(videoTrack: MediaStreamTrack);
+  takePhoto(): Promise<Blob>;
+}
 
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -14,9 +21,11 @@ function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageCaptureRef = useRef<ImageCapture | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [isProcessingImage, setIsProcessingImage] = useState<boolean>(false);
   const [customFormats, setCustomFormats] = useState<Format[]>([]);
   const [selectedFormatId, setSelectedFormatId] = useState<FormatId>('eu_35x45');
   const [personName, setPersonName] = useState<string>('');
@@ -25,6 +34,7 @@ function App() {
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
   const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
+  const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
@@ -37,11 +47,11 @@ function App() {
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId)!;
 
-  const removeToast = (id: number) => {
+  const removeToast = useCallback((id: number) => {
     setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
-  };
+  }, []);
 
-  const addToast = (message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
+  const addToast = useCallback((message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
     const id = Date.now() + Math.random();
     setToasts(prevToasts => [...prevToasts, { id, message, type }]);
     if (duration > 0) {
@@ -49,9 +59,9 @@ function App() {
         removeToast(id);
       }, duration);
     }
-  };
+  }, [removeToast]);
 
-  const applyWatermark = (context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
+  const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
     context.save();
     const diagonalRadians = -25 * Math.PI / 180;
     const baseSize = Math.min(targetWidth, targetHeight);
@@ -83,7 +93,7 @@ function App() {
       row++;
     }
     context.restore();
-  };
+  }, []);
 
   const handleFullscreenChange = useCallback(() => {
     setIsFullscreen(!!document.fullscreenElement);
@@ -143,6 +153,7 @@ function App() {
   useEffect(() => {
     if (!baseImage) {
       setCapturedImage(null);
+      setIsProcessingImage(false);
       return;
     }
 
@@ -163,8 +174,17 @@ function App() {
 
       setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
     };
+    img.onerror = () => {
+      addToast('Failed to load image for processing.', 'error');
+    };
+    img.onloadstart = () => {
+      setIsProcessingImage(true);
+    };
+    img.onloadend = () => {
+      setIsProcessingImage(false);
+    };
     img.src = baseImage;
-  }, [baseImage, watermarkEnabled]);
+  }, [baseImage, watermarkEnabled, applyWatermark, addToast]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -238,10 +258,13 @@ function App() {
     try {
       addToast('Starting camera...', 'info');
       setIsCameraLoading(true);
+      const aspectRatio = selectedFormat.widthPx / selectedFormat.heightPx;
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          // Request a high resolution to get the best possible video feed
+          width: { ideal: 4096 },
+          // Enforce the same aspect ratio as the selected photo format for a WYSIWYG preview
+          aspectRatio: { ideal: aspectRatio },
           facingMode: 'user'
         },
         audio: false
@@ -250,6 +273,24 @@ function App() {
       console.log('Got media stream:', mediaStream);
       setStream(mediaStream);
       setIsCameraOn(true);
+
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      const settings = videoTrack.getSettings();
+      if (settings.width && settings.height) {
+        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 4000);
+      }
+
+      if ('ImageCapture' in window) {
+        try {
+          imageCaptureRef.current = new ImageCapture(videoTrack);
+          addToast('High-resolution capture is available.', 'info', 3000);
+        } catch (e) {
+          console.error('Could not create ImageCapture:', e);
+          imageCaptureRef.current = null;
+        }
+      } else {
+        addToast('High-resolution capture not supported. Using video stream.', 'info', 3000);
+      }
     } catch (err) {
       addToast(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
       setIsCameraOn(false);
@@ -262,10 +303,73 @@ function App() {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
       setIsCameraOn(false);
+      imageCaptureRef.current = null;
     }
   };
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
+    // High-res capture with ImageCapture API if available
+    if (imageCaptureRef.current) {
+      try {
+        addToast('Capturing high-resolution photo...', 'info', 2000);
+        const blob = await imageCaptureRef.current.takePhoto();
+        const imageUrl = URL.createObjectURL(blob);
+
+        const img = new Image();
+        img.onload = () => {
+          if (!canvasRef.current) return;
+
+          const canvas = canvasRef.current;
+          const context = canvas.getContext('2d');
+          if (!context) return;
+
+          const targetWidth = selectedFormat.widthPx;
+          const targetHeight = selectedFormat.heightPx;
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+
+          const imageAspectRatio = img.width / img.height;
+          const canvasAspectRatio = targetWidth / targetHeight;
+
+          let sourceX = 0;
+          let sourceY = 0;
+          let sourceWidth = img.width;
+          let sourceHeight = img.height;
+
+          if (imageAspectRatio > canvasAspectRatio) {
+            sourceHeight = img.height;
+            sourceWidth = sourceHeight * canvasAspectRatio;
+            sourceX = (img.width - sourceWidth) / 2;
+          } else {
+            sourceWidth = img.width;
+            sourceHeight = sourceWidth / canvasAspectRatio;
+            sourceY = (img.height - sourceHeight) / 2;
+          }
+
+          context.drawImage(
+            img,
+            sourceX, sourceY, sourceWidth, sourceHeight,
+            0, 0, targetWidth, targetHeight
+          );
+
+          const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+          setBaseImage(imageDataUrl);
+          addToast('Photo captured successfully!', 'success');
+          URL.revokeObjectURL(imageUrl);
+        };
+        img.onerror = () => {
+          addToast('Failed to process captured photo.', 'error');
+          URL.revokeObjectURL(imageUrl);
+        };
+        img.src = imageUrl;
+        return; // Exit after handling ImageCapture
+      } catch (e) {
+        const error = e as Error;
+        addToast(`High-res capture failed: ${error.message}. Falling back to video frame.`, 'error');
+      }
+    }
+
+    // Fallback for browsers without ImageCapture or if it fails
     if (!videoRef.current || !canvasRef.current) return;
 
     const video = videoRef.current;
@@ -274,13 +378,11 @@ function App() {
 
     if (!context) return;
 
-    // Set canvas dimensions to selected format size
     const targetWidth = selectedFormat.widthPx;
     const targetHeight = selectedFormat.heightPx;
     canvas.width = targetWidth;
     canvas.height = targetHeight;
 
-    // Calculate aspect ratios
     const videoAspectRatio = video.videoWidth / video.videoHeight;
     const canvasAspectRatio = targetWidth / targetHeight;
 
@@ -289,30 +391,25 @@ function App() {
     let sourceWidth = video.videoWidth;
     let sourceHeight = video.videoHeight;
 
-    // Crop to match selected aspect ratio
     if (videoAspectRatio > canvasAspectRatio) {
-      // Video is wider relative to target; crop horizontally
       sourceHeight = video.videoHeight;
       sourceWidth = sourceHeight * canvasAspectRatio;
       sourceX = (video.videoWidth - sourceWidth) / 2;
     } else {
-      // Video is taller relative to target; crop vertically
       sourceWidth = video.videoWidth;
       sourceHeight = sourceWidth / canvasAspectRatio;
       sourceY = (video.videoHeight - sourceHeight) / 2;
     }
 
-    // Draw the cropped and scaled image
     context.drawImage(
       video,
       sourceX, sourceY, sourceWidth, sourceHeight,
       0, 0, targetWidth, targetHeight
     );
 
-    // Convert to high-quality image
-    const imageDataUrl = canvas.toDataURL('image/jpeg', 1);
+    const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     setBaseImage(imageDataUrl);
-    addToast('Photo captured successfully!', 'success');
+    addToast('Photo captured from video stream.', 'success');
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -368,7 +465,7 @@ function App() {
           0, 0, targetWidth, targetHeight
         );
 
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
         setBaseImage(imageDataUrl);
         addToast('Image uploaded successfully!', 'success');
       };
@@ -657,7 +754,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4 flex items-center justify-center">
-      <div className={`max-w-screen-2xl mx-auto ${showCustomFormatForm ? 'blur-sm' : ''}`}>
+      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header toasts={toasts} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
@@ -667,9 +764,6 @@ function App() {
             isCameraLoading={isCameraLoading}
             videoRef={videoRef}
             selectedFormat={selectedFormat}
-            selectedFormatId={selectedFormatId}
-            allFormats={allFormats}
-            onSetSelectedFormatId={setSelectedFormatId}
             onStartCamera={startCamera}
             onStopCamera={stopCamera}
             onCapturePhoto={capturePhoto}
@@ -677,6 +771,7 @@ function App() {
             onManageFormatsClick={() => setShowCustomFormatForm(true)}
           />
           <ResultPanel
+            isProcessingImage={isProcessingImage}
             capturedImage={capturedImage}
             selectedFormat={selectedFormat}
             personName={personName}
@@ -685,11 +780,7 @@ function App() {
             onWatermarkChange={setWatermarkEnabled}
             onDownload={downloadImage}
             onRetake={retakePhoto}
-            onPrint={openPrintPreview}
-            photosPerPage={photosPerPage}
-            onPhotosPerPageChange={setPhotosPerPage}
-            autoFit10x15={autoFit10x15}
-            onAutoFitChange={setAutoFit10x15}
+            onOpenPrintDialog={() => setShowPrintDialog(true)}
           />
         </div>
 
@@ -710,6 +801,9 @@ function App() {
         isOpen={showCustomFormatForm}
         onClose={handleCloseDialog}
         customFormats={customFormats}
+        allFormats={allFormats}
+        selectedFormatId={selectedFormatId}
+        onSetSelectedFormatId={setSelectedFormatId}
         editingFormat={editingFormat}
         newFormat={newFormat}
         onNewFormatChange={setNewFormat}
@@ -718,6 +812,17 @@ function App() {
         onDelete={handleDeleteCustomFormat}
         onEditClick={handleEditClick}
         onCancelEdit={handleCancelEdit}
+      />
+
+      <PrintOptionsDialog
+        isOpen={showPrintDialog}
+        onClose={() => setShowPrintDialog(false)}
+        onPrint={openPrintPreview}
+        photosPerPage={photosPerPage}
+        onPhotosPerPageChange={setPhotosPerPage}
+        autoFit10x15={autoFit10x15}
+        onAutoFitChange={setAutoFit10x15}
+        selectedFormat={selectedFormat}
       />
     </div>
   );

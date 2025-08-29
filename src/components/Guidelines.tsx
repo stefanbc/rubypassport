@@ -2,8 +2,8 @@ import { CheckCircle, XCircle, Sun } from 'lucide-react';
 
 export function Guidelines() {
   return (
-    <div className="bg-zinc-900 rounded-xl shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-      <h2 className="text-xl font-semibold text-red-400 mb-1 select-none">Passport Photo Guidelines</h2>
+    <div className="bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
+      <h2 className="text-xl font-semibold text-red-400 mb-1 select-none">Guidelines</h2>
       <p className="text-xs text-gray-400 mb-4">Follow these for most country standards.</p>
       <div className="grid grid-cols-1 gap-6">
         <div>
