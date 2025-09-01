@@ -157,12 +157,19 @@ function App() {
       return;
     }
 
+    setIsProcessingImage(true);
     const img = new Image();
     img.onload = () => {
-      if (!canvasRef.current) return;
+      if (!canvasRef.current) {
+        setIsProcessingImage(false);
+        return;
+      }
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
-      if (!context) return;
+      if (!context) {
+        setIsProcessingImage(false);
+        return;
+      }
 
       canvas.width = img.width;
       canvas.height = img.height;
@@ -173,14 +180,10 @@ function App() {
       }
 
       setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
+      setIsProcessingImage(false);
     };
     img.onerror = () => {
       addToast('Failed to load image for processing.', 'error');
-    };
-    img.onloadstart = () => {
-      setIsProcessingImage(true);
-    };
-    img.onloadend = () => {
       setIsProcessingImage(false);
     };
     img.src = baseImage;
@@ -308,6 +311,7 @@ function App() {
   };
 
   const capturePhoto = async () => {
+    setIsProcessingImage(true);
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
       try {
@@ -317,11 +321,17 @@ function App() {
 
         const img = new Image();
         img.onload = () => {
-          if (!canvasRef.current) return;
+          if (!canvasRef.current) {
+            setIsProcessingImage(false);
+            return;
+          }
 
           const canvas = canvasRef.current;
           const context = canvas.getContext('2d');
-          if (!context) return;
+          if (!context) {
+            setIsProcessingImage(false);
+            return;
+          }
 
           const targetWidth = selectedFormat.widthPx;
           const targetHeight = selectedFormat.heightPx;
@@ -360,6 +370,7 @@ function App() {
         img.onerror = () => {
           addToast('Failed to process captured photo.', 'error');
           URL.revokeObjectURL(imageUrl);
+          setIsProcessingImage(false);
         };
         img.src = imageUrl;
         return; // Exit after handling ImageCapture
@@ -370,13 +381,19 @@ function App() {
     }
 
     // Fallback for browsers without ImageCapture or if it fails
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current) {
+      setIsProcessingImage(false);
+      return;
+    }
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
 
-    if (!context) return;
+    if (!context) {
+      setIsProcessingImage(false);
+      return;
+    }
 
     const targetWidth = selectedFormat.widthPx;
     const targetHeight = selectedFormat.heightPx;
@@ -421,20 +438,28 @@ function App() {
       return;
     }
 
+    setIsProcessingImage(true);
     const reader = new FileReader();
     reader.onload = (event) => {
       const result = event.target?.result;
       if (typeof result !== 'string') {
         addToast('Failed to read image data.', 'error');
+        setIsProcessingImage(false);
         return;
       }
       const img = new Image();
       img.onload = () => {
-        if (!canvasRef.current) return;
+        if (!canvasRef.current) {
+          setIsProcessingImage(false);
+          return;
+        }
 
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        if (!context) return;
+        if (!context) {
+          setIsProcessingImage(false);
+          return;
+        }
 
         const targetWidth = selectedFormat.widthPx;
         const targetHeight = selectedFormat.heightPx;
@@ -469,10 +494,16 @@ function App() {
         setBaseImage(imageDataUrl);
         addToast('Image uploaded successfully!', 'success');
       };
-      img.onerror = () => addToast('Failed to load the selected image.', 'error');
+      img.onerror = () => {
+        addToast('Failed to load the selected image.', 'error');
+        setIsProcessingImage(false);
+      };
       img.src = result;
     };
-    reader.onerror = () => addToast('Failed to read the selected file.', 'error');
+    reader.onerror = () => {
+      addToast('Failed to read the selected file.', 'error');
+      setIsProcessingImage(false);
+    };
     reader.readAsDataURL(file);
 
     // Reset file input value to allow selecting the same file again
@@ -504,7 +535,7 @@ function App() {
     // Paper size: 10x15 cm (approx 3.94 x 5.91 in)
     const paperW = 15 / 2.54; // ~5.91 in
     const paperH = 10 / 2.54; // ~3.94 in
-    const gapIn = 0.15; // equal row/column gap
+    const gapIn = 0.10; // equal row/column gap
     const cutMarkLengthIn = gapIn / 2;
     const cutMarkOffsetIn = -cutMarkLengthIn;
 

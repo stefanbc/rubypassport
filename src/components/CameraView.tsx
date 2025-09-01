@@ -42,7 +42,7 @@ export function CameraView({
           title="Change format or manage custom formats"
         >
           <SlidersHorizontal size={16} />
-          <span className="select-none">{selectedFormat.label}</span>
+          <span className="truncate max-w-40 md:max-w-none select-none">{selectedFormat.label}</span>
         </button>
       </div>
 
