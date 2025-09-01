@@ -94,7 +94,7 @@ export function ResultPanel({
           <button
             onClick={onDownload}
             disabled={!capturedImage || isProcessingImage}
-            className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base"
           >
             <Download size={20} />
             Download
@@ -102,7 +102,7 @@ export function ResultPanel({
           <button
             onClick={onOpenPrintDialog}
             disabled={!capturedImage || isProcessingImage}
-            className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base"
           >
             <Printer size={20} />
             Print

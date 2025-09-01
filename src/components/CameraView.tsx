@@ -127,7 +127,7 @@ export function CameraView({
           <>
             <button
               onClick={onStartCamera}
-              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base"
               disabled={isCameraLoading}
             >
               {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
@@ -135,7 +135,7 @@ export function CameraView({
             </button>
             <button
               onClick={onUploadClick}
-              className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
               disabled={isCameraLoading}
             >
               <Computer size={20} />
@@ -146,14 +146,14 @@ export function CameraView({
           <>
             <button
               onClick={onCapturePhoto}
-              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
             >
               <CheckCircle size={20} />
               Capture Photo
             </button>
             <button
               onClick={onStopCamera}
-              className="px-4 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+              className="px-4 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
             >
               Stop
             </button>
