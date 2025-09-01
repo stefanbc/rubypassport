@@ -1,4 +1,4 @@
-import { Gem, Maximize, Minimize, XCircle, CheckCircle, Info } from 'lucide-react';
+import { Gem, Maximize, Minimize, XCircle, CheckCircle, Info, Keyboard } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { Toast } from '../types';
@@ -7,9 +7,10 @@ type HeaderProps = {
   activeToast: Toast | null;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
+  onOpenShortcutsDialog: () => void;
 };
 
-export function Header({ activeToast, isFullscreen, onToggleFullscreen }: HeaderProps) {
+export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenShortcutsDialog }: HeaderProps) {
   const [displayedToast, setDisplayedToast] = useState<Toast | null>(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
   const isAnimatingOut = useRef(false);
@@ -92,6 +93,13 @@ export function Header({ activeToast, isFullscreen, onToggleFullscreen }: Header
           title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
         >
           {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+        </button>
+        <button
+          onClick={onOpenShortcutsDialog}
+          className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          title="Show keyboard shortcuts (?)"
+        >
+          <Keyboard size={20} />
         </button>
       </div>
     </div>

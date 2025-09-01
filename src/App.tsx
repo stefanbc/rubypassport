@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, ChangeEvent } from 'react';
 import { Toast, Format, PhotoCount, FormatId, FORMATS } from './types';
 import { FormatDialog, NewFormatState } from './components/FormatDialog';
 import { Header } from './components/Header';
@@ -7,6 +7,7 @@ import { CameraView } from './components/CameraView';
 import { ResultPanel } from './components/ResultPanel';
 import { PrintOptionsDialog } from './components/PrintOptionsDialog';
 import { Footer } from './components/Footer';
+import { ShortcutsDialog } from './components/ShortcutsDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
@@ -43,6 +44,7 @@ function AppContent() {
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
   const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
+  const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
@@ -107,169 +109,20 @@ function AppContent() {
     context.restore();
   }, []);
 
-  const handleFullscreenChange = useCallback(() => {
-    setIsFullscreen(!!document.fullscreenElement);
+  const retakePhoto = useCallback(() => {
+    setBaseImage(null);
   }, []);
 
-  useEffect(() => {
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, [handleFullscreenChange]);
-
-  useEffect(() => {
-    try {
-      const savedFormats = localStorage.getItem('rubyPassportCustomFormats');
-      if (savedFormats) {
-        const parsed = JSON.parse(savedFormats);
-        if (Array.isArray(parsed)) {
-          setCustomFormats(parsed);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load custom formats from localStorage', error);
-      addToast('Could not load custom formats.', 'error');
+  const stopCamera = useCallback(() => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+      setIsCameraOn(false);
+      imageCaptureRef.current = null;
     }
-  }, [addToast]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('rubyPassportCustomFormats', JSON.stringify(customFormats));
-    } catch (error) {
-      console.error('Failed to save custom formats to localStorage', error);
-      addToast('Could not save custom formats.', 'error');
-    }
-  }, [customFormats, addToast]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowCustomFormatForm(false);
-        setEditingFormat(null);
-      }
-    };
-
-    if (showCustomFormatForm) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [showCustomFormatForm]);
-
-  const handleCloseDialog = () => {
-    setShowCustomFormatForm(false);
-    handleCancelEdit();
-  }
-
-  useEffect(() => {
-    if (!baseImage) {
-      setCapturedImage(null);
-      setIsProcessingImage(false);
-      return;
-    }
-
-    setIsProcessingImage(true);
-    const img = new Image();
-    img.onload = () => {
-      if (!canvasRef.current) {
-        setIsProcessingImage(false);
-        return;
-      }
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      if (!context) {
-        setIsProcessingImage(false);
-        return;
-      }
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-      context.drawImage(img, 0, 0);
-
-      if (watermarkEnabled) {
-        applyWatermark(context, img.width, img.height);
-      }
-
-      setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
-      setIsProcessingImage(false);
-    };
-    img.onerror = () => {
-      addToast('Failed to load image for processing.', 'error');
-      setIsProcessingImage(false);
-    };
-    img.src = baseImage;
-  }, [baseImage, watermarkEnabled, applyWatermark, addToast]);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        addToast(
-          `Error attempting to enable full-screen mode: ${err.message}`,
-          'error'
-        );
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
-
-
-  useEffect(() => {
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
   }, [stream]);
 
-  // Handle video element setup when stream is available
-  useEffect(() => {
-    if (stream && videoRef.current) {
-      console.log('Setting video source...');
-      videoRef.current.srcObject = stream;
-
-      const video = videoRef.current;
-
-      // Add multiple event listeners to ensure video starts
-      const handleLoadedMetadata = async () => {
-        console.log('Video metadata loaded');
-        try {
-          await video.play();
-          console.log('Video playing');
-          setIsCameraLoading(false);
-        } catch (playError: unknown) {
-          if (playError instanceof Error) {
-            addToast(`Could not start video playback: ${playError.message}`, 'error');
-          } else {
-            addToast('Could not start video playback.', 'error');
-          }
-        }
-      };
-
-      const handleCanPlay = () => {
-        console.log('Video can play');
-      };
-
-      video.addEventListener('loadedmetadata', handleLoadedMetadata);
-      video.addEventListener('canplay', handleCanPlay);
-
-      // Force play attempt
-      video.play().catch(() => {
-        addToast('Waiting for camera permissions...', 'info');
-      });
-
-      // Cleanup event listeners
-      return () => {
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        video.removeEventListener('canplay', handleCanPlay);
-      };
-    }
-  }, [stream, addToast]);
-
-  const startCamera = async () => {
+  const startCamera = useCallback(async () => {
     try {
       addToast('Starting camera...', 'info');
       setIsCameraLoading(true);
@@ -311,18 +164,9 @@ function AppContent() {
       setIsCameraOn(false);
       setIsCameraLoading(false);
     }
-  };
+  }, [addToast, selectedFormat]);
 
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-      setIsCameraOn(false);
-      imageCaptureRef.current = null;
-    }
-  };
-
-  const capturePhoto = async () => {
+  const capturePhoto = useCallback(async () => {
     setIsProcessingImage(true);
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
@@ -439,9 +283,242 @@ function AppContent() {
     const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     setBaseImage(imageDataUrl);
     addToast('Photo captured from video stream.', 'success');
-  };
+  }, [addToast, selectedFormat]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const downloadImage = useCallback(() => {
+    if (!capturedImage) return;
+
+    const link = document.createElement('a');
+    const safeName = personName.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '');
+    const namePart = safeName ? `${safeName}-` : '';
+    link.download = `${namePart}passport-${selectedFormat.id}-${selectedFormat.widthPx}x${selectedFormat.heightPx}-${Date.now()}.jpg`;
+    link.href = capturedImage;
+    link.click();
+    addToast('Image downloaded!', 'success');
+  }, [capturedImage, personName, selectedFormat, addToast]);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        addToast(
+          `Error attempting to enable full-screen mode: ${err.message}`,
+          'error'
+        );
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }, [addToast]);
+
+  const handleCancelEdit = useCallback(() => {
+    setEditingFormat(null);
+    setNewFormat({
+      label: '',
+      widthPx: '',
+      heightPx: '',
+      printWidthMm: '',
+      printHeightMm: '',
+    });
+  }, []);
+
+  const handleCloseDialog = useCallback(() => {
+    setShowCustomFormatForm(false);
+    handleCancelEdit();
+  }, [handleCancelEdit]);
+
+  const handleFullscreenChange = useCallback(() => {
+    setIsFullscreen(!!document.fullscreenElement);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [handleFullscreenChange]);
+
+  useEffect(() => {
+    try {
+      const savedFormats = localStorage.getItem('rubyPassportCustomFormats');
+      if (savedFormats) {
+        const parsed = JSON.parse(savedFormats);
+        if (Array.isArray(parsed)) {
+          setCustomFormats(parsed);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load custom formats from localStorage', error);
+      addToast('Could not load custom formats.', 'error');
+    }
+  }, [addToast]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rubyPassportCustomFormats', JSON.stringify(customFormats));
+    } catch (error) {
+      console.error('Failed to save custom formats to localStorage', error);
+      addToast('Could not save custom formats.', 'error');
+    }
+  }, [customFormats, addToast]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
+
+      if (e.key === 'Escape') {
+        if (showShortcutsDialog) return setShowShortcutsDialog(false);
+        if (showCustomFormatForm) return handleCloseDialog();
+        if (showPrintDialog) return setShowPrintDialog(false);
+        if (isTyping) (e.target as HTMLElement).blur();
+        return;
+      }
+
+      if (isTyping) return;
+
+      // No other shortcuts if a dialog is open
+      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog) {
+        return;
+      }
+
+      switch (e.key) {
+        case '?':
+          setShowShortcutsDialog(true);
+          break;
+        case 'c':
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          isCameraOn ? stopCamera() : void startCamera();
+          break;
+        case ' ':
+          if (isCameraOn) {
+            e.preventDefault(); // Prevent page scroll
+            capturePhoto();
+          }
+          break;
+        case 'u':
+          if (!isCameraOn) fileInputRef.current?.click();
+          break;
+        case 'd':
+          if (capturedImage) downloadImage();
+          break;
+        case 'r':
+          if (capturedImage) retakePhoto();
+          break;
+        case 'w':
+          if (capturedImage) setWatermarkEnabled(p => !p);
+          break;
+        case 'p':
+          if (capturedImage) setShowPrintDialog(true);
+          break;
+        case 'f':
+          setShowCustomFormatForm(true);
+          break;
+        case 't':
+          // Simulate a click on the theme switcher button
+          document.querySelector<HTMLButtonElement>('button[title^="Switch to"]')?.click();
+          break;
+        case 'Enter':
+          toggleFullscreen();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, startCamera, stopCamera, capturePhoto, downloadImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+
+  useEffect(() => {
+    if (!baseImage) {
+      setCapturedImage(null);
+      setIsProcessingImage(false);
+      return;
+    }
+
+    setIsProcessingImage(true);
+    const img = new Image();
+    img.onload = () => {
+      if (!canvasRef.current) {
+        setIsProcessingImage(false);
+        return;
+      }
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      if (!context) {
+        setIsProcessingImage(false);
+        return;
+      }
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      if (watermarkEnabled) {
+        applyWatermark(context, img.width, img.height);
+      }
+
+      setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
+      setIsProcessingImage(false);
+    };
+    img.onerror = () => {
+      addToast('Failed to load image for processing.', 'error');
+      setIsProcessingImage(false);
+    };
+    img.src = baseImage;
+  }, [baseImage, watermarkEnabled, applyWatermark, addToast]);
+
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
+
+  // Handle video element setup when stream is available
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      console.log('Setting video source...');
+      videoRef.current.srcObject = stream;
+
+      const video = videoRef.current;
+
+      // Add multiple event listeners to ensure video starts
+      const handleLoadedMetadata = async () => {
+        console.log('Video metadata loaded');
+        try {
+          await video.play();
+          console.log('Video playing');
+          setIsCameraLoading(false);
+        } catch (playError: unknown) {
+          if (playError instanceof Error) {
+            addToast(`Could not start video playback: ${playError.message}`, 'error');
+          } else {
+            addToast('Could not start video playback.', 'error');
+          }
+        }
+      };
+
+      const handleCanPlay = () => {
+        console.log('Video can play');
+      };
+
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      video.addEventListener('canplay', handleCanPlay);
+
+      // Force play attempt
+      video.play().catch(() => {
+        addToast('Waiting for camera permissions...', 'info');
+      });
+
+      // Cleanup event listeners
+      return () => {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        video.removeEventListener('canplay', handleCanPlay);
+      };
+    }
+  }, [stream, addToast]);
+
+  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -520,18 +597,6 @@ function AppContent() {
 
     // Reset file input value to allow selecting the same file again
     e.target.value = '';
-  };
-
-  const downloadImage = () => {
-    if (!capturedImage) return;
-
-    const link = document.createElement('a');
-    const safeName = personName.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '');
-    const namePart = safeName ? `${safeName}-` : '';
-    link.download = `${namePart}passport-${selectedFormat.id}-${selectedFormat.widthPx}x${selectedFormat.heightPx}-${Date.now()}.jpg`;
-    link.href = capturedImage;
-    link.click();
-    addToast('Image downloaded!', 'success');
   };
 
   const openPrintPreview = () => {
@@ -691,17 +756,6 @@ function AppContent() {
     });
   };
 
-  const handleCancelEdit = () => {
-    setEditingFormat(null);
-    setNewFormat({
-      label: '',
-      widthPx: '',
-      heightPx: '',
-      printWidthMm: '',
-      printHeightMm: '',
-    });
-  };
-
   const handleUpdateCustomFormat = () => {
     if (!editingFormat) return;
 
@@ -791,14 +845,10 @@ function AppContent() {
     addToast('Custom format removed.', 'success');
   };
 
-  const retakePhoto = () => {
-    setBaseImage(null);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
+      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           <Guidelines />
@@ -866,6 +916,11 @@ function AppContent() {
         autoFit10x15={autoFit10x15}
         onAutoFitChange={setAutoFit10x15}
         selectedFormat={selectedFormat}
+      />
+
+      <ShortcutsDialog
+        isOpen={showShortcutsDialog}
+        onClose={() => setShowShortcutsDialog(false)}
       />
     </div>
   );
