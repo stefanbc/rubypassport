@@ -1,5 +1,5 @@
 import { Gem, Maximize, Minimize, XCircle, CheckCircle, Info, Keyboard } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, HTMLAttributes } from 'react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { Toast } from '../types';
 
@@ -8,6 +8,20 @@ type HeaderProps = {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   onOpenShortcutsDialog: () => void;
+};
+
+const ToastIcon = ({ type, ...props }: { type: Toast['type'] } & HTMLAttributes<HTMLDivElement>) => (
+  <div {...props}>
+    {type === 'error' && <XCircle size={20} />}
+    {type === 'success' && <CheckCircle size={20} />}
+    {type === 'info' && <Info size={20} />}
+  </div>
+);
+
+const toastColorClasses: Record<Toast['type'], string> = {
+  error: 'text-red-500 dark:text-red-400',
+  success: 'text-green-500 dark:text-green-400',
+  info: 'text-gray-700 dark:text-gray-200',
 };
 
 export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenShortcutsDialog }: HeaderProps) {
@@ -55,33 +69,28 @@ export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenSh
   }, [displayedToast]);
 
   return (
-    <div className="mb-3 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="h-8 w-8 rounded bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
+    <header className="mb-3 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="h-8 w-8 flex-shrink-0 rounded bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
           <Gem size={18} className="text-white" />
         </div>
         <div className="leading-tight select-none text-gray-800 dark:text-white">
-          <div className="font-semibold tracking-tight">RubyPassport</div>
-          <div className="text-[11px] text-red-600/80 dark:text-red-300/80">Passport Photo Generator</div>
+          <h1 className="font-semibold tracking-tight">RubyPassport</h1>
+          <p className="hidden sm:block text-[11px] text-red-600/80 dark:text-red-300/80">Passport Photo Generator</p>
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         {/* Toast Container */}
-        <div className="relative h-[24px] w-80 overflow-hidden pr-2 mr-2">
+        <div className="relative hidden h-[24px] w-80 overflow-hidden pr-2 mr-2 md:block">
           {displayedToast && (
             <div
               key={displayedToast.id}
               className={`absolute inset-0 flex items-center text-sm select-none transition-all duration-300 ease-in-out
                 ${isToastVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}
-                ${displayedToast.type === 'error' ? 'text-red-500 dark:text-red-600' : displayedToast.type === 'success' ? 'text-green-500 dark:text-green-600' : 'text-gray-700 dark:text-gray-200'
-                }`
+                ${toastColorClasses[displayedToast.type]}`
               }
             >
-              <div className="mr-3">
-                {displayedToast.type === 'error' && <XCircle size={20} />}
-                {displayedToast.type === 'success' && <CheckCircle size={20} />}
-                {displayedToast.type === 'info' && <Info size={20} />}
-              </div>
+              <ToastIcon type={displayedToast.type} className="mr-2 flex-shrink-0" />
               <span className="flex-1 truncate">{displayedToast.message}</span>
             </div>
           )}
@@ -102,6 +111,6 @@ export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenSh
           <Keyboard size={20} />
         </button>
       </div>
-    </div>
+    </header>
   );
 }

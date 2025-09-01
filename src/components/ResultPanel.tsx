@@ -44,18 +44,25 @@ export function ResultPanel({
         className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
         style={{ paddingTop: `${(heightPx / widthPx) * 100}%`, contain: 'strict' }}
       >
-        {isProcessingImage ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 dark:text-gray-300">
-            <Loader2 size={32} className="animate-spin mb-2 text-red-500" />
-            <p className="text-sm text-gray-500 dark:text-gray-400">Processing photo...</p>
-          </div>
-        ) : capturedImage ? (
+        {/* Render image if we have one, regardless of processing state */}
+        {capturedImage && (
           <img
             src={capturedImage}
             alt="Captured passport"
             className="absolute inset-0 w-full h-full object-contain"
           />
-        ) : (
+        )}
+
+        {/* Show loader if processing. It will overlay the image if it exists. */}
+        {isProcessingImage && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/70 dark:bg-zinc-900/70 backdrop-blur-sm transition-opacity duration-300">
+            <Loader2 size={32} className="animate-spin mb-2 text-red-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-300">Processing photo...</p>
+          </div>
+        )}
+
+        {/* Show placeholder only if there's no image and we're not processing */}
+        {!capturedImage && !isProcessingImage && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 dark:text-gray-300">
             <ImageIcon size={42} className="mx-auto mb-2 opacity-70" />
             <p className="select-none text-sm text-gray-500 dark:text-gray-400">Capture or upload a photo</p>
