@@ -33,12 +33,12 @@ export function CameraView({
   const eyeLineTopPct = 45; // Eye line ~45% from top
 
   return (
-    <div className="bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-800/50 ring-1 ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
+    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-red-400 select-none">Preview</h2>
+        <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 select-none">Preview</h2>
         <button
           onClick={onManageFormatsClick}
-          className="flex items-center gap-2 text-sm text-red-300/80 hover:text-red-300 transition-colors py-1 px-3 rounded bg-zinc-800 hover:bg-zinc-700 cursor-pointer"
+          className="flex items-center gap-2 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors py-1 px-3 rounded bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer"
           title="Change format or manage custom formats"
         >
           <SlidersHorizontal size={16} />
@@ -47,7 +47,7 @@ export function CameraView({
       </div>
 
       <div
-        className="relative bg-black rounded overflow-hidden mb-4 ring-1 ring-red-900/40"
+        className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
         style={{ paddingTop: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 100}%` }}
       >
         {isCameraOn ? (
@@ -104,17 +104,17 @@ export function CameraView({
             </div>
           </>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+          <div className="absolute inset-0 flex items-center justify-center text-gray-600 dark:text-gray-300">
             <div className="flex flex-col items-center">
               {isCameraLoading ? (
                 <>
                   <Loader2 size={32} className="animate-spin mb-2 text-red-500" />
-                  <p className="text-sm text-gray-400">Starting camera…</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Starting camera…</p>
                 </>
               ) : (
                 <>
                   <Camera size={42} className="mx-auto mb-2 opacity-70" />
-                  <p className="select-none text-sm text-gray-400">Camera not started</p>
+                  <p className="select-none text-sm text-gray-500 dark:text-gray-400">Camera not started</p>
                 </>
               )}
             </div>
@@ -135,7 +135,7 @@ export function CameraView({
             </button>
             <button
               onClick={onUploadClick}
-              className="flex-1 flex items-center justify-center gap-2 bg-zinc-700 text-white py-3 px-4 rounded hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
+              className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
               disabled={isCameraLoading}
             >
               <Computer size={20} />
@@ -153,7 +153,7 @@ export function CameraView({
             </button>
             <button
               onClick={onStopCamera}
-              className="px-4 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
+              className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
             >
               Stop
             </button>

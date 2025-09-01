@@ -7,6 +7,7 @@ import { CameraView } from './components/CameraView';
 import { ResultPanel } from './components/ResultPanel';
 import { PrintOptionsDialog } from './components/PrintOptionsDialog';
 import { Footer } from './components/Footer';
+import { ThemeProvider } from './contexts/ThemeProvider';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -15,6 +16,14 @@ declare class ImageCapture {
 }
 
 function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
+
+function AppContent() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [baseImage, setBaseImage] = useState<string | null>(null);
@@ -784,7 +793,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-black to-red-950 p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
       <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header toasts={toasts} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
 
