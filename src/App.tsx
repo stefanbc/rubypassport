@@ -33,7 +33,7 @@ function AppContent() {
   const imageCaptureRef = useRef<ImageCapture | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<(Toast & { duration: number })[]>([]);
   const [isProcessingImage, setIsProcessingImage] = useState<boolean>(false);
   const [customFormats, setCustomFormats] = useState<Format[]>([]);
   const [selectedFormatId, setSelectedFormatId] = useState<FormatId>('eu_35x45');
@@ -56,19 +56,22 @@ function AppContent() {
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId)!;
 
-  const removeToast = useCallback((id: number) => {
-    setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
-  }, []);
-
   const addToast = useCallback((message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
     const id = Date.now() + Math.random();
-    setToasts(prevToasts => [...prevToasts, { id, message, type }]);
-    if (duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, duration);
+    setToasts(prev => [...prev, { id, message, type, duration }]);
+  }, []);
+
+  // Effect to manage the toast queue, showing one at a time.
+  useEffect(() => {
+    if (toasts.length > 0) {
+      const timer = setTimeout(() => {
+        // Remove the shown toast from the front of the queue
+        setToasts(currentToasts => currentToasts.slice(1));
+      }, toasts[0].duration);
+
+      return () => clearTimeout(timer);
     }
-  }, [removeToast]);
+  }, [toasts]);
 
   const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
     context.save();
@@ -126,7 +129,7 @@ function AppContent() {
       console.error('Failed to load custom formats from localStorage', error);
       addToast('Could not load custom formats.', 'error');
     }
-  }, []);
+  }, [addToast]);
 
   useEffect(() => {
     try {
@@ -135,7 +138,7 @@ function AppContent() {
       console.error('Failed to save custom formats to localStorage', error);
       addToast('Could not save custom formats.', 'error');
     }
-  }, [customFormats]);
+  }, [customFormats, addToast]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -264,7 +267,7 @@ function AppContent() {
         video.removeEventListener('canplay', handleCanPlay);
       };
     }
-  }, [stream]);
+  }, [stream, addToast]);
 
   const startCamera = async () => {
     try {
@@ -795,7 +798,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
       <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header toasts={toasts} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
+        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           <Guidelines />
