@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { ShortcutsDialog } from './components/ShortcutsDialog';
 import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
+import { DownloadOptionsDialog } from './components/DownloadOptionsDialog';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -45,10 +46,12 @@ function AppContent() {
   const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
   const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
+  const [showDownloadDialog, setShowDownloadDialog] = useState(false);
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
+  const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
     widthPx: '',
@@ -113,6 +116,7 @@ function AppContent() {
 
   const retakePhoto = useCallback(() => {
     setBaseImage(null);
+    setHighResBlob(null);
   }, []);
 
   const stopCamera = useCallback(() => {
@@ -170,11 +174,13 @@ function AppContent() {
 
   const capturePhoto = useCallback(async () => {
     setIsProcessingImage(true);
+    setHighResBlob(null);
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
       try {
         addToast('Capturing high-resolution photo...', 'info', 2000);
         const blob = await imageCaptureRef.current.takePhoto();
+        setHighResBlob(blob);
         const imageUrl = URL.createObjectURL(blob);
 
         const img = new Image();
@@ -287,7 +293,7 @@ function AppContent() {
     addToast('Photo captured from video stream.', 'success');
   }, [addToast, selectedFormat]);
 
-  const downloadImage = useCallback(() => {
+  const downloadProcessedImage = useCallback(() => {
     if (!capturedImage) return;
 
     const link = document.createElement('a');
@@ -296,8 +302,22 @@ function AppContent() {
     link.download = `${namePart}passport-${selectedFormat.id}-${selectedFormat.widthPx}x${selectedFormat.heightPx}-${Date.now()}.jpg`;
     link.href = capturedImage;
     link.click();
-    addToast('Image downloaded!', 'success');
+    addToast('Processed image downloaded!', 'success');
   }, [capturedImage, personName, selectedFormat, addToast]);
+
+  const downloadHighResImage = useCallback(() => {
+    if (!highResBlob) return;
+
+    const link = document.createElement('a');
+    const safeName = personName.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '');
+    const namePart = safeName ? `${safeName}-` : '';
+    const extension = highResBlob.type.split('/')[1] || 'jpg';
+    link.download = `${namePart}passport-original-${Date.now()}.${extension}`;
+    link.href = URL.createObjectURL(highResBlob);
+    link.click();
+    URL.revokeObjectURL(link.href);
+    addToast('Original image downloaded!', 'success');
+  }, [highResBlob, personName, addToast]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -372,6 +392,7 @@ function AppContent() {
         if (showShortcutsDialog) return setShowShortcutsDialog(false);
         if (showCustomFormatForm) return handleCloseDialog();
         if (showPrintDialog) return setShowPrintDialog(false);
+        if (showDownloadDialog) return setShowDownloadDialog(false);
         if (isInfoDialogOpen) return setIsInfoDialogOpen(false);
         if (isTyping) (e.target as HTMLElement).blur();
         return;
@@ -380,7 +401,7 @@ function AppContent() {
       if (isTyping) return;
 
       // No other shortcuts if a dialog is open
-      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen) {
+      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog) {
         return;
       }
 
@@ -402,7 +423,7 @@ function AppContent() {
           if (!isCameraOn) fileInputRef.current?.click();
           break;
         case 'd':
-          if (capturedImage) downloadImage();
+          if (capturedImage) setShowDownloadDialog(true);
           break;
         case 'r':
           if (capturedImage) retakePhoto();
@@ -431,7 +452,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, startCamera, stopCamera, capturePhoto, downloadImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
 
   useEffect(() => {
     if (!baseImage) {
@@ -533,6 +554,7 @@ function AppContent() {
       return;
     }
 
+    setHighResBlob(file);
     setIsProcessingImage(true);
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -877,7 +899,7 @@ function AppContent() {
             onPersonNameChange={setPersonName}
             watermarkEnabled={watermarkEnabled}
             onWatermarkChange={setWatermarkEnabled}
-            onDownload={downloadImage}
+            onDownload={() => setShowDownloadDialog(true)}
             onRetake={retakePhoto}
             onOpenPrintDialog={() => setShowPrintDialog(true)}
           />
@@ -922,6 +944,14 @@ function AppContent() {
         autoFit10x15={autoFit10x15}
         onAutoFitChange={setAutoFit10x15}
         selectedFormat={selectedFormat}
+      />
+
+      <DownloadOptionsDialog
+        isOpen={showDownloadDialog}
+        onClose={() => setShowDownloadDialog(false)}
+        onDownloadProcessed={downloadProcessedImage}
+        onDownloadHighRes={downloadHighResImage}
+        hasHighRes={!!highResBlob}
       />
 
       <ShortcutsDialog
