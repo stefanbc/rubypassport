@@ -7,10 +7,11 @@ import { CameraView } from './components/CameraView';
 import { ResultPanel } from './components/ResultPanel';
 import { PrintOptionsDialog } from './components/PrintOptionsDialog';
 import { Footer } from './components/Footer';
+import { DownloadOptionsDialog } from './components/DownloadOptionsDialog';
 import { ShortcutsDialog } from './components/ShortcutsDialog';
 import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
-import { DownloadOptionsDialog } from './components/DownloadOptionsDialog';
+import { ToastContainer } from './components/ToastContainer';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -876,7 +877,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
       <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
+        <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           <Guidelines />
@@ -917,6 +918,8 @@ function AppContent() {
           onChange={handleFileSelect}
         />
       </div>
+
+      <ToastContainer activeToast={toasts[0] ?? null} />
 
       <FormatDialog
         isOpen={showCustomFormatForm}
