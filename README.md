@@ -2,7 +2,7 @@
 
 RubyPassport is a modern web app for capturing and generating compliant passport/ID photos directly in the browser.
 
-<img width="1920" height="934" alt="localhost_5173_" src="https://github.com/user-attachments/assets/26da9a93-dec3-441d-a469-e7a48624019d" />
+<img width="1920" height="1080" alt="rubypassport vercel app_" src="https://github.com/user-attachments/assets/9efe35ff-af28-4cc9-9406-5f26d1d1baa9" />
 
 ## Features
 
