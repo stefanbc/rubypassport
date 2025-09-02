@@ -1,3 +1,5 @@
+import { version } from '../../package.json';
+
 export function Footer() {
   return (
     <div className="mt-6 pt-4 border-t border-red-200/80 dark:border-red-900/20">
@@ -7,8 +9,8 @@ export function Footer() {
           Made with ❤️ by <a href="https://stefancosma.xyz" className="text-red-600/80 hover:text-red-500 dark:text-red-300/80 dark:hover:text-red-300" target="_blank" rel="noopener noreferrer">Stefan</a>
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 md:text-right">
-          {import.meta.env.VITE_GIT_COMMIT_HASH && (
-            <span className="mr-2">v{import.meta.env.VITE_GIT_COMMIT_HASH.substring(0, 7)}</span>
+          {version && (
+            <span className="mr-2">v{version}</span>
           )}
           <a href="https://github.com/stefanbc/rubypassport" className="text-red-600/80 hover:text-red-500 dark:text-red-300/80 dark:hover:text-red-300" target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="inline-block align-text-bottom mr-1" aria-hidden="true">
