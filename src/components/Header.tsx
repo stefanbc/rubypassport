@@ -8,6 +8,7 @@ type HeaderProps = {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   onOpenShortcutsDialog: () => void;
+  onOpenInfoDialog: () => void;
 };
 
 const ToastIcon = ({ type, ...props }: { type: Toast['type'] } & HTMLAttributes<HTMLDivElement>) => (
@@ -24,7 +25,7 @@ const toastColorClasses: Record<Toast['type'], string> = {
   info: 'text-gray-700 dark:text-gray-200',
 };
 
-export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenShortcutsDialog }: HeaderProps) {
+export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenShortcutsDialog, onOpenInfoDialog }: HeaderProps) {
   const [displayedToast, setDisplayedToast] = useState<Toast | null>(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
   const isAnimatingOut = useRef(false);
@@ -102,6 +103,13 @@ export function Header({ activeToast, isFullscreen, onToggleFullscreen, onOpenSh
           title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
         >
           {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+        </button>
+        <button
+          onClick={onOpenInfoDialog}
+          className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          title="Show info dialog (I)"
+        >
+          <Info size={20} />
         </button>
         <button
           onClick={onOpenShortcutsDialog}

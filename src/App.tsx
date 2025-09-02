@@ -8,6 +8,7 @@ import { ResultPanel } from './components/ResultPanel';
 import { PrintOptionsDialog } from './components/PrintOptionsDialog';
 import { Footer } from './components/Footer';
 import { ShortcutsDialog } from './components/ShortcutsDialog';
+import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
@@ -46,6 +47,7 @@ function AppContent() {
   const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
+  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
@@ -370,6 +372,7 @@ function AppContent() {
         if (showShortcutsDialog) return setShowShortcutsDialog(false);
         if (showCustomFormatForm) return handleCloseDialog();
         if (showPrintDialog) return setShowPrintDialog(false);
+        if (isInfoDialogOpen) return setIsInfoDialogOpen(false);
         if (isTyping) (e.target as HTMLElement).blur();
         return;
       }
@@ -377,7 +380,7 @@ function AppContent() {
       if (isTyping) return;
 
       // No other shortcuts if a dialog is open
-      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog) {
+      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen) {
         return;
       }
 
@@ -413,6 +416,9 @@ function AppContent() {
         case 'f':
           setShowCustomFormatForm(true);
           break;
+        case 'i':
+          setIsInfoDialogOpen(true);
+          break;
         case 't':
           // Simulate a click on the theme switcher button
           document.querySelector<HTMLButtonElement>('button[title^="Switch to"]')?.click();
@@ -425,7 +431,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, startCamera, stopCamera, capturePhoto, downloadImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, startCamera, stopCamera, capturePhoto, downloadImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
 
   useEffect(() => {
     if (!baseImage) {
@@ -847,8 +853,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} />
+      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+        <Header activeToast={toasts[0] ?? null} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           <Guidelines />
@@ -921,6 +927,11 @@ function AppContent() {
       <ShortcutsDialog
         isOpen={showShortcutsDialog}
         onClose={() => setShowShortcutsDialog(false)}
+      />
+
+      <InfoDialog
+        isOpen={isInfoDialogOpen}
+        onClose={() => setIsInfoDialogOpen(false)}
       />
     </div>
   );
