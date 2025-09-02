@@ -17,6 +17,7 @@ const shortcuts = [
   { key: 'F', description: 'Open format settings' },
   { key: 'T', description: 'Toggle theme' },
   { key: 'Enter', description: 'Toggle fullscreen' },
+  { key: 'I', description: 'Show info dialog' },
 ];
 
 export function ShortcutsDialog({ isOpen, onClose }: ShortcutsDialogProps) {
