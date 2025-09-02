@@ -6,14 +6,28 @@ RubyPassport is a modern web app for capturing and generating compliant passport
 
 ## Features
 
-- Camera capture with live alignment guides
-- Multiple formats (US 2x2, EU/UK 35×45, Romania 35×45, Canada 50×70, China 33×48, and more)
-- Result preview that adapts to the selected format
-- Print Preview with exact physical sizing (inches) and multi-photo tiling
-- Auto-fit to 10×15 cm photo paper (optional)
-- Download with dynamic filenames and optional person name
-- Optional official-style watermark (RUBYPASSPORT), toggleable
-- Dark, ruby-accented UI with modern typography
+### Photo Creation & Handling
+- **Live Camera Capture**: Use your device's camera with real-time, format-adaptive alignment guides.
+- **High-Resolution Photos**: Utilizes the `ImageCapture` API (where available) for higher quality photos than a standard video frame snapshot.
+- **Upload Existing Image**: Process any image file from your device.
+- **Client-Side Processing**: All photo processing happens locally in your browser, ensuring your photos are never uploaded to a server.
+
+### Format Management
+- **Standard Formats**: Comes with a wide range of built-in formats (US, EU/UK, Canada, China, and more).
+- **Custom Formats**: Add, edit, and delete your own photo formats with precise pixel and physical print dimensions.
+- **Instant Previews**: The live camera view and result panel adapt instantly to the selected format.
+
+### Printing & Export
+- **Precise Print Preview**: Generate a print-ready page with multiple photos tiled to exact physical dimensions.
+- **Auto-Fit to 10x15cm**: Automatically arrange the maximum number of photos to fit on a standard 10x15 cm (4x6 inch) photo paper sheet.
+- **Download Image**: Save the final photo with a dynamic, descriptive filename.
+- **Personalization**: Optionally add a person's name to be used in filenames and print preview titles.
+
+### User Experience
+- **Modern UI**: A sleek, ruby-accented dark theme.
+- **Keyboard Shortcuts**: Comprehensive shortcuts for nearly every action. Press `?` in the app to see them all.
+- **Fullscreen Mode**: Toggleable for an immersive, distraction-free experience.
+- **Optional Watermark**: Add or remove an official-style "RUBY PASSPORT" watermark with a single click.
 
 ## Getting Started
 
