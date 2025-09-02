@@ -1,4 +1,4 @@
-import { XCircle, Pencil, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { XCircle, Pencil, Trash2, ChevronDown } from 'lucide-react';
 import { Format } from '../types';
 import { useState, useEffect } from 'react';
 
@@ -114,11 +114,11 @@ export function FormatDialog({
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 select-none">{editingFormat ? 'Edit Format' : 'Add New Format'}</h3>
             {!editingFormat && (
               <span className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1 -mr-1">
-                {isAddFormVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                <ChevronDown size={20} className={`transition-transform duration-300 ${isAddFormVisible ? 'rotate-180' : ''}`} />
               </span>
             )}
           </div>
-          {isAddFormVisible && (
+          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isAddFormVisible ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
             <div className="space-y-3 mt-4 border-t border-red-200 dark:border-red-900/30 pt-4">
               <div className="flex items-center gap-3">
                 <label className="text-gray-600 dark:text-gray-300 text-sm w-32 select-none" htmlFor="modalNewFormatLabel">Label</label>
@@ -151,7 +151,7 @@ export function FormatDialog({
                 )}
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         {customFormatsList.length > 0 && (
