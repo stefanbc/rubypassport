@@ -72,7 +72,7 @@ export function FormatDialog({
       <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl p-8 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg relative" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
           aria-label="Close format settings dialog"
         >
           <XCircle size={24} />
@@ -141,11 +141,11 @@ export function FormatDialog({
                 <input id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm} onChange={e => onNewFormatChange({ ...newFormat, printHeightMm: e.target.value })} placeholder="e.g. 152.4" className="flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded-lg border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
               </div>
               <div className="flex gap-3 pt-2">
-                <button onClick={editingFormat ? handleUpdateAndCollapse : onAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-700 dark:bg-red-800 text-white py-2 px-4 rounded-lg hover:bg-red-600 dark:hover:bg-red-700 transition-colors cursor-pointer">
+                <button onClick={editingFormat ? handleUpdateAndCollapse : onAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-700 dark:bg-red-800 text-white py-2 px-4 rounded-lg hover:bg-red-600 dark:hover:bg-red-700 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
                   {editingFormat ? 'Update Format' : 'Add Format'}
                 </button>
                 {editingFormat && (
-                  <button onClick={handleCancelEditAndCollapse} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded-lg hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer">
+                  <button onClick={handleCancelEditAndCollapse} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded-lg hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
                     Cancel
                   </button>
                 )}
@@ -162,10 +162,10 @@ export function FormatDialog({
                 <li key={format.id} className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 bg-red-50/50 dark:bg-zinc-800/50 p-2 rounded-md hover:bg-red-100/50 dark:hover:bg-zinc-700/50 transition-colors">
                   <span>{format.label} ({format.widthPx}x{format.heightPx}px)</span>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors" title="Edit format">
+                    <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-red-50 dark:focus:ring-offset-zinc-800 focus:ring-blue-500" title="Edit format">
                       <Pencil size={16} />
                     </button>
-                    <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors" title="Delete format">
+                    <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-red-50 dark:focus:ring-offset-zinc-800 focus:ring-red-500" title="Delete format">
                       <Trash2 size={16} />
                     </button>
                   </div>
