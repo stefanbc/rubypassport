@@ -23,6 +23,10 @@ const faqs = [
     a: 'Absolutely. You can add, edit, and delete your own photo formats with precise pixel and physical print dimensions using the "Format Settings" (F) dialog.'
   },
   {
+    q: 'Can I use an existing photo instead of the camera?',
+    a: "Yes! You can upload an image from your computer by clicking the 'Upload' button or by dragging and dropping a file. If your image is larger than the selected format, you'll be able to drag it to reposition it for the perfect crop before it's processed."
+  },
+  {
     q: 'What are the alignment guides for?',
     a: 'The live guides on the camera view help you align your face correctly according to the selected format\'s requirements, ensuring your photo is compliant.'
   },

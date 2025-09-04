@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, ChangeEvent } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Toast, Format, PhotoCount, FormatId, FORMATS } from './types';
 import { FormatDialog, NewFormatState } from './components/FormatDialog';
 import { Header } from './components/Header';
@@ -12,6 +12,7 @@ import { ShortcutsDialog } from './components/ShortcutsDialog';
 import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
+import { UploadDialog } from './components/UploadDialog';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -33,7 +34,6 @@ function AppContent() {
   const [baseImage, setBaseImage] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const imageCaptureRef = useRef<ImageCapture | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -51,6 +51,7 @@ function AppContent() {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
@@ -390,11 +391,12 @@ function AppContent() {
       const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
 
       if (e.key === 'Escape') {
-        if (showShortcutsDialog) return setShowShortcutsDialog(false);
-        if (showCustomFormatForm) return handleCloseDialog();
-        if (showPrintDialog) return setShowPrintDialog(false);
-        if (showDownloadDialog) return setShowDownloadDialog(false);
-        if (isInfoDialogOpen) return setIsInfoDialogOpen(false);
+        if (showShortcutsDialog) { setShowShortcutsDialog(false); return; }
+        if (showCustomFormatForm) { handleCloseDialog(); return; }
+        if (showPrintDialog) { setShowPrintDialog(false); return; }
+        if (showUploadDialog) { setShowUploadDialog(false); return; }
+        if (showDownloadDialog) { setShowDownloadDialog(false); return; }
+        if (isInfoDialogOpen) { setIsInfoDialogOpen(false); return; }
         if (isTyping) (e.target as HTMLElement).blur();
         return;
       }
@@ -402,7 +404,7 @@ function AppContent() {
       if (isTyping) return;
 
       // No other shortcuts if a dialog is open
-      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog) {
+      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog || showUploadDialog) {
         return;
       }
 
@@ -421,7 +423,7 @@ function AppContent() {
           }
           break;
         case 'u':
-          if (!isCameraOn) fileInputRef.current?.click();
+          if (!isCameraOn) setShowUploadDialog(true);
           break;
         case 'd':
           if (capturedImage) setShowDownloadDialog(true);
@@ -453,7 +455,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, showUploadDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
 
   useEffect(() => {
     if (!baseImage) {
@@ -546,87 +548,12 @@ function AppContent() {
     }
   }, [stream, addToast]);
 
-  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      addToast('Please select a valid image file.', 'error');
-      return;
-    }
-
-    setHighResBlob(file);
-    setIsProcessingImage(true);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result;
-      if (typeof result !== 'string') {
-        addToast('Failed to read image data.', 'error');
-        setIsProcessingImage(false);
-        return;
-      }
-      const img = new Image();
-      img.onload = () => {
-        if (!canvasRef.current) {
-          setIsProcessingImage(false);
-          return;
-        }
-
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-        if (!context) {
-          setIsProcessingImage(false);
-          return;
-        }
-
-        const targetWidth = selectedFormat.widthPx;
-        const targetHeight = selectedFormat.heightPx;
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        const imageAspectRatio = img.width / img.height;
-        const canvasAspectRatio = targetWidth / targetHeight;
-
-        let sourceX = 0;
-        let sourceY = 0;
-        let sourceWidth = img.width;
-        let sourceHeight = img.height;
-
-        if (imageAspectRatio > canvasAspectRatio) {
-          sourceHeight = img.height;
-          sourceWidth = sourceHeight * canvasAspectRatio;
-          sourceX = (img.width - sourceWidth) / 2;
-        } else {
-          sourceWidth = img.width;
-          sourceHeight = sourceWidth / canvasAspectRatio;
-          sourceY = (img.height - sourceHeight) / 2;
-        }
-
-        context.drawImage(
-          img,
-          sourceX, sourceY, sourceWidth, sourceHeight,
-          0, 0, targetWidth, targetHeight
-        );
-
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-        setBaseImage(imageDataUrl);
-        addToast('Image uploaded successfully!', 'success');
-      };
-      img.onerror = () => {
-        addToast('Failed to load the selected image.', 'error');
-        setIsProcessingImage(false);
-      };
-      img.src = result;
-    };
-    reader.onerror = () => {
-      addToast('Failed to read the selected file.', 'error');
-      setIsProcessingImage(false);
-    };
-    reader.readAsDataURL(file);
-
-    // Reset file input value to allow selecting the same file again
-    e.target.value = '';
-  };
+  const handleImageCropped = useCallback((originalFile: File, croppedDataUrl: string) => {
+    setHighResBlob(originalFile);
+    setBaseImage(croppedDataUrl);
+    setShowUploadDialog(false);
+    addToast('Image uploaded and cropped successfully!', 'success');
+  }, [addToast]);
 
   const openPrintPreview = () => {
     if (!capturedImage) return;
@@ -876,7 +803,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showUploadDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
@@ -889,7 +816,7 @@ function AppContent() {
             onStartCamera={startCamera}
             onStopCamera={stopCamera}
             onCapturePhoto={capturePhoto}
-            onUploadClick={() => fileInputRef.current?.click()}
+            onUploadClick={() => setShowUploadDialog(true)}
             onManageFormatsClick={() => setShowCustomFormatForm(true)}
           />
           <ResultPanel
@@ -910,13 +837,6 @@ function AppContent() {
 
         {/* Hidden canvas for photo processing */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-          accept="image/*"
-          onChange={handleFileSelect}
-        />
       </div>
 
       <ToastContainer activeToast={toasts[0] ?? null} />
@@ -936,6 +856,14 @@ function AppContent() {
         onDelete={handleDeleteCustomFormat}
         onEditClick={handleEditClick}
         onCancelEdit={handleCancelEdit}
+      />
+
+      <UploadDialog
+        isOpen={showUploadDialog}
+        onClose={() => setShowUploadDialog(false)}
+        onImageCropped={handleImageCropped}
+        selectedFormat={selectedFormat}
+        addToast={addToast}
       />
 
       <PrintOptionsDialog
