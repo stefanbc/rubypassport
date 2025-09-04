@@ -1,5 +1,5 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent } from 'react';
-import { XCircle, Check, RotateCcw, UploadCloud } from 'lucide-react';
+import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
 import { Format } from '../types';
 
 interface ImportDialogProps {
@@ -18,6 +18,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0, imgX: 0, imgY: 0 });
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
@@ -37,6 +38,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     setImageSrc(null);
     setOriginalFile(null);
     setPosition({ x: 0, y: 0 });
+    setZoom(1);
     dragCounter.current = 0;
     setIsDragging(false);
     panStartedOnCropper.current = false;
@@ -46,10 +48,11 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
   }, []);
 
   useEffect(() => {
+    // Reset the state when the dialog is closed, so it's fresh for the next import.
     if (!isOpen) {
       setTimeout(() => {
         handleReset();
-      }, 300); // Allow closing animation to finish
+      }, 300); // Allow closing animation to finish before resetting state
     }
   }, [isOpen, handleReset]);
 
@@ -102,6 +105,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
 
   const handleImageLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
+    setZoom(1);
     setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
 
     if (cropContainerRef.current) {
@@ -126,6 +130,26 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     const imageAspectRatio = imageDimensions.width / imageDimensions.height;
     const cropAspectRatio = selectedFormat.widthPx / selectedFormat.heightPx;
     return imageAspectRatio > cropAspectRatio ? { height: '100%', width: 'auto' } : { width: '100%', height: 'auto' };
+  };
+
+  const handleZoomChange = (newZoom: number) => {
+    if (!cropContainerRef.current || !imageRef.current) return;
+
+    const { clientWidth: cropW, clientHeight: cropH } = cropContainerRef.current;
+    const { clientWidth: imgW, clientHeight: imgH } = imageRef.current;
+
+    const oldZoom = zoom;
+
+    // Calculate the new position to keep the center of the crop area focused
+    const newPosX = cropW / 2 - (cropW / 2 - position.x) * (newZoom / oldZoom);
+    const newPosY = cropH / 2 - (cropH / 2 - position.y) * (newZoom / oldZoom);
+
+    // Clamp the new position within the new boundaries
+    const clampedX = Math.max(cropW - imgW * newZoom, Math.min(0, newPosX));
+    const clampedY = Math.max(cropH - imgH * newZoom, Math.min(0, newPosY));
+
+    setPosition({ x: clampedX, y: clampedY });
+    setZoom(newZoom);
   };
 
   const handlePanStart = (e: ReactMouseEvent<HTMLElement> | ReactTouchEvent<HTMLElement>) => {
@@ -164,8 +188,8 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
       const newY = panStart.imgY + dy;
 
       setPosition({
-        x: Math.max(cropW - imgW, Math.min(0, newX)),
-        y: Math.max(cropH - imgH, Math.min(0, newY)),
+        x: Math.max(cropW - (imgW * zoom), Math.min(0, newX)),
+        y: Math.max(cropH - (imgH * zoom), Math.min(0, newY)),
       });
     };
 
@@ -205,11 +229,22 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
       addToast('Could not process image.', 'error');
       return;
     }
+    // The scale of the un-zoomed image element relative to its natural size.
+    // This is consistent for both width and height because aspect ratio is maintained.
     const displayScale = img.clientWidth / img.naturalWidth;
-    const sx = -position.x / displayScale;
-    const sy = -position.y / displayScale;
-    const sWidth = cropContainer.clientWidth / displayScale;
-    const sHeight = cropContainer.clientHeight / displayScale;
+
+    // The total scale from the natural image size to the final zoomed-and-displayed size.
+    const totalScale = displayScale * zoom;
+
+    // The visual top-left corner of the image element accounts for both translation and scaling from the center.
+    const visualX = position.x + (img.clientWidth / 2) * (1 - zoom);
+    const visualY = position.y + (img.clientHeight / 2) * (1 - zoom);
+
+    // Map the crop area back to the natural image's coordinates for `drawImage`.
+    const sx = -visualX / totalScale;
+    const sy = -visualY / totalScale;
+    const sWidth = cropContainer.clientWidth / totalScale;
+    const sHeight = cropContainer.clientHeight / totalScale;
     ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
     const croppedDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     onImageCropped(originalFile, croppedDataUrl);
@@ -237,9 +272,9 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
                 ref={imageRef}
                 src={imageSrc}
                 alt="Import preview"
-                className="absolute select-none max-w-none"
+                className={`absolute select-none max-w-none ${!isPanning ? 'transition-transform duration-200 ease-out' : ''}`}
                 style={{
-                  transform: `translate(${position.x}px, ${position.y}px)`,
+                  transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
                   ...getImageStyle(),
                   touchAction: 'none',
                 }}
@@ -288,6 +323,19 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
                   </p>
                 </div>
               </div>
+            </div>
+            <div className="flex items-center gap-3 mt-4">
+              <ZoomOut size={20} className="text-gray-500 dark:text-gray-400" />
+              <input
+                type="range"
+                min="1"
+                max="3"
+                step="0.05"
+                value={zoom}
+                onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-zinc-700 accent-red-600"
+              />
+              <ZoomIn size={20} className="text-gray-500 dark:text-gray-400" />
             </div>
             <div className="flex gap-3 mt-4">
               <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">

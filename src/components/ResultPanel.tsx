@@ -1,4 +1,5 @@
 import { Image as ImageIcon, Download, Trash2, Printer, Copyright, Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { Format } from '../types';
 
 type ResultPanelProps = {
@@ -27,6 +28,24 @@ export function ResultPanel({
   onOpenPrintDialog,
 }: ResultPanelProps) {
   const { widthPx, heightPx, label } = selectedFormat;
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Prevent the page from unloading immediately.
+      event.preventDefault();
+      // Note: Most modern browsers show a generic message and ignore this custom one for security reasons.
+      event.returnValue = 'Are you sure you want to leave? Your generated photo will be lost.';
+    };
+
+    if (capturedImage) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
+
+    // Cleanup the event listener when the component unmounts or the image is cleared.
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [capturedImage]);
 
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">

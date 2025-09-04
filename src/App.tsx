@@ -408,6 +408,12 @@ function AppContent() {
         return;
       }
 
+      // Ignore single-key shortcuts if modifier keys are pressed.
+      // This prevents conflicts with browser shortcuts like Cmd+R (reload).
+      if (e.metaKey || e.ctrlKey || e.altKey) {
+        return;
+      }
+
       switch (e.key) {
         case '?':
           setShowShortcutsDialog(true);
