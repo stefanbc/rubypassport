@@ -33,7 +33,7 @@ export function ResultPanel({
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 select-none">Result</h2>
         {capturedImage && !isProcessingImage && (
-          <button onClick={onRetake} className="flex items-center gap-2 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors py-1 px-3 rounded bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer">
+          <button onClick={onRetake} className="flex items-center gap-2 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 py-1 px-3 rounded bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer">
             <Trash2 size={16} />
             Retake
           </button>
@@ -75,7 +75,7 @@ export function ResultPanel({
           <div className="absolute top-2 right-2">
             <button
               onClick={() => onWatermarkChange(!watermarkEnabled)}
-              className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded transition-colors cursor-pointer ${
+              className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer ${
                 watermarkEnabled
                   ? 'bg-red-600/80 text-white hover:bg-red-700'
                   : 'bg-gray-500/50 text-white hover:bg-gray-600/70 dark:bg-black/50 dark:text-gray-300 dark:hover:bg-black/70 dark:hover:text-white'

@@ -74,10 +74,10 @@ export function PrintOptionsDialog({
                 </div>
 
                 <div className="flex gap-3 pt-8">
-                    <button onClick={onClose} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer">
+                    <button onClick={onClose} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer">
                         Cancel
                     </button>
-                    <button onClick={handlePrint} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer">
+                    <button onClick={handlePrint} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer">
                         <Printer size={18} />
                         Print Now
                     </button>
