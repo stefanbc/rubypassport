@@ -1,5 +1,5 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent } from 'react';
-import { XCircle, Check, RotateCcw, Move, UploadCloud } from 'lucide-react';
+import { XCircle, Check, RotateCcw, UploadCloud } from 'lucide-react';
 import { Format } from '../types';
 
 interface ImportDialogProps {
@@ -21,11 +21,17 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0, imgX: 0, imgY: 0 });
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
-  const [showRepositionGuide, setShowRepositionGuide] = useState(false);
   const panStartedOnCropper = useRef(false);
 
   const imageRef = useRef<HTMLImageElement>(null);
   const cropContainerRef = useRef<HTMLDivElement>(null);
+
+  // Guide constants from CameraView
+  const guideOvalWidthPct = 42;
+  const guideOvalHeightPct = 64;
+  const innerOvalWidthPct = Math.round(guideOvalWidthPct * 0.72);
+  const innerOvalHeightPct = Math.round(guideOvalHeightPct * 0.80);
+  const eyeLineTopPct = 45;
 
   const handleReset = useCallback(() => {
     setImageSrc(null);
@@ -34,7 +40,6 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     dragCounter.current = 0;
     setIsDragging(false);
     panStartedOnCropper.current = false;
-    setShowRepositionGuide(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -56,7 +61,6 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     }
 
     setOriginalFile(file);
-    setShowRepositionGuide(true);
     const reader = new FileReader();
     reader.onload = (e) => {
       setImageSrc(e.target?.result as string);
@@ -129,7 +133,6 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     e.stopPropagation();
     panStartedOnCropper.current = true;
     setIsPanning(true);
-    setShowRepositionGuide(false);
     const { clientX, clientY } = 'touches' in e ? e.touches[0] : e;
     setPanStart({ x: clientX, y: clientY, imgX: position.x, imgY: position.y });
   };
@@ -229,7 +232,6 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
 
         {imageSrc ? (
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Drag the image to position it correctly within the frame.</p>
             <div ref={cropContainerRef} className="relative bg-gray-200 dark:bg-black rounded-md overflow-hidden cursor-grab active:cursor-grabbing" style={{ aspectRatio: `${selectedFormat.widthPx} / ${selectedFormat.heightPx}` }}>
               <img
                 ref={imageRef}
@@ -246,14 +248,46 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
                 onTouchStart={handlePanStart}
                 draggable="false"
               />
-              {showRepositionGuide && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none transition-opacity duration-300">
-                  <div className="flex flex-col items-center text-white animate-pulse drop-shadow-lg">
-                    <Move size={48} />
-                    <p className="text-sm font-semibold mt-2">Drag to Reposition</p>
-                  </div>
+              {/* Guide overlay (from CameraView, with pointer-events-none for dragging) */}
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Face bounding oval */}
+                <div
+                  className="absolute border-2 border-white border-dashed rounded-full opacity-70"
+                  style={{
+                    width: `${guideOvalWidthPct}%`,
+                    height: `${guideOvalHeightPct}%`,
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+                {/* Head positioning inner oval */}
+                <div
+                  className="absolute border border-white border-dashed rounded-full opacity-50"
+                  style={{
+                    width: `${innerOvalWidthPct}%`,
+                    height: `${innerOvalHeightPct}%`,
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+                {/* Eye level guide */}
+                <div className="absolute left-[4%] right-[4%] h-0.5 bg-white opacity-40" style={{ top: `${eyeLineTopPct}%` }} />
+                {/* Center line */}
+                <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white opacity-30 transform -translate-x-0.5" />
+                {/* Corner guides for framing */}
+                <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-white opacity-60"></div>
+                <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-white opacity-60"></div>
+                <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
+                <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
+                    Align face with the oval guide<br />
+                    Drag to reposition
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
             <div className="flex gap-3 mt-4">
               <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer">
