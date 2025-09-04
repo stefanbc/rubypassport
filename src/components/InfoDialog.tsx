@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: 'Can I use an existing photo instead of the camera?',
-    a: "Yes! You can upload an image from your computer by clicking the 'Upload' button or by dragging and dropping a file. If your image is larger than the selected format, you'll be able to drag it to reposition it for the perfect crop before it's processed."
+    a: "Yes! You can import an image from your computer by clicking the 'Import' button or by dragging and dropping a file. If your image is larger than the selected format, you'll be able to drag it to reposition it for the perfect crop before it's processed."
   },
   {
     q: 'What are the alignment guides for?',

@@ -9,7 +9,7 @@ RubyPassport is a modern web app for capturing and generating compliant passport
 ### Photo Creation & Handling
 - **Live Camera Capture**: Use your device's camera with real-time, format-adaptive alignment guides.
 - **High-Resolution Photos**: Utilizes the `ImageCapture` API (where available) for higher quality photos than a standard video frame snapshot.
-- **Upload Existing Image**: Process any image file from your device.
+- **Import Existing Image**: Process any image file from your device.
 - **Client-Side Processing**: All photo processing happens locally in your browser, ensuring your photos are never uploaded to a server.
 
 ### Format Management

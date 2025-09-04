@@ -1,8 +1,8 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent } from 'react';
-import { XCircle, UploadCloud, Check, RotateCcw, Move } from 'lucide-react';
+import { XCircle, Check, RotateCcw, Move, UploadCloud } from 'lucide-react';
 import { Format } from '../types';
 
-interface UploadDialogProps {
+interface ImportDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onImageCropped: (originalFile: File, croppedDataUrl: string) => void;
@@ -10,7 +10,7 @@ interface UploadDialogProps {
   addToast: (message: string, type: 'error' | 'info' | 'success', duration?: number) => void;
 }
 
-export function UploadDialog({ isOpen, onClose, onImageCropped, selectedFormat, addToast }: UploadDialogProps) {
+export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, addToast }: ImportDialogProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -223,7 +223,7 @@ export function UploadDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer" aria-label="Close dialog">
           <XCircle size={24} />
         </button>
-        <h2 className="text-2xl font-semibold text-red-600 dark:text-red-400 mb-4 select-none">{imageSrc ? 'Reposition Image' : 'Upload Image'}</h2>
+        <h2 className="text-2xl font-semibold text-red-600 dark:text-red-400 mb-4 select-none">{imageSrc ? 'Reposition Image' : 'Import Image'}</h2>
 
         <input type="file" ref={fileInputRef} onChange={handleFileSelected} accept="image/*" className="hidden" />
 
@@ -234,7 +234,7 @@ export function UploadDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
               <img
                 ref={imageRef}
                 src={imageSrc}
-                alt="Upload preview"
+                alt="Import preview"
                 className="absolute select-none max-w-none"
                 style={{
                   transform: `translate(${position.x}px, ${position.y}px)`,

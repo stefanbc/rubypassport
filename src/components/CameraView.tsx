@@ -10,7 +10,7 @@ type CameraViewProps = {
   onStartCamera: () => void;
   onStopCamera: () => void;
   onCapturePhoto: () => void;
-  onUploadClick: () => void;
+  onImportClick: () => void;
   onManageFormatsClick: () => void;
 };
 
@@ -22,7 +22,7 @@ export function CameraView({
   onStartCamera,
   onStopCamera,
   onCapturePhoto,
-  onUploadClick,
+  onImportClick,
   onManageFormatsClick,
 }: CameraViewProps) {
   // Human-proportional guide sizing (kept stable across formats)
@@ -134,12 +134,12 @@ export function CameraView({
               {isCameraLoading ? 'Starting…' : 'Start Camera'}
             </button>
             <button
-              onClick={onUploadClick}
+              onClick={onImportClick}
               className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base"
               disabled={isCameraLoading}
             >
               <Computer size={20} />
-              Upload Image
+              Import Image
             </button>
           </>
         ) : (

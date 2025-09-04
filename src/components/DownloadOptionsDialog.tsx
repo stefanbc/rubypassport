@@ -59,7 +59,7 @@ export function DownloadOptionsDialog({
           </button>
           {!hasHighRes && (
             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-              A high-resolution original is only available for photos taken with the high-res camera option or from an uploaded file.
+              A high-resolution original is only available for photos taken with the high-res camera option or from an imported file.
             </p>
           )}
         </div>

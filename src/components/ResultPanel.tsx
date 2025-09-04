@@ -65,7 +65,7 @@ export function ResultPanel({
         {!capturedImage && !isProcessingImage && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 dark:text-gray-300">
             <ImageIcon size={42} className="mx-auto mb-2 opacity-70" />
-            <p className="select-none text-sm text-gray-500 dark:text-gray-400">Capture or upload a photo</p>
+            <p className="select-none text-sm text-gray-500 dark:text-gray-400">Capture or import a photo</p>
           </div>
         )}
         <div className="absolute bottom-2 left-2 bg-black/40 text-white text-xs px-2 py-1 rounded select-none">

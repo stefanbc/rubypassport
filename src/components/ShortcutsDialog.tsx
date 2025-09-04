@@ -9,7 +9,7 @@ const shortcuts = [
   { key: '?', description: 'Show this help dialog' },
   { key: 'C', description: 'Start / Stop camera' },
   { key: 'Space', description: 'Capture photo' },
-  { key: 'U', description: 'Upload image' },
+  { key: 'U', description: 'Import image' },
   { key: 'D', description: 'Download result' },
   { key: 'R', description: 'Retake photo' },
   { key: 'W', description: 'Toggle watermark' },

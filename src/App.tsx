@@ -12,7 +12,7 @@ import { ShortcutsDialog } from './components/ShortcutsDialog';
 import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
-import { UploadDialog } from './components/UploadDialog';
+import { ImportDialog } from './components/ImportDialog';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -51,7 +51,7 @@ function AppContent() {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
@@ -394,7 +394,7 @@ function AppContent() {
         if (showShortcutsDialog) { setShowShortcutsDialog(false); return; }
         if (showCustomFormatForm) { handleCloseDialog(); return; }
         if (showPrintDialog) { setShowPrintDialog(false); return; }
-        if (showUploadDialog) { setShowUploadDialog(false); return; }
+        if (showImportDialog) { setShowImportDialog(false); return; }
         if (showDownloadDialog) { setShowDownloadDialog(false); return; }
         if (isInfoDialogOpen) { setIsInfoDialogOpen(false); return; }
         if (isTyping) (e.target as HTMLElement).blur();
@@ -404,7 +404,7 @@ function AppContent() {
       if (isTyping) return;
 
       // No other shortcuts if a dialog is open
-      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog || showUploadDialog) {
+      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog || showImportDialog) {
         return;
       }
 
@@ -423,7 +423,7 @@ function AppContent() {
           }
           break;
         case 'u':
-          if (!isCameraOn) setShowUploadDialog(true);
+          if (!isCameraOn) setShowImportDialog(true);
           break;
         case 'd':
           if (capturedImage) setShowDownloadDialog(true);
@@ -455,7 +455,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, showUploadDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, showImportDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
 
   useEffect(() => {
     if (!baseImage) {
@@ -551,8 +551,8 @@ function AppContent() {
   const handleImageCropped = useCallback((originalFile: File, croppedDataUrl: string) => {
     setHighResBlob(originalFile);
     setBaseImage(croppedDataUrl);
-    setShowUploadDialog(false);
-    addToast('Image uploaded and cropped successfully!', 'success');
+    setShowImportDialog(false);
+    addToast('Image imported and cropped successfully!', 'success');
   }, [addToast]);
 
   const openPrintPreview = () => {
@@ -803,7 +803,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showUploadDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
 
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
@@ -816,7 +816,7 @@ function AppContent() {
             onStartCamera={startCamera}
             onStopCamera={stopCamera}
             onCapturePhoto={capturePhoto}
-            onUploadClick={() => setShowUploadDialog(true)}
+            onImportClick={() => setShowImportDialog(true)}
             onManageFormatsClick={() => setShowCustomFormatForm(true)}
           />
           <ResultPanel
@@ -858,9 +858,9 @@ function AppContent() {
         onCancelEdit={handleCancelEdit}
       />
 
-      <UploadDialog
-        isOpen={showUploadDialog}
-        onClose={() => setShowUploadDialog(false)}
+      <ImportDialog
+        isOpen={showImportDialog}
+        onClose={() => setShowImportDialog(false)}
         onImageCropped={handleImageCropped}
         selectedFormat={selectedFormat}
         addToast={addToast}
