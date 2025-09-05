@@ -1,4 +1,4 @@
-import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent } from 'react';
+import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent, WheelEvent as ReactWheelEvent } from 'react';
 import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
 import { Format } from '../types';
 
@@ -140,9 +140,14 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
 
     const oldZoom = zoom;
 
-    // Calculate the new position to keep the center of the crop area focused
-    const newPosX = cropW / 2 - (cropW / 2 - position.x) * (newZoom / oldZoom);
-    const newPosY = cropH / 2 - (cropH / 2 - position.y) * (newZoom / oldZoom);
+    // The center of the crop view in its own coordinates
+    const cropCenterX = cropW / 2;
+    const cropCenterY = cropH / 2;
+
+    // The new position of the image's top-left corner.
+    // We want the point at the center of the crop view to stay there.
+    const newPosX = (cropCenterX - imgW / 2) * (1 - newZoom / oldZoom) + position.x * (newZoom / oldZoom);
+    const newPosY = (cropCenterY - imgH / 2) * (1 - newZoom / oldZoom) + position.y * (newZoom / oldZoom);
 
     // Clamp the new position within the new boundaries
     const clampedX = Math.max(cropW - imgW * newZoom, Math.min(0, newPosX));
@@ -150,6 +155,12 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
 
     setPosition({ x: clampedX, y: clampedY });
     setZoom(newZoom);
+  };
+
+  const handleWheel = (e: ReactWheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const newZoom = Math.max(1, Math.min(3, zoom - e.deltaY * 0.005));
+    if (newZoom !== zoom) handleZoomChange(newZoom);
   };
 
   const handlePanStart = (e: ReactMouseEvent<HTMLElement> | ReactTouchEvent<HTMLElement>) => {
@@ -267,7 +278,12 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
 
         {imageSrc ? (
           <div>
-            <div ref={cropContainerRef} className="relative bg-gray-200 dark:bg-black rounded-md overflow-hidden cursor-grab active:cursor-grabbing" style={{ aspectRatio: `${selectedFormat.widthPx} / ${selectedFormat.heightPx}` }}>
+            <div
+              ref={cropContainerRef}
+              className="relative bg-gray-200 dark:bg-black rounded-md overflow-hidden cursor-grab active:cursor-grabbing"
+              style={{ aspectRatio: `${selectedFormat.widthPx} / ${selectedFormat.heightPx}` }}
+              onWheel={handleWheel}
+            >
               <img
                 ref={imageRef}
                 src={imageSrc}
@@ -325,7 +341,11 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
               </div>
             </div>
             <div className="flex items-center gap-3 mt-4">
-              <ZoomOut size={20} className="text-gray-500 dark:text-gray-400" />
+              <ZoomOut
+                size={20}
+                className="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200"
+                onClick={() => handleZoomChange(Math.max(1, zoom - 0.1))}
+              />
               <input
                 type="range"
                 min="1"
@@ -335,7 +355,11 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
                 onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-zinc-700 accent-red-600"
               />
-              <ZoomIn size={20} className="text-gray-500 dark:text-gray-400" />
+              <ZoomIn
+                size={20}
+                className="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200"
+                onClick={() => handleZoomChange(Math.min(3, zoom + 0.1))}
+              />
             </div>
             <div className="flex gap-3 mt-4">
               <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
