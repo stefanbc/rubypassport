@@ -857,12 +857,12 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto w-full ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 md:p-4 md:flex md:items-center md:justify-center transition-colors duration-300">
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-2 md:p-0 ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} isMobile={isMobile} isPWA={isPWA} />
 
         {isMobile ? (
-          <div className="w-full">
+          <div className="w-full flex-grow flex flex-col pb-2">
             {/* Step Indicator */}
             <div className="flex justify-center items-center gap-2 mb-4">
               {['Guidelines', 'Camera', 'Result'].map((label, index) => (
@@ -876,13 +876,13 @@ function AppContent() {
             </div>
 
             {/* Wizard Content */}
-            <div className="relative w-full overflow-hidden" style={{ minHeight: '70vh' }}>
+            <div className="relative w-full overflow-hidden flex-grow">
               <div
                 className="flex w-[300%] h-full transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${wizardStepIndex * (100 / 3)}%)` }}
               >
                 {/* Guidelines Step */}
-                <div className="w-1/3 px-1 flex flex-col">
+                <div className="w-1/3 px-1 flex flex-col h-full">
                   <div className="flex-grow overflow-y-auto">
                     <Guidelines isMobile={isMobile} />
                   </div>
@@ -895,12 +895,12 @@ function AppContent() {
                 </div>
 
                 {/* Camera Step */}
-                <div className="w-1/3 px-1">
-                  <CameraView isCameraOn={isCameraOn} isCameraLoading={isCameraLoading} videoRef={videoRef} selectedFormat={selectedFormat} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setShowImportDialog(true)} onManageFormatsClick={() => setShowCustomFormatForm(true)} onBack={() => setWizardStep('guidelines')} isMobile={isMobile} onSwitchCamera={switchCamera} />
+                <div className="w-1/3 px-1 h-full">
+                  <CameraView isCameraOn={isCameraOn} isCameraLoading={isCameraLoading} videoRef={videoRef} selectedFormat={selectedFormat} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setShowImportDialog(true)} onManageFormatsClick={() => setShowCustomFormatForm(true)} onBack={() => setWizardStep('guidelines')} isMobile={isMobile} onSwitchCamera={switchCamera} facingMode={facingMode} />
                 </div>
 
                 {/* Result Step */}
-                <div className="w-1/3 px-1">
+                <div className="w-1/3 px-1 h-full">
                   <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} isMobile={isMobile} />
                 </div>
               </div>
@@ -908,7 +908,7 @@ function AppContent() {
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            <Guidelines />
+            <Guidelines isMobile={isMobile} />
             <CameraView
               isCameraOn={isCameraOn}
               isCameraLoading={isCameraLoading}
@@ -920,6 +920,7 @@ function AppContent() {
               onImportClick={() => setShowImportDialog(true)}
               onManageFormatsClick={() => setShowCustomFormatForm(true)}
               onSwitchCamera={switchCamera}
+              facingMode={facingMode}
             />
             <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} />
           </div>

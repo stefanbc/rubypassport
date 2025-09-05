@@ -13,6 +13,7 @@ type CameraViewProps = {
   onImportClick: () => void;
   onManageFormatsClick: () => void;
   onSwitchCamera: () => void;
+  facingMode: 'user' | 'environment';
   onBack?: () => void;
   isMobile?: boolean;
 };
@@ -28,6 +29,7 @@ export function CameraView({
   onImportClick,
   onManageFormatsClick,
   onSwitchCamera,
+  facingMode,
   onBack,
   isMobile,
 }: CameraViewProps) {
@@ -67,7 +69,7 @@ export function CameraView({
               autoPlay
               playsInline
               muted
-              className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
+              className={`absolute inset-0 w-full h-full object-cover ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
             />
             <button
               onClick={onSwitchCamera}
