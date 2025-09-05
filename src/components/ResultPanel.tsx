@@ -13,6 +13,7 @@ type ResultPanelProps = {
   onDownload: () => void;
   onRetake: () => void;
   onOpenPrintDialog: () => void;
+  isMobile?: boolean;
 };
 
 export function ResultPanel({
@@ -26,6 +27,7 @@ export function ResultPanel({
   onDownload,
   onRetake,
   onOpenPrintDialog,
+  isMobile,
 }: ResultPanelProps) {
   const { widthPx, heightPx, label } = selectedFormat;
 
@@ -48,9 +50,9 @@ export function ResultPanel({
   }, [capturedImage]);
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
+    <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 select-none">Result</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">Result</h2>
         {capturedImage && !isProcessingImage && (
           <button onClick={onRetake} className="flex items-center gap-2 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 py-1 px-3 rounded bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
             <Trash2 size={16} />
@@ -94,11 +96,10 @@ export function ResultPanel({
           <div className="absolute top-2 right-2">
             <button
               onClick={() => onWatermarkChange(!watermarkEnabled)}
-              className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 ${
-                watermarkEnabled
-                  ? 'bg-red-600/80 text-white hover:bg-red-700'
-                  : 'bg-gray-500/50 text-white hover:bg-gray-600/70 dark:bg-black/50 dark:text-gray-300 dark:hover:bg-black/70 dark:hover:text-white'
-              }`}
+              className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 ${watermarkEnabled
+                ? 'bg-red-600/80 text-white hover:bg-red-700'
+                : 'bg-gray-500/50 text-white hover:bg-gray-600/70 dark:bg-black/50 dark:text-gray-300 dark:hover:bg-black/70 dark:hover:text-white'
+                }`}
               title={watermarkEnabled ? 'Disable watermark' : 'Enable watermark'}
             >
               <Copyright size={14} />
@@ -108,6 +109,8 @@ export function ResultPanel({
         )}
       </div>
 
+      <div className="flex-grow" />
+
       <div className="space-y-4">
         <input
           type="text"
@@ -116,7 +119,7 @@ export function ResultPanel({
           placeholder="Person's Name (optional)"
           className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
         />
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={onDownload}
             disabled={!capturedImage || isProcessingImage}

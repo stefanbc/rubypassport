@@ -53,6 +53,9 @@ function AppContent() {
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
+  const [wizardStep, setWizardStep] = useState<'guidelines' | 'camera' | 'result'>('guidelines');
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [isMobile, setIsMobile] = useState(false);
   const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
@@ -64,6 +67,14 @@ function AppContent() {
 
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId)!;
+  const wizardStepIndex = { guidelines: 0, camera: 1, result: 2 }[wizardStep];
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const addToast = useCallback((message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
     const id = Date.now() + Math.random();
@@ -119,7 +130,10 @@ function AppContent() {
   const retakePhoto = useCallback(() => {
     setBaseImage(null);
     setHighResBlob(null);
-  }, []);
+    if (isMobile) {
+      setWizardStep('camera');
+    }
+  }, [isMobile]);
 
   const stopCamera = useCallback(() => {
     if (stream) {
@@ -130,7 +144,7 @@ function AppContent() {
     }
   }, [stream]);
 
-  const startCamera = useCallback(async () => {
+  const startCamera = useCallback(async (modeToSet: 'user' | 'environment' = facingMode) => {
     try {
       addToast('Starting camera...', 'info');
       setIsCameraLoading(true);
@@ -141,13 +155,14 @@ function AppContent() {
           width: { ideal: 4096 },
           // Enforce the same aspect ratio as the selected photo format for a WYSIWYG preview
           aspectRatio: { ideal: aspectRatio },
-          facingMode: 'user'
+          facingMode: modeToSet
         },
         audio: false
       });
 
       console.log('Got media stream:', mediaStream);
       setStream(mediaStream);
+      setFacingMode(modeToSet);
       setIsCameraOn(true);
 
       const videoTrack = mediaStream.getVideoTracks()[0];
@@ -172,7 +187,13 @@ function AppContent() {
       setIsCameraOn(false);
       setIsCameraLoading(false);
     }
-  }, [addToast, selectedFormat]);
+  }, [addToast, selectedFormat, facingMode]);
+
+  const switchCamera = useCallback(async () => {
+    const newMode = facingMode === 'user' ? 'environment' : 'user';
+    stopCamera();
+    setTimeout(() => startCamera(newMode), 100);
+  }, [facingMode, stopCamera, startCamera]);
 
   const capturePhoto = useCallback(async () => {
     setIsProcessingImage(true);
@@ -230,6 +251,9 @@ function AppContent() {
 
           const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
           setBaseImage(imageDataUrl);
+          if (isMobile) {
+            setWizardStep('result');
+          }
           addToast('Photo captured successfully!', 'success');
           URL.revokeObjectURL(imageUrl);
         };
@@ -292,8 +316,11 @@ function AppContent() {
 
     const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     setBaseImage(imageDataUrl);
+    if (isMobile) {
+      setWizardStep('result');
+    }
     addToast('Photo captured from video stream.', 'success');
-  }, [addToast, selectedFormat]);
+  }, [addToast, selectedFormat, isMobile]);
 
   const downloadProcessedImage = useCallback(() => {
     if (!capturedImage) return;
@@ -558,8 +585,11 @@ function AppContent() {
     setHighResBlob(originalFile);
     setBaseImage(croppedDataUrl);
     setShowImportDialog(false);
+    if (isMobile) {
+      setWizardStep('result');
+    }
     addToast('Image imported and cropped successfully!', 'success');
-  }, [addToast]);
+  }, [addToast, isMobile]);
 
   const openPrintPreview = () => {
     if (!capturedImage) return;
@@ -809,35 +839,72 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+      <div className={`max-w-screen-2xl mx-auto w-full ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
 
-        <div className="grid md:grid-cols-3 gap-8 items-stretch">
-          <Guidelines />
-          <CameraView
-            isCameraOn={isCameraOn}
-            isCameraLoading={isCameraLoading}
-            videoRef={videoRef}
-            selectedFormat={selectedFormat}
-            onStartCamera={startCamera}
-            onStopCamera={stopCamera}
-            onCapturePhoto={capturePhoto}
-            onImportClick={() => setShowImportDialog(true)}
-            onManageFormatsClick={() => setShowCustomFormatForm(true)}
-          />
-          <ResultPanel
-            isProcessingImage={isProcessingImage}
-            capturedImage={capturedImage}
-            selectedFormat={selectedFormat}
-            personName={personName}
-            onPersonNameChange={setPersonName}
-            watermarkEnabled={watermarkEnabled}
-            onWatermarkChange={setWatermarkEnabled}
-            onDownload={() => setShowDownloadDialog(true)}
-            onRetake={retakePhoto}
-            onOpenPrintDialog={() => setShowPrintDialog(true)}
-          />
-        </div>
+        {isMobile ? (
+          <div className="w-full">
+            {/* Step Indicator */}
+            <div className="flex justify-center items-center gap-2 mb-4">
+              {['Guidelines', 'Camera', 'Result'].map((label, index) => (
+                <div key={label} className="flex flex-col items-center gap-1 text-center w-1/3">
+                  <div
+                    className={`w-full h-1.5 rounded-full transition-colors ${wizardStepIndex >= index ? 'bg-red-600' : 'bg-gray-300 dark:bg-zinc-700'}`}
+                  />
+                  <span className={`text-xs font-medium transition-colors ${wizardStepIndex >= index ? 'text-red-600 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}>{label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Wizard Content */}
+            <div className="relative w-full overflow-hidden" style={{ minHeight: '70vh' }}>
+              <div
+                className="flex w-[300%] h-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${wizardStepIndex * (100 / 3)}%)` }}
+              >
+                {/* Guidelines Step */}
+                <div className="w-1/3 px-1 flex flex-col">
+                  <div className="flex-grow overflow-y-auto">
+                    <Guidelines isMobile={isMobile} />
+                  </div>
+                  <button
+                    onClick={() => setWizardStep('camera')}
+                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 font-semibold"
+                  >
+                    Continue
+                  </button>
+                </div>
+
+                {/* Camera Step */}
+                <div className="w-1/3 px-1">
+                  <CameraView isCameraOn={isCameraOn} isCameraLoading={isCameraLoading} videoRef={videoRef} selectedFormat={selectedFormat} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setShowImportDialog(true)} onManageFormatsClick={() => setShowCustomFormatForm(true)} onBack={() => setWizardStep('guidelines')} isMobile={isMobile} onSwitchCamera={switchCamera} />
+                </div>
+
+                {/* Result Step */}
+                <div className="w-1/3 px-1">
+                  <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} isMobile={isMobile} />
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8 items-stretch">
+            <Guidelines />
+            <CameraView
+              isCameraOn={isCameraOn}
+              isCameraLoading={isCameraLoading}
+              videoRef={videoRef}
+              selectedFormat={selectedFormat}
+              onStartCamera={() => startCamera()}
+              onStopCamera={stopCamera}
+              onCapturePhoto={capturePhoto}
+              onImportClick={() => setShowImportDialog(true)}
+              onManageFormatsClick={() => setShowCustomFormatForm(true)}
+              onSwitchCamera={switchCamera}
+            />
+            <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} />
+          </div>
+        )}
 
         <Footer />
 
@@ -870,6 +937,7 @@ function AppContent() {
         onImageCropped={handleImageCropped}
         selectedFormat={selectedFormat}
         addToast={addToast}
+        isMobile={isMobile}
       />
 
       <PrintOptionsDialog

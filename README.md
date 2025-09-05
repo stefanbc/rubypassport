@@ -8,8 +8,9 @@ RubyPassport is a modern web app for capturing and generating compliant passport
 
 ### Photo Creation & Handling
 - **Live Camera Capture**: Use your device's camera with real-time, format-adaptive alignment guides.
+- **Front & Back Camera Support**: Easily switch between your device's front and back cameras.
 - **High-Resolution Photos**: Utilizes the `ImageCapture` API (where available) for higher quality photos than a standard video frame snapshot.
-- **Import Existing Image**: Process any image file from your device.
+- **Import & Reposition**: Process any image file from your device with intuitive pan and zoom controls to get the perfect crop.
 - **Client-Side Processing**: All photo processing happens locally in your browser, ensuring your photos are never uploaded to a server.
 
 ### Format Management
@@ -24,7 +25,9 @@ RubyPassport is a modern web app for capturing and generating compliant passport
 - **Personalization**: Optionally add a person's name to be used in filenames and print preview titles.
 
 ### User Experience
-- **Modern UI**: A sleek, ruby-accented dark theme.
+- **Responsive Design & Mobile Wizard**: A clean, responsive interface that transforms into a step-by-step wizard on mobile devices.
+- **PWA Support**: Installable as a Progressive Web App for a native-like experience, including fullscreen mode on Android.
+- **Modern UI**: A sleek, ruby-accented dark theme that adapts to your system settings.
 - **Keyboard Shortcuts**: Comprehensive shortcuts for nearly every action. Press `?` in the app to see them all.
 - **Fullscreen Mode**: Toggleable for an immersive, distraction-free experience.
 - **Optional Watermark**: Add or remove an official-style "RUBY PASSPORT" watermark with a single click.

@@ -8,9 +8,10 @@ interface ImportDialogProps {
   onImageCropped: (originalFile: File, croppedDataUrl: string) => void;
   selectedFormat: Format;
   addToast: (message: string, type: 'error' | 'info' | 'success', duration?: number) => void;
+  isMobile?: boolean;
 }
 
-export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, addToast }: ImportDialogProps) {
+export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, addToast, isMobile }: ImportDialogProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -266,13 +267,13 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={handleBackdropClick}>
       <div
-        className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg relative"
+        className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600" aria-label="Close dialog">
           <XCircle size={24} />
         </button>
-        <h2 className="text-2xl font-semibold text-red-600 dark:text-red-400 mb-4 select-none">{imageSrc ? 'Reposition Image' : 'Import Image'}</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold text-red-600 dark:text-red-400 mb-4 select-none">{imageSrc ? 'Reposition Image' : 'Import Image'}</h2>
 
         <input type="file" ref={fileInputRef} onChange={handleFileSelected} accept="image/*" className="hidden" />
 
@@ -361,7 +362,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
                 onClick={() => handleZoomChange(Math.min(3, zoom + 0.1))}
               />
             </div>
-            <div className="flex gap-3 mt-4">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
               <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
                 <RotateCcw size={18} />
                 Change Image
@@ -375,13 +376,13 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
         ) : (
           <div
             onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop}
-            className={`mt-4 flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-red-500 bg-red-50 dark:bg-zinc-800' : 'border-gray-300 dark:border-zinc-700'}`}
+            className={`mt-4 flex flex-col items-center justify-center p-6 sm:p-10 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-red-500 bg-red-50 dark:bg-zinc-800' : 'border-gray-300 dark:border-zinc-700'}`}
           >
             <UploadCloud className={`w-12 h-12 mb-3 transition-colors ${isDragging ? 'text-red-600' : 'text-gray-400'}`} />
             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Drag & drop</span> an image here</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">or</p>
             <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded text-center transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
-              Choose from computer
+              {isMobile ? 'Choose from phone' : 'Choose from computer'}
             </button>
           </div>
         )}

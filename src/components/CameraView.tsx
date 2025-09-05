@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { Camera, Computer, Loader2, CheckCircle, SlidersHorizontal } from 'lucide-react';
+import { Camera, Computer, Loader2, CheckCircle, SlidersHorizontal, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Format } from '../types';
 
 type CameraViewProps = {
@@ -12,6 +12,9 @@ type CameraViewProps = {
   onCapturePhoto: () => void;
   onImportClick: () => void;
   onManageFormatsClick: () => void;
+  onSwitchCamera: () => void;
+  onBack?: () => void;
+  isMobile?: boolean;
 };
 
 export function CameraView({
@@ -24,6 +27,9 @@ export function CameraView({
   onCapturePhoto,
   onImportClick,
   onManageFormatsClick,
+  onSwitchCamera,
+  onBack,
+  isMobile,
 }: CameraViewProps) {
   // Human-proportional guide sizing (kept stable across formats)
   const guideOvalWidthPct = 42; // Approximate face width relative to frame width
@@ -33,17 +39,21 @@ export function CameraView({
   const eyeLineTopPct = 45; // Eye line ~45% from top
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 hover:shadow-2xl">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 select-none">Preview</h2>
-        <button
-          onClick={onManageFormatsClick}
-          className="flex items-center gap-2 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors py-1 px-3 rounded bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-          title="Change format or manage custom formats"
-        >
-          <SlidersHorizontal size={16} />
-          <span className="truncate max-w-40 md:max-w-none select-none">{selectedFormat.label}</span>
-        </button>
+    <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 relative ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
+      <div className="relative flex justify-center items-center mb-4">
+        {isMobile && onBack && (
+          <button
+            onClick={onBack}
+            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            aria-label="Back to guidelines"
+          >
+            <ArrowLeft size={16} />
+            <span className="hidden sm:inline">Back</span>
+          </button>
+        )}
+        <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">
+          Preview
+        </h2>
       </div>
 
       <div
@@ -59,6 +69,13 @@ export function CameraView({
               muted
               className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
             />
+            <button
+              onClick={onSwitchCamera}
+              className="absolute top-2 right-2 z-20 p-2 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
+              title="Switch camera"
+            >
+              <RefreshCw size={18} />
+            </button>
             {/* Guide overlay (responsive to selected format) */}
             <div className="absolute inset-0 pointer-events-none">
               {/* Face bounding oval */}
@@ -122,43 +139,55 @@ export function CameraView({
         )}
       </div>
 
-      <div className="flex gap-3">
-        {!isCameraOn ? (
-          <>
-            <button
-              onClick={onStartCamera}
-              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-              disabled={isCameraLoading}
-            >
-              {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
-              {isCameraLoading ? 'Starting…' : 'Start Camera'}
-            </button>
-            <button
-              onClick={onImportClick}
-              className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-              disabled={isCameraLoading}
-            >
-              <Computer size={20} />
-              Import Image
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={onCapturePhoto}
-              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-            >
-              <CheckCircle size={20} />
-              Capture Photo
-            </button>
-            <button
-              onClick={onStopCamera}
-              className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-            >
-              Stop
-            </button>
-          </>
-        )}
+      <div className="flex-grow" />
+
+      <div className="space-y-4">
+        <button
+          onClick={onManageFormatsClick}
+          className="w-full flex items-center justify-between text-left gap-2 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded-lg border border-red-200 dark:border-red-900/40 hover:bg-gray-200 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+          title="Change format or manage custom formats"
+        >
+          <span className="truncate select-none">{selectedFormat.label}</span>
+          <SlidersHorizontal size={16} className="text-gray-500 flex-shrink-0" />
+        </button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          {!isCameraOn ? (
+            <>
+              <button
+                onClick={onStartCamera}
+                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+                disabled={isCameraLoading}
+              >
+                {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
+                {isCameraLoading ? 'Starting…' : 'Start Camera'}
+              </button>
+              <button
+                onClick={onImportClick}
+                className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+                disabled={isCameraLoading}
+              >
+                <Computer size={20} />
+                Import Image
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={onCapturePhoto}
+                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+              >
+                <CheckCircle size={20} />
+                Capture Photo
+              </button>
+              <button
+                onClick={onStopCamera}
+                className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+              >
+                Stop
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
