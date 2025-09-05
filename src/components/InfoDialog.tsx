@@ -7,8 +7,8 @@ type InfoDialogProps = {
 
 const faqs = [
   {
-    q: 'What is RubyPassport?',
-    a: 'RubyPassport is a modern web app for capturing and generating compliant passport/ID photos directly in your browser. It helps you create photos that meet specific size and alignment requirements for various countries.'
+    q: 'What is Ruby Passport?',
+    a: 'Ruby Passport is a modern web app for capturing and generating compliant passport/ID photos directly in your browser. It helps you create photos that meet specific size and alignment requirements for various countries.'
   },
   {
     q: 'Is my data secure?',

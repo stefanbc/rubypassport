@@ -55,6 +55,7 @@ function AppContent() {
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [wizardStep, setWizardStep] = useState<'guidelines' | 'camera' | 'result'>('guidelines');
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [isPWA, setIsPWA] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
@@ -74,6 +75,24 @@ function AppContent() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const checkPWA = () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const isFullscreen = window.matchMedia('(display-mode: fullscreen)').matches;
+      setIsPWA(isStandalone || isFullscreen);
+    };
+    checkPWA();
+    const standaloneMatcher = window.matchMedia('(display-mode: standalone)');
+    const fullscreenMatcher = window.matchMedia('(display-mode: fullscreen)');
+    standaloneMatcher.addEventListener('change', checkPWA);
+    fullscreenMatcher.addEventListener('change', checkPWA);
+
+    return () => {
+      standaloneMatcher.removeEventListener('change', checkPWA);
+      fullscreenMatcher.removeEventListener('change', checkPWA);
+    };
   }, []);
 
   const addToast = useCallback((message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
@@ -840,7 +859,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 p-4 flex items-center justify-center transition-colors duration-300">
       <div className={`max-w-screen-2xl mx-auto w-full ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} />
+        <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} isMobile={isMobile} isPWA={isPWA} />
 
         {isMobile ? (
           <div className="w-full">
@@ -869,7 +888,7 @@ function AppContent() {
                   </div>
                   <button
                     onClick={() => setWizardStep('camera')}
-                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 font-semibold"
+                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 font-semibold"
                   >
                     Continue
                   </button>
@@ -906,7 +925,9 @@ function AppContent() {
           </div>
         )}
 
-        <Footer />
+        {!isMobile && (
+          <Footer />
+        )}
 
         {/* Hidden canvas for photo processing */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Sun, ChevronDown } from 'lucide-react';
+import { Footer } from './Footer';
 
 type GuidelinesProps = {
   isMobile?: boolean;
@@ -50,6 +51,7 @@ export function Guidelines({ isMobile }: GuidelinesProps) {
               <li>• Maintain a neutral expression (mouth closed)</li>
               <li>• Remove glasses and headwear (unless religious)</li>
               <li>• Ensure eyes are clearly visible</li>
+              <li>• Align face in oval, eyes on the line</li>
             </ul>
           </div>
         </div>
@@ -87,11 +89,6 @@ export function Guidelines({ isMobile }: GuidelinesProps) {
             </ul>
           </div>
         </div>
-        <div className="rounded-md bg-red-50 dark:bg-zinc-800/60 border border-red-100 dark:border-red-900/40 p-3">
-          <p className="text-xs text-gray-700 dark:text-gray-300">
-            Tip: Align your face within the outer oval. The eye line should be near the guide.
-          </p>
-        </div>
 
         <div className="flex-grow" />
 
@@ -101,6 +98,10 @@ export function Guidelines({ isMobile }: GuidelinesProps) {
             This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you’re done, they’re gone.
           </p>
         </div>
+
+        {isMobile && (
+          <Footer />
+        )}
       </div>
     </div>
   );
