@@ -3,9 +3,9 @@
   "short_name": "RubyPassport",
   "description": "Easily create, format, and print passport, visa, and ID photos for free. Supports official formats for various countries.",
   "start_url": ".",
-  "display": "standalone",
-  "background_color": "#450a0a",
-  "theme_color": "#db2777",
+  "display": "fullscreen",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
