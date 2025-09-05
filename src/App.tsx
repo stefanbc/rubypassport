@@ -857,8 +857,8 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 md:p-4 md:flex md:items-center md:justify-center transition-colors duration-300">
-      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-2 md:p-0 ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+    <div className="min-h-screen md:p-4 md:flex md:items-center md:justify-center">
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-4 md:p-0 ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} isMobile={isMobile} isPWA={isPWA} />
 
         {isMobile ? (
