@@ -16,7 +16,7 @@ export function Header({ isFullscreen, onToggleFullscreen, onOpenShortcutsDialog
           <img src="/images/favicon.svg" alt="RubyPassport Logo" className="w-full h-full object-contain" />
         </div>
         <div className="leading-tight select-none text-gray-800 dark:text-white">
-          <h1 className="font-semibold tracking-tight">RubyPassport</h1>
+          <h1 className="font-semibold tracking-tight">Ruby Passport</h1>
           <p className="hidden sm:block text-[11px] text-red-600/80 dark:text-red-300/80">Passport Photo Generator</p>
         </div>
       </div>
