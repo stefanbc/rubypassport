@@ -1,4 +1,4 @@
-import { Gem, Maximize, Minimize, Info, Keyboard } from 'lucide-react';
+import { Maximize, Minimize, Info, Keyboard } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
 type HeaderProps = {
@@ -12,8 +12,8 @@ export function Header({ isFullscreen, onToggleFullscreen, onOpenShortcutsDialog
   return (
     <header className="mb-3 flex items-center justify-between gap-2 sm:gap-4">
       <div className="flex items-center gap-2 sm:gap-3">
-        <div className="h-8 w-8 flex-shrink-0 rounded bg-gradient-to-br from-red-600 to-red-800 ring-1 ring-red-900/40 flex items-center justify-center shadow-md">
-          <Gem size={18} className="text-white" />
+        <div className="h-10 w-10">
+          <img src="/images/favicon.svg" alt="RubyPassport Logo" className="w-full h-full object-contain" />
         </div>
         <div className="leading-tight select-none text-gray-800 dark:text-white">
           <h1 className="font-semibold tracking-tight">RubyPassport</h1>
