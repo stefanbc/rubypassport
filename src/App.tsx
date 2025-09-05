@@ -167,24 +167,39 @@ function AppContent() {
     try {
       addToast('Starting camera...', 'info');
       setIsCameraLoading(true);
-      const aspectRatio = selectedFormat.widthPx / selectedFormat.heightPx;
+
+      // Get a stream with basic constraints first to access track capabilities.
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          // Request a high resolution to get the best possible video feed
-          width: { ideal: 4096 },
-          // Enforce the same aspect ratio as the selected photo format for a WYSIWYG preview
-          aspectRatio: { ideal: aspectRatio },
-          facingMode: modeToSet
-        },
+        video: { facingMode: modeToSet },
         audio: false
       });
+
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      if (!videoTrack) {
+        throw new Error("No video track found in the stream.");
+      }
+
+      const capabilities = videoTrack.getCapabilities();
+      if (capabilities.width?.max && capabilities.height?.max) {
+        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 4000);
+      }
+
+      // Apply more specific constraints for the best quality and aspect ratio.
+      const aspectRatio = selectedFormat.widthPx / selectedFormat.heightPx;
+      const idealWidth = capabilities.width?.max || 4096; // Fallback to 4096
+
+      const newConstraints: MediaTrackConstraints = {
+        width: { ideal: idealWidth },
+        aspectRatio: { ideal: aspectRatio },
+      };
+
+      await videoTrack.applyConstraints(newConstraints);
 
       console.log('Got media stream:', mediaStream);
       setStream(mediaStream);
       setFacingMode(modeToSet);
       setIsCameraOn(true);
 
-      const videoTrack = mediaStream.getVideoTracks()[0];
       const settings = videoTrack.getSettings();
       if (settings.width && settings.height) {
         addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 4000);
