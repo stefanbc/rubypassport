@@ -71,13 +71,15 @@ export function CameraView({
               muted
               className={`absolute inset-0 w-full h-full object-cover ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
             />
-            <button
-              onClick={onSwitchCamera}
-              className="absolute top-2 right-2 z-20 p-2 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
-              title="Switch camera"
-            >
-              <RefreshCw size={18} />
-            </button>
+            {isMobile && (
+              <button
+                onClick={onSwitchCamera}
+                className="absolute top-2 right-2 z-20 p-2 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
+                title="Switch camera"
+              >
+                <RefreshCw size={18} />
+              </button>
+            )}
             {/* Guide overlay (responsive to selected format) */}
             <div className="absolute inset-0 pointer-events-none">
               {/* Face bounding oval */}

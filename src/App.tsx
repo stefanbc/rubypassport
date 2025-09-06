@@ -39,8 +39,45 @@ function AppContent() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [toasts, setToasts] = useState<(Toast & { duration: number })[]>([]);
   const [isProcessingImage, setIsProcessingImage] = useState<boolean>(false);
-  const [customFormats, setCustomFormats] = useState<Format[]>([]);
-  const [selectedFormatId, setSelectedFormatId] = useState<FormatId>('eu_35x45');
+  const [customFormats, setCustomFormats] = useState<Format[]>(() => {
+    try {
+      const saved = localStorage.getItem('rubyPassportCustomFormats');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load custom formats from localStorage on init', e);
+    }
+    return [];
+  });
+
+  const [selectedFormatId, setSelectedFormatId] = useState<FormatId>(() => {
+    try {
+      const savedId = localStorage.getItem('rubyPassportSelectedFormatId');
+      if (savedId) {
+        // To validate the saved ID, we need the custom formats.
+        // We can't access state in the initializer, so we have to read them from localStorage again.
+        let initialCustomFormats: Format[] = [];
+        const savedCustomFormats = localStorage.getItem('rubyPassportCustomFormats');
+        if (savedCustomFormats) {
+          try {
+            const parsed = JSON.parse(savedCustomFormats);
+            if (Array.isArray(parsed)) initialCustomFormats = parsed;
+          } catch { /* ignore parse error, will use empty array */ }
+        }
+        const allFormats = [...FORMATS, ...initialCustomFormats];
+        if (allFormats.some(f => f.id === savedId)) {
+          return savedId as FormatId;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load selected format from localStorage on init', e);
+    }
+    return 'eu_35x45'; // Default if nothing is saved or if saved is invalid
+  });
   const [personName, setPersonName] = useState<string>('');
   const [photosPerPage, setPhotosPerPage] = useState<PhotoCount>(6);
   const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(false);
@@ -424,27 +461,30 @@ function AppContent() {
 
   useEffect(() => {
     try {
-      const savedFormats = localStorage.getItem('rubyPassportCustomFormats');
-      if (savedFormats) {
-        const parsed = JSON.parse(savedFormats);
-        if (Array.isArray(parsed)) {
-          setCustomFormats(parsed);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load custom formats from localStorage', error);
-      addToast('Could not load custom formats.', 'error');
-    }
-  }, [addToast]);
-
-  useEffect(() => {
-    try {
       localStorage.setItem('rubyPassportCustomFormats', JSON.stringify(customFormats));
     } catch (error) {
       console.error('Failed to save custom formats to localStorage', error);
       addToast('Could not save custom formats.', 'error');
     }
   }, [customFormats, addToast]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rubyPassportSelectedFormatId', selectedFormatId);
+    } catch (error) {
+      console.error('Failed to save selected format to localStorage', error);
+      addToast('Could not save selected format.', 'error');
+    }
+  }, [selectedFormatId, addToast]);
+
+  useEffect(() => {
+    // On mobile, automatically stop the camera if we navigate away from the camera step,
+    // for example, after capturing a photo and moving to the result panel.
+    // This conserves battery and resources.
+    if (isMobile && wizardStep !== 'camera' && isCameraOn) {
+      stopCamera();
+    }
+  }, [wizardStep, isMobile, isCameraOn, stopCamera]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
