@@ -140,16 +140,9 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
     const { clientWidth: cropW, clientHeight: cropH } = cropContainerRef.current;
     const { clientWidth: imgW, clientHeight: imgH } = imageRef.current;
 
-    const oldZoom = zoom;
-
-    // The center of the crop view in its own coordinates
-    const cropCenterX = cropW / 2;
-    const cropCenterY = cropH / 2;
-
-    // The new position of the image's top-left corner.
-    // We want the point at the center of the crop view to stay there.
-    const newPosX = (cropCenterX - imgW / 2) * (1 - newZoom / oldZoom) + position.x * (newZoom / oldZoom);
-    const newPosY = (cropCenterY - imgH / 2) * (1 - newZoom / oldZoom) + position.y * (newZoom / oldZoom);
+    // Zoom to the center of the crop area
+    const newPosX = cropW / 2 - (cropW / 2 - position.x) * (newZoom / zoom);
+    const newPosY = cropH / 2 - (cropH / 2 - position.y) * (newZoom / zoom);
 
     // Clamp the new position within the new boundaries
     const clampedX = Math.max(cropW - imgW * newZoom, Math.min(0, newPosX));
@@ -249,15 +242,14 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
     // The total scale from the natural image size to the final zoomed-and-displayed size.
     const totalScale = displayScale * zoom;
 
-    // The visual top-left corner of the image element accounts for both translation and scaling from the center.
-    const visualX = position.x + (img.clientWidth / 2) * (1 - zoom);
-    const visualY = position.y + (img.clientHeight / 2) * (1 - zoom);
-
-    // Map the crop area back to the natural image's coordinates for `drawImage`.
-    const sx = -visualX / totalScale;
-    const sy = -visualY / totalScale;
+    // Map the crop area (the viewport) back to the natural image's coordinates for `drawImage`.
+    // `position` is the top-left of the transformed image relative to the crop container.
+    // We divide by the total scale to convert from screen pixels to source image pixels.
+    const sx = -position.x / totalScale;
+    const sy = -position.y / totalScale;
     const sWidth = cropContainer.clientWidth / totalScale;
     const sHeight = cropContainer.clientHeight / totalScale;
+
     ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
     const croppedDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     onImageCropped(originalFile, croppedDataUrl);
@@ -294,6 +286,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
                 style={{
                   transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
                   ...getImageStyle(),
+                  transformOrigin: 'top left',
                   touchAction: 'none',
                 }}
                 onLoad={handleImageLoad}

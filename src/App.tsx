@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Format, FORMATS } from './types';
-import { FormatDialog, NewFormatState } from './components/FormatDialog';
+import { Format, FORMATS, FacingMode, NewFormatState } from './types';
+import { FormatDialog } from './components/FormatDialog';
 import { Header } from './components/Header';
 import { Guidelines } from './components/Guidelines';
 import { CameraView } from './components/CameraView';
@@ -146,7 +146,7 @@ function AppContent() {
     }
   }, [stream, setStream, setIsCameraOn]);
 
-  const startCamera = useCallback(async (modeToSet: 'user' | 'environment' = facingMode) => {
+  const startCamera = useCallback(async (modeToSet: FacingMode = facingMode) => {
     try {
       addToast('Starting camera...', 'info');
       setIsCameraLoading(true);

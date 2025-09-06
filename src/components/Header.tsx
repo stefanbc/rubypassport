@@ -7,7 +7,7 @@ type HeaderProps = {
 };
 
 export function Header({ onToggleFullscreen }: HeaderProps) {
-  const { isFullscreen, isMobile, isPWA, setActiveDialog } = useStore();
+  const { isFullscreen, isMobile, setActiveDialog } = useStore();
   return (
     <header className="mb-3 flex items-center justify-between gap-2 sm:gap-4">
       <div className="flex items-center gap-2 sm:gap-3">
@@ -21,7 +21,7 @@ export function Header({ onToggleFullscreen }: HeaderProps) {
       </div>
       <div className="flex items-center gap-1 sm:gap-2">
         <ThemeSwitcher />
-        {!isPWA && (
+        {!isMobile && (
           <button
             onClick={onToggleFullscreen}
             className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"

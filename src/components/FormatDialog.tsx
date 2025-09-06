@@ -1,16 +1,8 @@
 import { XCircle, Pencil, Trash2, ChevronDown } from 'lucide-react';
-import { Format } from '../types';
+import { Format, NewFormatState } from '../types';
 import { useState, useEffect } from 'react';
 import { useStore } from '../store';
 import { FORMATS } from '../types';
-
-export type NewFormatState = {
-  label: string;
-  widthPx: string;
-  heightPx: string;
-  printWidthMm: string;
-  printHeightMm: string;
-};
 
 type FormatDialogProps = {
   isOpen: boolean;

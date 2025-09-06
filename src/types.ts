@@ -1,7 +1,9 @@
+export type ToastType = 'error' | 'info' | 'success';
+
 export type Toast = {
   id: number;
   message: string;
-  type: 'error' | 'info' | 'success';
+  type: ToastType;
 };
 
 export type Format = {
@@ -15,6 +17,21 @@ export type Format = {
 
 export const PHOTO_COUNTS = [1, 2, 4, 6, 8, 10, 12] as const;
 export type PhotoCount = typeof PHOTO_COUNTS[number];
+
+export type Theme = 'light' | 'dark';
+
+export type DialogType =
+  | 'customFormat'
+  | 'download'
+  | 'shortcuts'
+  | 'print'
+  | 'info'
+  | 'import'
+  | null;
+
+export type WizardStep = 'guidelines' | 'camera' | 'result';
+
+export type FacingMode = 'user' | 'environment';
 
 // Supported passport/ID photo formats
 export const FORMATS: readonly Format[] = [
@@ -31,3 +48,11 @@ export const FORMATS: readonly Format[] = [
 ];
 export type PredefinedFormatId = typeof FORMATS[number]['id'];
 export type FormatId = PredefinedFormatId | string;
+
+export type NewFormatState = {
+  label: string;
+  widthPx: string;
+  heightPx: string;
+  printWidthMm: string;
+  printHeightMm: string;
+};
