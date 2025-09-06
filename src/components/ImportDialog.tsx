@@ -1,17 +1,18 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent, WheelEvent as ReactWheelEvent } from 'react';
 import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
-import { Format } from '../types';
+import { useStore } from '../store';
+import { FORMATS } from '../types';
 
 interface ImportDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onImageCropped: (originalFile: File, croppedDataUrl: string) => void;
-  selectedFormat: Format;
-  addToast: (message: string, type: 'error' | 'info' | 'success', duration?: number) => void;
-  isMobile?: boolean;
 }
 
-export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, addToast, isMobile }: ImportDialogProps) {
+export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogProps) {
+  const { selectedFormatId, customFormats, addToast, isMobile } = useStore();
+  const allFormats = [...FORMATS, ...customFormats];
+  const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +58,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     }
   }, [isOpen, handleReset]);
 
-  const handleFile = (file: File | null | undefined) => {
+  const handleFile = useCallback((file: File | null | undefined) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       addToast('Please select a valid image file.', 'error');
@@ -70,7 +71,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
       setImageSrc(e.target?.result as string);
     };
     reader.readAsDataURL(file);
-  };
+  }, [addToast]);
 
   const handleDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -98,7 +99,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
     setIsDragging(false);
     dragCounter.current = 0;
     handleFile(e.dataTransfer.files?.[0]);
-  }, [addToast]);
+  }, [handleFile]);
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
     handleFile(e.target.files?.[0]);
@@ -363,11 +364,11 @@ export function ImportDialog({ isOpen, onClose, onImageCropped, selectedFormat, 
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
+              <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
                 <RotateCcw size={18} />
                 Change Image
               </button>
-              <button onClick={handleCrop} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white text-xs md:text-base py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
+              <button onClick={handleCrop} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
                 <Check size={18} />
                 Confirm & Crop
               </button>

@@ -1,16 +1,13 @@
 import { Maximize, Minimize, Info, Keyboard } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { useStore } from '../store';
 
 type HeaderProps = {
-  isFullscreen: boolean;
   onToggleFullscreen: () => void;
-  onOpenShortcutsDialog: () => void;
-  onOpenInfoDialog: () => void;
-  isMobile?: boolean;
-  isPWA?: boolean;
 };
 
-export function Header({ isFullscreen, onToggleFullscreen, onOpenShortcutsDialog, onOpenInfoDialog, isMobile, isPWA }: HeaderProps) {
+export function Header({ onToggleFullscreen }: HeaderProps) {
+  const { isFullscreen, isMobile, isPWA, setActiveDialog } = useStore();
   return (
     <header className="mb-3 flex items-center justify-between gap-2 sm:gap-4">
       <div className="flex items-center gap-2 sm:gap-3">
@@ -34,7 +31,7 @@ export function Header({ isFullscreen, onToggleFullscreen, onOpenShortcutsDialog
           </button>
         )}
         <button
-          onClick={onOpenInfoDialog}
+          onClick={() => setActiveDialog('info')}
           className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
           title="Show info dialog (I)"
         >
@@ -42,7 +39,7 @@ export function Header({ isFullscreen, onToggleFullscreen, onOpenShortcutsDialog
         </button>
         {!isMobile && (
           <button
-            onClick={onOpenShortcutsDialog}
+            onClick={() => setActiveDialog('shortcuts')}
             className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
             title="Show keyboard shortcuts (?)"
           >

@@ -1,27 +1,22 @@
 import { XCircle, Printer } from 'lucide-react';
-import { Format, PhotoCount, PHOTO_COUNTS } from '../types';
+import { PhotoCount, PHOTO_COUNTS, FORMATS } from '../types';
+import { useStore } from '../store';
 
 type PrintOptionsDialogProps = {
     isOpen: boolean;
     onClose: () => void;
     onPrint: () => void;
-    photosPerPage: PhotoCount;
-    onPhotosPerPageChange: (count: PhotoCount) => void;
-    autoFit10x15: boolean;
-    onAutoFitChange: (fit: boolean) => void;
-    selectedFormat: Format;
 };
 
 export function PrintOptionsDialog({
     isOpen,
     onClose,
     onPrint,
-    photosPerPage,
-    onPhotosPerPageChange,
-    autoFit10x15,
-    onAutoFitChange,
-    selectedFormat,
 }: PrintOptionsDialogProps) {
+    const { photosPerPage, setPhotosPerPage, autoFit10x15, setAutoFit10x15, selectedFormatId, customFormats } = useStore();
+    const allFormats = [...FORMATS, ...customFormats];
+    const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
+
     if (!isOpen) return null;
 
     const handlePrint = () => {
@@ -47,7 +42,7 @@ export function PrintOptionsDialog({
                         <select
                             id="photosPerPageDialog"
                             value={photosPerPage}
-                            onChange={(e) => onPhotosPerPageChange(Number(e.target.value) as PhotoCount)}
+                            onChange={(e) => setPhotosPerPage(Number(e.target.value) as PhotoCount)}
                             className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
                             disabled={autoFit10x15}
                         >
@@ -62,7 +57,7 @@ export function PrintOptionsDialog({
                             id="autoFitDialog"
                             type="checkbox"
                             checked={autoFit10x15}
-                            onChange={(e) => onAutoFitChange(e.target.checked)}
+                            onChange={(e) => setAutoFit10x15(e.target.checked)}
                             className="h-4 w-4 accent-red-600 text-red-600 bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500 dark:focus:ring-red-600 ring-offset-white dark:ring-offset-zinc-800 focus:ring-2 cursor-pointer"
                         />
                     </div>

@@ -1,6 +1,8 @@
 import { XCircle, Pencil, Trash2, ChevronDown } from 'lucide-react';
 import { Format } from '../types';
 import { useState, useEffect } from 'react';
+import { useStore } from '../store';
+import { FORMATS } from '../types';
 
 export type NewFormatState = {
   label: string;
@@ -13,10 +15,6 @@ export type NewFormatState = {
 type FormatDialogProps = {
   isOpen: boolean;
   onClose: () => void;
-  customFormats: Format[];
-  allFormats: Format[];
-  selectedFormatId: string;
-  onSetSelectedFormatId: (id: string) => void;
   editingFormat: Format | null;
   newFormat: NewFormatState;
   onNewFormatChange: (format: NewFormatState) => void;
@@ -30,9 +28,6 @@ type FormatDialogProps = {
 export function FormatDialog({
   isOpen,
   onClose,
-  allFormats,
-  selectedFormatId,
-  onSetSelectedFormatId,
   editingFormat,
   newFormat,
   onNewFormatChange,
@@ -42,17 +37,18 @@ export function FormatDialog({
   onEditClick,
   onCancelEdit,
 }: FormatDialogProps) {
-  if (!isOpen) return null;
+  const { customFormats, selectedFormatId, setSelectedFormatId } = useStore();
+  const allFormats = [...FORMATS, ...customFormats];
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (editingFormat) {
       setIsAddFormVisible(true);
     }
   }, [editingFormat]);
+
+  if (!isOpen) return null;
 
   const handleCancelEditAndCollapse = () => {
     onCancelEdit();
@@ -86,7 +82,7 @@ export function FormatDialog({
           <select
             id="formatSelectorDialog"
             value={selectedFormatId}
-            onChange={(e) => onSetSelectedFormatId(e.target.value)}
+            onChange={(e) => setSelectedFormatId(e.target.value)}
             className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
           >
             <optgroup label="Standard Formats">

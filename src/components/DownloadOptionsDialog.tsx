@@ -1,11 +1,11 @@
 import { XCircle, Download, ImageDown } from 'lucide-react';
+import { useStore } from '../store';
 
 type DownloadOptionsDialogProps = {
   isOpen: boolean;
   onClose: () => void;
   onDownloadProcessed: () => void;
   onDownloadHighRes: () => void;
-  hasHighRes: boolean;
 };
 
 export function DownloadOptionsDialog({
@@ -13,8 +13,8 @@ export function DownloadOptionsDialog({
   onClose,
   onDownloadProcessed,
   onDownloadHighRes,
-  hasHighRes,
 }: DownloadOptionsDialogProps) {
+  const hasHighRes = useStore(state => !!state.highResBlob);
   if (!isOpen) return null;
 
   const handleDownloadProcessed = () => {

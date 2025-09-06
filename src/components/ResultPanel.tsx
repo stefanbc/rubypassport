@@ -1,34 +1,33 @@
 import { Image as ImageIcon, Download, Trash2, Printer, Copyright, Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
-import { Format } from '../types';
+import { useStore } from '../store';
+import { FORMATS } from '../types';
 
 type ResultPanelProps = {
-  isProcessingImage: boolean;
-  capturedImage: string | null;
-  selectedFormat: Format;
-  personName: string;
-  onPersonNameChange: (name: string) => void;
-  watermarkEnabled: boolean;
-  onWatermarkChange: (enabled: boolean) => void;
   onDownload: () => void;
   onRetake: () => void;
   onOpenPrintDialog: () => void;
-  isMobile?: boolean;
 };
 
 export function ResultPanel({
-  isProcessingImage,
-  capturedImage,
-  selectedFormat,
-  personName,
-  onPersonNameChange,
-  watermarkEnabled,
-  onWatermarkChange,
   onDownload,
   onRetake,
   onOpenPrintDialog,
-  isMobile,
 }: ResultPanelProps) {
+  const {
+    isProcessingImage,
+    capturedImage,
+    personName,
+    setPersonName,
+    watermarkEnabled,
+    setWatermarkEnabled,
+    isMobile,
+    selectedFormatId,
+    customFormats,
+  } = useStore();
+
+  const allFormats = [...FORMATS, ...customFormats];
+  const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const { widthPx, heightPx, label } = selectedFormat;
 
   useEffect(() => {
@@ -95,7 +94,7 @@ export function ResultPanel({
         {capturedImage && !isProcessingImage && (
           <div className="absolute top-2 right-2">
             <button
-              onClick={() => onWatermarkChange(!watermarkEnabled)}
+              onClick={() => setWatermarkEnabled(!watermarkEnabled)}
               className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 ${watermarkEnabled
                 ? 'bg-red-600/80 text-white hover:bg-red-700'
                 : 'bg-gray-500/50 text-white hover:bg-gray-600/70 dark:bg-black/50 dark:text-gray-300 dark:hover:bg-black/70 dark:hover:text-white'
@@ -115,7 +114,7 @@ export function ResultPanel({
         <input
           type="text"
           value={personName}
-          onChange={(e) => onPersonNameChange(e.target.value)}
+          onChange={(e) => setPersonName(e.target.value)}
           placeholder="Person's Name (optional)"
           className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
         />
@@ -123,7 +122,7 @@ export function ResultPanel({
           <button
             onClick={onDownload}
             disabled={!capturedImage || isProcessingImage}
-            className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
           >
             <Download size={20} />
             Download
@@ -131,7 +130,7 @@ export function ResultPanel({
           <button
             onClick={onOpenPrintDialog}
             disabled={!capturedImage || isProcessingImage}
-            className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-xs md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
           >
             <Printer size={20} />
             Print

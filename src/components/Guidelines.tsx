@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Sun, ChevronDown } from 'lucide-react';
 import { Footer } from './Footer';
+import { useStore } from '../store';
 
-type GuidelinesProps = {
-  isMobile?: boolean;
-};
-
-export function Guidelines({ isMobile }: GuidelinesProps) {
+export function Guidelines() {
+  const isMobile = useStore(state => state.isMobile);
   const [openSections, setOpenSections] = useState({
     do: true,
     dont: true,
@@ -14,18 +12,12 @@ export function Guidelines({ isMobile }: GuidelinesProps) {
   });
 
   useEffect(() => {
-    const checkMobile = () => {
-      const isMobile = window.innerWidth < 768;
-      if (isMobile) {
-        setOpenSections({ do: true, dont: false, lighting: false });
-      } else {
-        setOpenSections({ do: true, dont: true, lighting: true });
-      }
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    if (isMobile) {
+      setOpenSections({ do: true, dont: false, lighting: false });
+    } else {
+      setOpenSections({ do: true, dont: true, lighting: true });
+    }
+  }, [isMobile]);
 
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));

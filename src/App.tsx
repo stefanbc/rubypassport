@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Toast, Format, PhotoCount, FormatId, FORMATS } from './types';
+import { Format, FORMATS } from './types';
 import { FormatDialog, NewFormatState } from './components/FormatDialog';
 import { Header } from './components/Header';
 import { Guidelines } from './components/Guidelines';
@@ -13,6 +13,7 @@ import { InfoDialog } from './components/InfoDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
 import { ImportDialog } from './components/ImportDialog';
+import { useStore } from './store';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -29,72 +30,26 @@ function App() {
 }
 
 function AppContent() {
+  // --- Store State and Actions ---
+  const {
+    customFormats, selectedFormatId, watermarkEnabled,
+    baseImage, stream, isCameraOn, facingMode, toasts,
+    isMobile, activeDialog, wizardStep,
+    setSelectedFormatId, setWatermarkEnabled, setWizardStep,
+    setBaseImage, setCapturedImage, setHighResBlob, setStream, setIsCameraOn, setIsCameraLoading, setFacingMode,
+    setIsProcessingImage, setIsMobile, setIsPWA, setIsFullscreen, setActiveDialog,
+    addToast, removeToast, retakePhoto: storeRetakePhoto,
+    addCustomFormat, updateCustomFormat, deleteCustomFormat
+  } = useStore();
+
+  // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [baseImage, setBaseImage] = useState<string | null>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const imageCaptureRef = useRef<ImageCapture | null>(null);
-  const [isCameraOn, setIsCameraOn] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [toasts, setToasts] = useState<(Toast & { duration: number })[]>([]);
-  const [isProcessingImage, setIsProcessingImage] = useState<boolean>(false);
-  const [customFormats, setCustomFormats] = useState<Format[]>(() => {
-    try {
-      const saved = localStorage.getItem('rubyPassportCustomFormats');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.error('Failed to load custom formats from localStorage on init', e);
-    }
-    return [];
-  });
 
-  const [selectedFormatId, setSelectedFormatId] = useState<FormatId>(() => {
-    try {
-      const savedId = localStorage.getItem('rubyPassportSelectedFormatId');
-      if (savedId) {
-        // To validate the saved ID, we need the custom formats.
-        // We can't access state in the initializer, so we have to read them from localStorage again.
-        let initialCustomFormats: Format[] = [];
-        const savedCustomFormats = localStorage.getItem('rubyPassportCustomFormats');
-        if (savedCustomFormats) {
-          try {
-            const parsed = JSON.parse(savedCustomFormats);
-            if (Array.isArray(parsed)) initialCustomFormats = parsed;
-          } catch { /* ignore parse error, will use empty array */ }
-        }
-        const allFormats = [...FORMATS, ...initialCustomFormats];
-        if (allFormats.some(f => f.id === savedId)) {
-          return savedId as FormatId;
-        }
-      }
-    } catch (e) {
-      console.error('Failed to load selected format from localStorage on init', e);
-    }
-    return 'eu_35x45'; // Default if nothing is saved or if saved is invalid
-  });
-  const [personName, setPersonName] = useState<string>('');
-  const [photosPerPage, setPhotosPerPage] = useState<PhotoCount>(6);
-  const [watermarkEnabled, setWatermarkEnabled] = useState<boolean>(false);
-  const [autoFit10x15, setAutoFit10x15] = useState<boolean>(false);
-  const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
-  const [showCustomFormatForm, setShowCustomFormatForm] = useState(false);
-  const [showDownloadDialog, setShowDownloadDialog] = useState(false);
-  const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
-  const [showPrintDialog, setShowPrintDialog] = useState(false);
-  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
-  const [showImportDialog, setShowImportDialog] = useState(false);
+  // --- Local UI State ---
+  // State for the format dialog form is kept local as it's tightly coupled to the dialog's lifecycle
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
-  const [wizardStep, setWizardStep] = useState<'guidelines' | 'camera' | 'result'>('guidelines');
-  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
-  const [isPWA, setIsPWA] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [highResBlob, setHighResBlob] = useState<Blob | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
     widthPx: '',
@@ -104,15 +59,20 @@ function AppContent() {
   });
 
   const allFormats: Format[] = [...FORMATS, ...customFormats];
-  const selectedFormat = allFormats.find(f => f.id === selectedFormatId)!;
+  const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const wizardStepIndex = { guidelines: 0, camera: 1, result: 2 }[wizardStep];
+
+  // Wrapper to match previous signature
+  const retakePhoto = useCallback(() => {
+    storeRetakePhoto(isMobile);
+  }, [storeRetakePhoto, isMobile]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [setIsMobile]);
 
   useEffect(() => {
     const checkPWA = () => {
@@ -130,24 +90,18 @@ function AppContent() {
       standaloneMatcher.removeEventListener('change', checkPWA);
       fullscreenMatcher.removeEventListener('change', checkPWA);
     };
-  }, []);
-
-  const addToast = useCallback((message: string, type: 'error' | 'info' | 'success' = 'info', duration: number = 5000) => {
-    const id = Date.now() + Math.random();
-    setToasts(prev => [...prev, { id, message, type, duration }]);
-  }, []);
+  }, [setIsPWA]);
 
   // Effect to manage the toast queue, showing one at a time.
   useEffect(() => {
     if (toasts.length > 0) {
       const timer = setTimeout(() => {
-        // Remove the shown toast from the front of the queue
-        setToasts(currentToasts => currentToasts.slice(1));
+        removeToast();
       }, toasts[0].duration);
 
       return () => clearTimeout(timer);
     }
-  }, [toasts]);
+  }, [toasts, removeToast]);
 
   const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
     context.save();
@@ -183,22 +137,14 @@ function AppContent() {
     context.restore();
   }, []);
 
-  const retakePhoto = useCallback(() => {
-    setBaseImage(null);
-    setHighResBlob(null);
-    if (isMobile) {
-      setWizardStep('camera');
-    }
-  }, [isMobile]);
-
   const stopCamera = useCallback(() => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
       setStream(null);
       setIsCameraOn(false);
       imageCaptureRef.current = null;
     }
-  }, [stream]);
+  }, [stream, setStream, setIsCameraOn]);
 
   const startCamera = useCallback(async (modeToSet: 'user' | 'environment' = facingMode) => {
     try {
@@ -258,7 +204,7 @@ function AppContent() {
       setIsCameraOn(false);
       setIsCameraLoading(false);
     }
-  }, [addToast, selectedFormat, facingMode]);
+  }, [addToast, selectedFormat, facingMode, setStream, setFacingMode, setIsCameraOn, setIsCameraLoading]);
 
   const switchCamera = useCallback(async () => {
     const newMode = facingMode === 'user' ? 'environment' : 'user';
@@ -391,10 +337,14 @@ function AppContent() {
       setWizardStep('result');
     }
     addToast('Photo captured from video stream.', 'success');
-  }, [addToast, selectedFormat, isMobile]);
+  }, [addToast, selectedFormat, isMobile, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
 
   const downloadProcessedImage = useCallback(() => {
+    const { capturedImage, personName, selectedFormatId, customFormats } = useStore.getState();
     if (!capturedImage) return;
+
+    const allFormats = [...FORMATS, ...customFormats];
+    const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
 
     const link = document.createElement('a');
     const safeName = personName.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '');
@@ -403,9 +353,10 @@ function AppContent() {
     link.href = capturedImage;
     link.click();
     addToast('Processed image downloaded!', 'success');
-  }, [capturedImage, personName, selectedFormat, addToast]);
+  }, [addToast]);
 
   const downloadHighResImage = useCallback(() => {
+    const { highResBlob, personName } = useStore.getState();
     if (!highResBlob) return;
 
     const link = document.createElement('a');
@@ -417,7 +368,7 @@ function AppContent() {
     link.click();
     URL.revokeObjectURL(link.href);
     addToast('Original image downloaded!', 'success');
-  }, [highResBlob, personName, addToast]);
+  }, [addToast]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -446,41 +397,20 @@ function AppContent() {
   }, []);
 
   const handleCloseDialog = useCallback(() => {
-    setShowCustomFormatForm(false);
+    setActiveDialog(null);
     handleCancelEdit();
-  }, [handleCancelEdit]);
+  }, [handleCancelEdit, setActiveDialog]);
 
   const handleFullscreenChange = useCallback(() => {
     setIsFullscreen(!!document.fullscreenElement);
-  }, []);
+  }, [setIsFullscreen]);
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [handleFullscreenChange]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('rubyPassportCustomFormats', JSON.stringify(customFormats));
-    } catch (error) {
-      console.error('Failed to save custom formats to localStorage', error);
-      addToast('Could not save custom formats.', 'error');
-    }
-  }, [customFormats, addToast]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('rubyPassportSelectedFormatId', selectedFormatId);
-    } catch (error) {
-      console.error('Failed to save selected format to localStorage', error);
-      addToast('Could not save selected format.', 'error');
-    }
-  }, [selectedFormatId, addToast]);
-
-  useEffect(() => {
-    // On mobile, automatically stop the camera if we navigate away from the camera step,
-    // for example, after capturing a photo and moving to the result panel.
-    // This conserves battery and resources.
+  useEffect(() => { // On mobile, automatically stop the camera if we navigate away from the camera step.
     if (isMobile && wizardStep !== 'camera' && isCameraOn) {
       stopCamera();
     }
@@ -492,20 +422,18 @@ function AppContent() {
       const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
 
       if (e.key === 'Escape') {
-        if (showShortcutsDialog) { setShowShortcutsDialog(false); return; }
-        if (showCustomFormatForm) { handleCloseDialog(); return; }
-        if (showPrintDialog) { setShowPrintDialog(false); return; }
-        if (showImportDialog) { setShowImportDialog(false); return; }
-        if (showDownloadDialog) { setShowDownloadDialog(false); return; }
-        if (isInfoDialogOpen) { setIsInfoDialogOpen(false); return; }
+        if (activeDialog) {
+          setActiveDialog(null);
+          return;
+        }
         if (isTyping) (e.target as HTMLElement).blur();
         return;
       }
 
       if (isTyping) return;
 
-      // No other shortcuts if a dialog is open
-      if (showShortcutsDialog || showCustomFormatForm || showPrintDialog || isInfoDialogOpen || showDownloadDialog || showImportDialog) {
+      // No other shortcuts if a dialog is open, except for Escape which is handled above.
+      if (activeDialog) {
         return;
       }
 
@@ -517,7 +445,7 @@ function AppContent() {
 
       switch (e.key) {
         case '?':
-          setShowShortcutsDialog(true);
+          setActiveDialog('shortcuts');
           break;
         case 'c':
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -530,25 +458,25 @@ function AppContent() {
           }
           break;
         case 'u':
-          if (!isCameraOn) setShowImportDialog(true);
+          if (!isCameraOn) setActiveDialog('import');
           break;
         case 'd':
-          if (capturedImage) setShowDownloadDialog(true);
+          if (useStore.getState().capturedImage) setActiveDialog('download');
           break;
         case 'r':
-          if (capturedImage) retakePhoto();
+          if (useStore.getState().capturedImage) retakePhoto();
           break;
         case 'w':
-          if (capturedImage) setWatermarkEnabled(p => !p);
+          if (useStore.getState().capturedImage) setWatermarkEnabled(!useStore.getState().watermarkEnabled);
           break;
         case 'p':
-          if (capturedImage) setShowPrintDialog(true);
+          if (useStore.getState().capturedImage) setActiveDialog('print');
           break;
         case 'f':
-          setShowCustomFormatForm(true);
+          setActiveDialog('customFormat');
           break;
         case 'i':
-          setIsInfoDialogOpen(true);
+          setActiveDialog('info');
           break;
         case 't':
           // Simulate a click on the theme switcher button
@@ -562,7 +490,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, capturedImage, showCustomFormatForm, showPrintDialog, showShortcutsDialog, isInfoDialogOpen, showDownloadDialog, showImportDialog, startCamera, stopCamera, capturePhoto, downloadProcessedImage, retakePhoto, toggleFullscreen, handleCloseDialog]);
+  }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled]);
 
   useEffect(() => {
     if (!baseImage) {
@@ -600,13 +528,13 @@ function AppContent() {
       addToast('Failed to load image for processing.', 'error');
       setIsProcessingImage(false);
     };
-    img.src = baseImage;
-  }, [baseImage, watermarkEnabled, applyWatermark, addToast]);
+    img.src = baseImage; // This triggers the onload
+  }, [baseImage, watermarkEnabled, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
 
   useEffect(() => {
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (stream) { // Ensure camera is off on unmount
+        stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
       }
     };
   }, [stream]);
@@ -653,19 +581,28 @@ function AppContent() {
         video.removeEventListener('canplay', handleCanPlay);
       };
     }
-  }, [stream, addToast]);
+  }, [stream, addToast, setIsCameraLoading]);
 
   const handleImageCropped = useCallback((originalFile: File, croppedDataUrl: string) => {
     setHighResBlob(originalFile);
-    setBaseImage(croppedDataUrl);
-    setShowImportDialog(false);
+    setBaseImage(croppedDataUrl); // This will trigger the processing effect
+    setActiveDialog(null);
     if (isMobile) {
       setWizardStep('result');
     }
     addToast('Image imported and cropped successfully!', 'success');
-  }, [addToast, isMobile]);
+  }, [addToast, isMobile, setBaseImage, setHighResBlob, setWizardStep, setActiveDialog]);
 
-  const openPrintPreview = () => {
+  const openPrintPreview = useCallback(() => {
+    const {
+      capturedImage,
+      personName,
+      selectedFormatId,
+      customFormats,
+      autoFit10x15,
+      photosPerPage
+    } = useStore.getState();
+
     if (!capturedImage) return;
     addToast('Preparing print preview...', 'info');
     const printWin = window.open('', '_blank');
@@ -673,6 +610,8 @@ function AppContent() {
       addToast('Could not open print window. Please disable your pop-up blockers.', 'error');
       return;
     }
+    const allFormats = [...FORMATS, ...customFormats];
+    const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
     const widthIn = selectedFormat.printWidthIn;
     const heightIn = selectedFormat.printHeightIn;
     // Paper size: 10x15 cm (approx 3.94 x 5.91 in)
@@ -809,7 +748,7 @@ function AppContent() {
       });
     };
     waitForImages();
-  };
+  }, [addToast]);
 
   const handleEditClick = (formatToEdit: Format) => {
     setEditingFormat(formatToEdit);
@@ -831,15 +770,7 @@ function AppContent() {
       return;
     }
 
-    const updatedFormat: Format = {
-      id: editingFormat.id,
-      label: label.trim(),
-      widthPx: parseInt(widthPx, 10),
-      heightPx: parseInt(heightPx, 10),
-      printWidthIn: parseFloat(printWidthMm) / 25.4,
-      printHeightIn: parseFloat(printHeightMm) / 25.4,
-    };
-
+    const updatedFormat: Format = { ...editingFormat, label: label.trim(), widthPx: parseInt(widthPx, 10), heightPx: parseInt(heightPx, 10), printWidthIn: parseFloat(printWidthMm) / 25.4, printHeightIn: parseFloat(printHeightMm) / 25.4 };
     if (
       isNaN(updatedFormat.widthPx) || updatedFormat.widthPx <= 0 ||
       isNaN(updatedFormat.heightPx) || updatedFormat.heightPx <= 0 ||
@@ -850,8 +781,7 @@ function AppContent() {
       return;
     }
 
-    setCustomFormats(prev => prev.map(f => (f.id === editingFormat.id ? updatedFormat : f)));
-    addToast(`Updated custom format: ${label}`, 'success');
+    updateCustomFormat(updatedFormat);
 
     // If the currently selected format was the one being edited, ensure it remains selected
     // (though the id doesn't change, this is good practice if it could)
@@ -869,8 +799,7 @@ function AppContent() {
       return;
     }
 
-    const newCustomFormat: Format = {
-      id: `custom_${Date.now()}`,
+    const newCustomFormat: Omit<Format, 'id'> = {
       label: label.trim(),
       widthPx: parseInt(widthPx, 10),
       heightPx: parseInt(heightPx, 10),
@@ -888,8 +817,7 @@ function AppContent() {
       return;
     }
 
-    setCustomFormats(prev => [...prev, newCustomFormat]);
-    addToast(`Added custom format: ${label}`, 'success');
+    addCustomFormat(newCustomFormat);
     setNewFormat({
       label: '',
       widthPx: '',
@@ -897,24 +825,17 @@ function AppContent() {
       printWidthMm: '',
       printHeightMm: '',
     });
-    setSelectedFormatId(newCustomFormat.id);
   };
 
   const handleDeleteCustomFormat = (idToDelete: string) => {
-    if (editingFormat && editingFormat.id === idToDelete) {
-      handleCancelEdit(); // Reset form if deleting the item being edited
-    }
-    setCustomFormats(prev => prev.filter(f => f.id !== idToDelete));
-    if (selectedFormatId === idToDelete) {
-      setSelectedFormatId('eu_35x45'); // reset to a default
-    }
-    addToast('Custom format removed.', 'success');
+    if (editingFormat && editingFormat.id === idToDelete) handleCancelEdit();
+    deleteCustomFormat(idToDelete);
   };
 
   return (
     <div className="min-h-screen md:p-4 md:flex md:items-center md:justify-center">
-      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-4 md:p-0 ${(showCustomFormatForm || showPrintDialog || showShortcutsDialog || isInfoDialogOpen || showImportDialog) ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} onOpenShortcutsDialog={() => setShowShortcutsDialog(true)} onOpenInfoDialog={() => setIsInfoDialogOpen(true)} isMobile={isMobile} isPWA={isPWA} />
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-4 md:p-0 ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+        <Header onToggleFullscreen={toggleFullscreen} />
 
         {isMobile ? (
           <div className="w-full flex-grow flex flex-col pb-2">
@@ -939,7 +860,7 @@ function AppContent() {
                 {/* Guidelines Step */}
                 <div className="w-1/3 px-1 flex flex-col h-full">
                   <div className="flex-grow overflow-y-auto">
-                    <Guidelines isMobile={isMobile} />
+                    <Guidelines />
                   </div>
                   <button
                     onClick={() => setWizardStep('camera')}
@@ -951,33 +872,29 @@ function AppContent() {
 
                 {/* Camera Step */}
                 <div className="w-1/3 px-1 h-full">
-                  <CameraView isCameraOn={isCameraOn} isCameraLoading={isCameraLoading} videoRef={videoRef} selectedFormat={selectedFormat} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setShowImportDialog(true)} onManageFormatsClick={() => setShowCustomFormatForm(true)} onBack={() => setWizardStep('guidelines')} isMobile={isMobile} onSwitchCamera={switchCamera} facingMode={facingMode} />
+                  <CameraView videoRef={videoRef} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setActiveDialog('import')} onManageFormatsClick={() => setActiveDialog('customFormat')} onBack={() => setWizardStep('guidelines')} onSwitchCamera={switchCamera} />
                 </div>
 
                 {/* Result Step */}
                 <div className="w-1/3 px-1 h-full">
-                  <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} isMobile={isMobile} />
+                  <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
                 </div>
               </div>
             </div>
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            <Guidelines isMobile={isMobile} />
+            <Guidelines />
             <CameraView
-              isCameraOn={isCameraOn}
-              isCameraLoading={isCameraLoading}
               videoRef={videoRef}
-              selectedFormat={selectedFormat}
               onStartCamera={() => startCamera()}
               onStopCamera={stopCamera}
               onCapturePhoto={capturePhoto}
-              onImportClick={() => setShowImportDialog(true)}
-              onManageFormatsClick={() => setShowCustomFormatForm(true)}
+              onImportClick={() => setActiveDialog('import')}
+              onManageFormatsClick={() => setActiveDialog('customFormat')}
               onSwitchCamera={switchCamera}
-              facingMode={facingMode}
             />
-            <ResultPanel isProcessingImage={isProcessingImage} capturedImage={capturedImage} selectedFormat={selectedFormat} personName={personName} onPersonNameChange={setPersonName} watermarkEnabled={watermarkEnabled} onWatermarkChange={setWatermarkEnabled} onDownload={() => setShowDownloadDialog(true)} onRetake={retakePhoto} onOpenPrintDialog={() => setShowPrintDialog(true)} />
+            <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
           </div>
         )}
 
@@ -992,12 +909,8 @@ function AppContent() {
       <ToastContainer activeToast={toasts[0] ?? null} />
 
       <FormatDialog
-        isOpen={showCustomFormatForm}
+        isOpen={activeDialog === 'customFormat'}
         onClose={handleCloseDialog}
-        customFormats={customFormats}
-        allFormats={allFormats}
-        selectedFormatId={selectedFormatId}
-        onSetSelectedFormatId={setSelectedFormatId}
         editingFormat={editingFormat}
         newFormat={newFormat}
         onNewFormatChange={setNewFormat}
@@ -1009,41 +922,32 @@ function AppContent() {
       />
 
       <ImportDialog
-        isOpen={showImportDialog}
-        onClose={() => setShowImportDialog(false)}
+        isOpen={activeDialog === 'import'}
+        onClose={() => setActiveDialog(null)}
         onImageCropped={handleImageCropped}
-        selectedFormat={selectedFormat}
-        addToast={addToast}
-        isMobile={isMobile}
       />
 
       <PrintOptionsDialog
-        isOpen={showPrintDialog}
-        onClose={() => setShowPrintDialog(false)}
+        isOpen={activeDialog === 'print'}
+        onClose={() => setActiveDialog(null)}
         onPrint={openPrintPreview}
-        photosPerPage={photosPerPage}
-        onPhotosPerPageChange={setPhotosPerPage}
-        autoFit10x15={autoFit10x15}
-        onAutoFitChange={setAutoFit10x15}
-        selectedFormat={selectedFormat}
       />
 
       <DownloadOptionsDialog
-        isOpen={showDownloadDialog}
-        onClose={() => setShowDownloadDialog(false)}
+        isOpen={activeDialog === 'download'}
+        onClose={() => setActiveDialog(null)}
         onDownloadProcessed={downloadProcessedImage}
         onDownloadHighRes={downloadHighResImage}
-        hasHighRes={!!highResBlob}
       />
 
       <ShortcutsDialog
-        isOpen={showShortcutsDialog}
-        onClose={() => setShowShortcutsDialog(false)}
+        isOpen={activeDialog === 'shortcuts'}
+        onClose={() => setActiveDialog(null)}
       />
 
       <InfoDialog
-        isOpen={isInfoDialogOpen}
-        onClose={() => setIsInfoDialogOpen(false)}
+        isOpen={activeDialog === 'info'}
+        onClose={() => setActiveDialog(null)}
       />
     </div>
   );
