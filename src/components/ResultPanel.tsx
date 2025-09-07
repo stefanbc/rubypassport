@@ -116,7 +116,7 @@ export function ResultPanel({
           value={personName}
           onChange={(e) => setPersonName(e.target.value)}
           placeholder="Person's Name (optional)"
-          className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
+          className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
         />
         <div className="flex flex-col sm:flex-row gap-3">
           <button
