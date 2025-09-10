@@ -39,8 +39,8 @@ function AppContent() {
     setBaseImage, setCapturedImage, setHighResBlob, setStream, setIsCameraOn, setIsCameraLoading, setFacingMode,
     setIsProcessingImage, setIsMobile, setIsPWA, setIsFullscreen, setActiveDialog,
     addToast, removeToast, retakePhoto: storeRetakePhoto,
-    addCustomFormat, updateCustomFormat, deleteCustomFormat
-  } = useStore();
+    addCustomFormat, updateCustomFormat, deleteCustomFormat,
+    multiCaptureEnabled, enqueueToQueue } = useStore();
 
   // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -268,7 +268,7 @@ function AppContent() {
 
           const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
           setBaseImage(imageDataUrl);
-          if (isMobile) {
+          if (isMobile && !multiCaptureEnabled) {
             setWizardStep('result');
           }
           addToast('Photo captured successfully!', 'success');
@@ -333,11 +333,11 @@ function AppContent() {
 
     const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     setBaseImage(imageDataUrl);
-    if (isMobile) {
+    if (isMobile && !multiCaptureEnabled) {
       setWizardStep('result');
     }
     addToast('Photo captured from video stream.', 'success');
-  }, [addToast, selectedFormat, isMobile, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
+  }, [addToast, selectedFormat, isMobile, multiCaptureEnabled, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
 
   const downloadProcessedImage = useCallback(() => {
     const { capturedImage, personName, selectedFormatId, customFormats } = useStore.getState();
@@ -470,7 +470,7 @@ function AppContent() {
           if (useStore.getState().capturedImage) setWatermarkEnabled(!useStore.getState().watermarkEnabled);
           break;
         case 'p':
-          if (useStore.getState().capturedImage) setActiveDialog('print');
+          if (useStore.getState().capturedImage || useStore.getState().captureQueue.length > 0) setActiveDialog('print');
           break;
         case 'f':
           setActiveDialog('customFormat');
@@ -492,6 +492,7 @@ function AppContent() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled]);
 
+  const lastQueuedBaseImageRef = useRef<string | null>(null);
   useEffect(() => {
     if (!baseImage) {
       setCapturedImage(null);
@@ -521,7 +522,13 @@ function AppContent() {
         applyWatermark(context, img.width, img.height);
       }
 
-      setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
+      const finalDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+      setCapturedImage(finalDataUrl);
+      if (multiCaptureEnabled && baseImage !== lastQueuedBaseImageRef.current) {
+        enqueueToQueue(finalDataUrl);
+        lastQueuedBaseImageRef.current = baseImage;
+        addToast(`Added to queue (${useStore.getState().captureQueue.length + 1})`, 'success', 2500);
+      }
       setIsProcessingImage(false);
     };
     img.onerror = () => {
@@ -529,7 +536,7 @@ function AppContent() {
       setIsProcessingImage(false);
     };
     img.src = baseImage; // This triggers the onload
-  }, [baseImage, watermarkEnabled, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
+  }, [baseImage, watermarkEnabled, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
 
   useEffect(() => {
     return () => {
@@ -600,10 +607,11 @@ function AppContent() {
       selectedFormatId,
       customFormats,
       autoFit10x15,
-      photosPerPage
+      photosPerPage,
+      captureQueue
     } = useStore.getState();
 
-    if (!capturedImage) return;
+    if (!capturedImage && captureQueue.length === 0) return;
     addToast('Preparing print preview...', 'info');
     const printWin = window.open('', '_blank');
     if (!printWin) {
@@ -706,6 +714,7 @@ function AppContent() {
 
     const sheet = doc.createElement('div');
     sheet.className = 'sheet';
+    const imagesSource = captureQueue.length > 0 ? captureQueue : (capturedImage ? [capturedImage] : []);
     const countToRender = totalImages;
     for (let i = 0; i < countToRender; i++) {
       const photoContainer = doc.createElement('div');
@@ -713,7 +722,7 @@ function AppContent() {
 
       const img = doc.createElement('img');
       img.className = 'photo';
-      img.src = capturedImage;
+      img.src = imagesSource[i % imagesSource.length]!;
       img.alt = 'Passport portrait';
       photoContainer.appendChild(img);
       photoContainer.appendChild(doc.createElement('span'));

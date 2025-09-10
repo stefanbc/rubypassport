@@ -62,6 +62,9 @@ interface AppState {
   isCameraLoading: boolean
   facingMode: FacingMode
   toasts: (Toast & { duration: number })[]
+  // Multi-capture queue
+  multiCaptureEnabled: boolean
+  captureQueue: string[]
 }
 
 interface AppActions {
@@ -78,6 +81,10 @@ interface AppActions {
   setTheme: (theme: Theme) => void
   setWatermarkEnabled: (enabled: boolean) => void
   setAutoFit10x15: (enabled: boolean) => void
+  // Multi-capture Actions
+  setMultiCaptureEnabled: (enabled: boolean) => void
+  enqueueToQueue: (imageDataUrl: string) => void
+  clearQueue: () => void
 
   // UI Actions
   setIsProcessingImage: (isProcessing: boolean) => void
@@ -131,6 +138,8 @@ const initialState: AppState = {
   isCameraLoading: false,
   facingMode: 'user',
   toasts: [],
+  multiCaptureEnabled: false,
+  captureQueue: [],
 }
 
 export const useStore = create<AppState & AppActions>()(
@@ -174,6 +183,11 @@ export const useStore = create<AppState & AppActions>()(
       setTheme: (theme) => set({ theme }),
       setWatermarkEnabled: (enabled) => set({ watermarkEnabled: enabled }),
       setAutoFit10x15: (enabled) => set({ autoFit10x15: enabled }),
+      // Multi-capture Actions
+      setMultiCaptureEnabled: (enabled) => set({ multiCaptureEnabled: enabled }),
+      enqueueToQueue: (imageDataUrl) =>
+        set((state) => ({ captureQueue: [...state.captureQueue, imageDataUrl] })),
+      clearQueue: () => set({ captureQueue: [] }),
 
       // UI Actions
       setIsProcessingImage: (isProcessing) =>

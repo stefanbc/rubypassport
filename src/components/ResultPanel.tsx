@@ -24,6 +24,8 @@ export function ResultPanel({
     isMobile,
     selectedFormatId,
     customFormats,
+    captureQueue,
+    clearQueue,
   } = useStore();
 
   const allFormats = [...FORMATS, ...customFormats];
@@ -111,6 +113,12 @@ export function ResultPanel({
       <div className="flex-grow" />
 
       <div className="space-y-4">
+        {captureQueue.length > 0 && (
+          <div className="flex items-center justify-between text-xs bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800 rounded px-3 py-2">
+            <span>Queued photos: {captureQueue.length}</span>
+            <button onClick={clearQueue} className="text-red-600 dark:text-red-300 hover:underline cursor-pointer">Clear</button>
+          </div>
+        )}
         <input
           type="text"
           value={personName}
@@ -121,7 +129,7 @@ export function ResultPanel({
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={onDownload}
-            disabled={!capturedImage || isProcessingImage}
+            disabled={(!capturedImage && captureQueue.length === 0) || isProcessingImage}
             className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
           >
             <Download size={20} />
@@ -129,7 +137,7 @@ export function ResultPanel({
           </button>
           <button
             onClick={onOpenPrintDialog}
-            disabled={!capturedImage || isProcessingImage}
+            disabled={(!capturedImage && captureQueue.length === 0) || isProcessingImage}
             className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
           >
             <Printer size={20} />
