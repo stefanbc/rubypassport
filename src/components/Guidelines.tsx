@@ -87,7 +87,7 @@ export function Guidelines() {
         <div className="rounded-md bg-red-50 dark:bg-zinc-800/60 border border-red-100 dark:border-red-900/40 p-3">
           <p className="text-xs text-gray-700 dark:text-gray-300">
             <span className="font-semibold">Your Privacy Matters</span><br />
-            This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you’re done, they’re gone.
+            This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you're done, they're gone.
           </p>
         </div>
 

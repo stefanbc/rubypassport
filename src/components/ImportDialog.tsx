@@ -259,19 +259,27 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={handleBackdropClick}>
-      <div
-        className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600" aria-label="Close dialog">
-          <XCircle size={24} />
-        </button>
-        <h2 className="text-xl sm:text-2xl font-semibold text-red-600 dark:text-red-400 mb-4 select-none">{imageSrc ? 'Reposition Image' : 'Import Image'}</h2>
+      <div className="bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-2xl border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
+          <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
+            <UploadCloud size={24} />
+            {imageSrc ? 'Reposition Image' : 'Import Image'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            aria-label="Close dialog"
+          >
+            <XCircle size={22} />
+          </button>
+        </div>
 
         <input type="file" ref={fileInputRef} onChange={handleFileSelected} accept="image/*" className="hidden" />
 
-        {imageSrc ? (
-          <div>
+        <div className="p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
+          {imageSrc ? (
+            <div>
             <div
               ref={cropContainerRef}
               className="relative bg-gray-200 dark:bg-black rounded-md overflow-hidden cursor-grab active:cursor-grabbing"
@@ -366,20 +374,21 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
                 Confirm & Crop
               </button>
             </div>
-          </div>
-        ) : (
-          <div
-            onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop}
-            className={`mt-4 flex flex-col items-center justify-center p-6 sm:p-10 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-red-500 bg-red-50 dark:bg-zinc-800' : 'border-gray-300 dark:border-zinc-700'}`}
-          >
-            <UploadCloud className={`w-12 h-12 mb-3 transition-colors ${isDragging ? 'text-red-600' : 'text-gray-400'}`} />
-            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Drag & drop</span> an image here</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">or</p>
-            <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded text-center transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
-              {isMobile ? 'Choose from phone' : 'Choose from computer'}
-            </button>
-          </div>
-        )}
+            </div>
+          ) : (
+            <div
+              onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop}
+              className={`flex flex-col items-center justify-center p-6 sm:p-10 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-red-500 bg-red-50 dark:bg-zinc-800' : 'border-gray-300 dark:border-zinc-700'}`}
+            >
+              <UploadCloud className={`w-12 h-12 mb-3 transition-colors ${isDragging ? 'text-red-600' : 'text-gray-400'}`} />
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Drag & drop</span> an image here</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">or</p>
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded text-center transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
+                {isMobile ? 'Choose from phone' : 'Choose from computer'}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

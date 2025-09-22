@@ -1,13 +1,35 @@
 import { Maximize, Minimize, Info, Keyboard, Images } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { useStore } from '../store';
+import { useShallow } from 'zustand/react/shallow';
 
 type HeaderProps = {
   onToggleFullscreen: () => void;
 };
 
 export function Header({ onToggleFullscreen }: HeaderProps) {
-  const { isFullscreen, isMobile, setActiveDialog, multiCaptureEnabled, setMultiCaptureEnabled } = useStore();
+  const {
+    isFullscreen,
+    isMobile,
+    setActiveDialog,
+    multiCaptureEnabled,
+    setMultiCaptureEnabled,
+    addToast,
+    captureQueue,
+  } = useStore(
+    useShallow((state) => ({
+      isFullscreen: state.isFullscreen,
+      isMobile: state.isMobile,
+      setActiveDialog: state.setActiveDialog,
+      multiCaptureEnabled: state.multiCaptureEnabled,
+      setMultiCaptureEnabled: state.setMultiCaptureEnabled,
+      addToast: state.addToast,
+      captureQueue: state.captureQueue,
+    }))
+  );
+
+  const hasQueue = captureQueue.length > 0;
+
   return (
     <header className="mb-3 flex items-center justify-between gap-2 sm:gap-4">
       <div className="flex items-center gap-2 sm:gap-3">
@@ -22,15 +44,34 @@ export function Header({ onToggleFullscreen }: HeaderProps) {
       <div className="flex items-center gap-1 sm:gap-2">
         <ThemeSwitcher />
         <button
-          onClick={() => setMultiCaptureEnabled(!multiCaptureEnabled)}
-          className={`relative p-2 rounded-full transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600 ${multiCaptureEnabled
+          onClick={() => {
+            if (hasQueue) {
+              setActiveDialog('photoQueue');
+            } else {
+              const newState = !multiCaptureEnabled;
+              setMultiCaptureEnabled(newState);
+              addToast(
+                newState
+                  ? 'Photo Booth mode enabled - photos will be queued for batch printing'
+                  : 'Photo Booth mode disabled - single photo mode',
+                'info',
+                2500
+              );
+            }
+          }}
+          className={`relative p-2 rounded-full transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600 ${multiCaptureEnabled || hasQueue
             ? 'bg-red-600 text-white hover:bg-red-700'
             : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800'}
           `}
           aria-pressed={multiCaptureEnabled}
-          title={multiCaptureEnabled ? 'Photo Booth enabled' : 'Enable Photo Booth'}
+          title={hasQueue ? `View Photo Queue (${captureQueue.length})` : (multiCaptureEnabled ? 'Photo Booth enabled' : 'Enable Photo Booth')}
         >
           <Images size={20} />
+          {hasQueue && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-500 text-white text-[10px] font-bold ring-2 ring-gray-50 dark:ring-black">
+              {captureQueue.length}
+            </span>
+          )}
         </button>
         {!isMobile && (
           <button

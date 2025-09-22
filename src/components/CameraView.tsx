@@ -24,7 +24,7 @@ export function CameraView({
   onSwitchCamera,
   onBack,
 }: CameraViewProps) {
-  const { isCameraOn, isCameraLoading, selectedFormatId, customFormats, facingMode, isMobile, captureQueue } = useStore();
+  const { isCameraOn, isCameraLoading, selectedFormatId, customFormats, facingMode, isMobile } = useStore();
   const allFormats = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
 
@@ -37,7 +37,7 @@ export function CameraView({
 
   return (
     <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 relative ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
-      <div className="relative flex justify-center items-center mb-4">
+      <div className={`relative flex ${isMobile ? 'justify-center' : ''} items-center mb-4`}>
         {isMobile && onBack && (
           <button
             onClick={onBack}
@@ -141,11 +141,6 @@ export function CameraView({
       <div className="flex-grow" />
 
       <div className="space-y-4">
-        {captureQueue.length > 0 && (
-          <div className="flex items-center justify-end">
-            <span className="text-xs px-2 py-1 rounded bg-red-600/10 text-red-700 dark:text-red-300 border border-red-300/40">Queued: {captureQueue.length}</span>
-          </div>
-        )}
         <button
           onClick={onManageFormatsClick}
           className="w-full flex items-center justify-between text-left gap-2 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40 hover:bg-gray-200 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"

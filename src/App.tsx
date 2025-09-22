@@ -14,6 +14,7 @@ import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
 import { ImportDialog } from './components/ImportDialog';
 import { useStore } from './store';
+import { PhotoQueueDialog } from './components/PhotoQueueDialog';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -32,7 +33,7 @@ function App() {
 function AppContent() {
   // --- Store State and Actions ---
   const {
-    customFormats, selectedFormatId, watermarkEnabled,
+    customFormats, selectedFormatId, watermarkEnabled, watermarkText,
     baseImage, stream, isCameraOn, facingMode, toasts,
     isMobile, activeDialog, wizardStep,
     setSelectedFormatId, setWatermarkEnabled, setWizardStep,
@@ -40,7 +41,7 @@ function AppContent() {
     setIsProcessingImage, setIsMobile, setIsPWA, setIsFullscreen, setActiveDialog,
     addToast, removeToast, retakePhoto: storeRetakePhoto,
     addCustomFormat, updateCustomFormat, deleteCustomFormat,
-    multiCaptureEnabled, enqueueToQueue } = useStore();
+    multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled } = useStore();
 
   // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -103,20 +104,20 @@ function AppContent() {
     }
   }, [toasts, removeToast]);
 
-  const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
+  const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number, text: string) => {
+    if (!text.trim()) return;
     context.save();
     const diagonalRadians = -25 * Math.PI / 180;
     const baseSize = Math.min(targetWidth, targetHeight);
     const fontSize = Math.max(14, Math.floor(baseSize * 0.075));
     context.font = `600 ${fontSize}px 'EB Garamond', 'Garamond', 'Times New Roman', serif`;
-    context.fillStyle = 'rgba(255,255,255,0.04)';
-    context.strokeStyle = 'rgba(255,255,255,0.03)';
+    context.fillStyle = 'rgba(255,255,255,0.07)';
+    context.strokeStyle = 'rgba(255,255,255,0.06)';
     context.lineWidth = Math.max(0.4, Math.floor(fontSize * 0.02));
     context.textAlign = 'center';
     context.textBaseline = 'middle';
 
     // Create a tiled pattern of watermark text sized to avoid overlaps
-    const text = '💎 RUBY PASSPORT';
     const metrics = context.measureText(text);
     const textWidth = Math.max(metrics.width, fontSize * 6);
     const stepX = textWidth + fontSize * 1.25; // horizontal spacing
@@ -164,7 +165,7 @@ function AppContent() {
 
       const capabilities = videoTrack.getCapabilities();
       if (capabilities.width?.max && capabilities.height?.max) {
-        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 4000);
+        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 1500);
       }
 
       // Apply more specific constraints for the best quality and aspect ratio.
@@ -185,19 +186,19 @@ function AppContent() {
 
       const settings = videoTrack.getSettings();
       if (settings.width && settings.height) {
-        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 4000);
+        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 1500);
       }
 
       if ('ImageCapture' in window) {
         try {
           imageCaptureRef.current = new ImageCapture(videoTrack);
-          addToast('High-resolution capture is available.', 'info', 3000);
+          addToast('High-resolution capture is available.', 'info', 1500);
         } catch (e) {
           console.error('Could not create ImageCapture:', e);
           imageCaptureRef.current = null;
         }
       } else {
-        addToast('High-resolution capture not supported. Using video stream.', 'info', 3000);
+        addToast('High-resolution capture not supported. Using video stream.', 'info', 1500);
       }
     } catch (err) {
       addToast(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
@@ -218,7 +219,7 @@ function AppContent() {
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
       try {
-        addToast('Capturing high-resolution photo...', 'info', 2000);
+        addToast('Capturing high-resolution photo...', 'info', 1000);
         const blob = await imageCaptureRef.current.takePhoto();
         setHighResBlob(blob);
         const imageUrl = URL.createObjectURL(blob);
@@ -268,7 +269,7 @@ function AppContent() {
 
           const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
           setBaseImage(imageDataUrl);
-          if (isMobile && !multiCaptureEnabled) {
+          if (isMobile) {
             setWizardStep('result');
           }
           addToast('Photo captured successfully!', 'success');
@@ -333,7 +334,7 @@ function AppContent() {
 
     const imageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
     setBaseImage(imageDataUrl);
-    if (isMobile && !multiCaptureEnabled) {
+    if (isMobile) {
       setWizardStep('result');
     }
     addToast('Photo captured from video stream.', 'success');
@@ -482,6 +483,9 @@ function AppContent() {
           // Simulate a click on the theme switcher button
           document.querySelector<HTMLButtonElement>('button[title^="Switch to"]')?.click();
           break;
+        case 'b':
+          setMultiCaptureEnabled(!useStore.getState().multiCaptureEnabled);
+          break;
         case 'Enter':
           toggleFullscreen();
           break;
@@ -490,7 +494,7 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled]);
+  }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled, setMultiCaptureEnabled]);
 
   const lastQueuedBaseImageRef = useRef<string | null>(null);
   useEffect(() => {
@@ -519,7 +523,7 @@ function AppContent() {
       context.drawImage(img, 0, 0);
 
       if (watermarkEnabled) {
-        applyWatermark(context, img.width, img.height);
+        applyWatermark(context, img.width, img.height, watermarkText);
       }
 
       const finalDataUrl = canvas.toDataURL('image/jpeg', 1.0);
@@ -527,7 +531,7 @@ function AppContent() {
       if (multiCaptureEnabled && baseImage !== lastQueuedBaseImageRef.current) {
         enqueueToQueue(finalDataUrl);
         lastQueuedBaseImageRef.current = baseImage;
-        addToast(`Added to queue (${useStore.getState().captureQueue.length + 1})`, 'success', 2500);
+        addToast(`Added to queue (${useStore.getState().captureQueue.length})`, 'success', 1000);
       }
       setIsProcessingImage(false);
     };
@@ -536,7 +540,7 @@ function AppContent() {
       setIsProcessingImage(false);
     };
     img.src = baseImage; // This triggers the onload
-  }, [baseImage, watermarkEnabled, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
+  }, [baseImage, watermarkEnabled, watermarkText, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
 
   useEffect(() => {
     return () => {
@@ -914,6 +918,11 @@ function AppContent() {
         {/* Hidden canvas for photo processing */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />
       </div>
+
+      <PhotoQueueDialog
+        isOpen={activeDialog === 'photoQueue'}
+        onClose={handleCloseDialog}
+      />
 
       <ToastContainer activeToast={toasts[0] ?? null} />
 
