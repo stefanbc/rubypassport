@@ -1,5 +1,5 @@
 import { XCircle, Download, ImageDown } from 'lucide-react';
-import { useStore } from '../store';
+import { useStore } from '../../store';
 
 type DownloadOptionsDialogProps = {
   isOpen: boolean;

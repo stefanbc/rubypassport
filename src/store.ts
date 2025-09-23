@@ -43,6 +43,7 @@ interface AppState {
   // Transient state
   isProcessingImage: boolean
   isMobile: boolean
+  isTablet: boolean
   isPWA: boolean
   isFullscreen: boolean
   activeDialog:
@@ -94,6 +95,7 @@ interface AppActions {
   // UI Actions
   setIsProcessingImage: (isProcessing: boolean) => void
   setIsMobile: (isMobile: boolean) => void
+  setIsTablet: (isTablet: boolean) => void
   setIsPWA: (isPWA: boolean) => void
   setIsFullscreen: (isFullscreen: boolean) => void
   setActiveDialog: (dialog: DialogType) => void
@@ -131,6 +133,7 @@ const initialState: AppState = {
 
   isProcessingImage: false,
   isMobile: false,
+  isTablet: false,
   isPWA: false,
   isFullscreen: false,
   activeDialog: null,
@@ -213,6 +216,7 @@ export const useStore = create<AppState & AppActions>()(
       setIsProcessingImage: (isProcessing) =>
         set({ isProcessingImage: isProcessing }),
       setIsMobile: (isMobile) => set({ isMobile }),
+      setIsTablet: (isTablet) => set({ isTablet }),
       setIsPWA: (isPWA) => set({ isPWA }),
       setIsFullscreen: (isFullscreen) => set({ isFullscreen }),
       setActiveDialog: (dialog) => set({ activeDialog: dialog }),

@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
-import { Camera, Computer, Loader2, CheckCircle, SlidersHorizontal, ArrowLeft, RefreshCw } from 'lucide-react';
-import { useStore } from '../store';
-import { FORMATS } from '../types';
+import { Camera, Computer, Loader2, CheckCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import { useStore } from '../../store';
+import { FORMATS } from '../../types';
 
 type CameraViewProps = {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -9,7 +9,6 @@ type CameraViewProps = {
   onStopCamera: () => void;
   onCapturePhoto: () => void;
   onImportClick: () => void;
-  onManageFormatsClick: () => void;
   onSwitchCamera: () => void;
   onBack?: () => void;
 };
@@ -20,7 +19,6 @@ export function CameraView({
   onStopCamera,
   onCapturePhoto,
   onImportClick,
-  onManageFormatsClick,
   onSwitchCamera,
   onBack,
 }: CameraViewProps) {
@@ -36,7 +34,7 @@ export function CameraView({
   const eyeLineTopPct = 45; // Eye line ~45% from top
 
   return (
-    <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 relative ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
+    <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 relative overflow-y-auto ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
       <div className={`relative flex ${isMobile ? 'justify-center' : ''} items-center mb-4`}>
         {isMobile && onBack && (
           <button
@@ -141,14 +139,6 @@ export function CameraView({
       <div className="flex-grow" />
 
       <div className="space-y-4">
-        <button
-          onClick={onManageFormatsClick}
-          className="w-full flex items-center justify-between text-left gap-2 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40 hover:bg-gray-200 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
-          title="Change format or manage custom formats"
-        >
-          <span className="truncate select-none">{selectedFormat.label}</span>
-          <SlidersHorizontal size={16} className="text-gray-500 flex-shrink-0" />
-        </button>
         <div className="flex flex-col sm:flex-row gap-3">
           {!isCameraOn ? (
             <>

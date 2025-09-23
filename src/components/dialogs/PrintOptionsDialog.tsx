@@ -1,6 +1,6 @@
 import { XCircle, Printer } from 'lucide-react';
-import { PhotoCount, PHOTO_COUNTS, FORMATS } from '../types';
-import { useStore } from '../store';
+import { PhotoCount, PHOTO_COUNTS, FORMATS } from '../../types';
+import { useStore } from '../../store';
 
 type PrintOptionsDialogProps = {
     isOpen: boolean;

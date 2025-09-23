@@ -1,7 +1,7 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent, WheelEvent as ReactWheelEvent } from 'react';
 import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
-import { useStore } from '../store';
-import { FORMATS } from '../types';
+import { useStore } from '../../store';
+import { FORMATS } from '../../types';
 
 interface ImportDialogProps {
   isOpen: boolean;

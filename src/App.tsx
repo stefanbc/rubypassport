@@ -1,20 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Format, FORMATS, FacingMode, NewFormatState } from './types';
-import { FormatDialog } from './components/FormatDialog';
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { useStore } from './store';
 import { Header } from './components/Header';
-import { Guidelines } from './components/Guidelines';
-import { CameraView } from './components/CameraView';
-import { ResultPanel } from './components/ResultPanel';
-import { PrintOptionsDialog } from './components/PrintOptionsDialog';
+import { Guidelines } from './components/panels/Guidelines';
+import { CameraView } from './components/panels/CameraView';
+import { ResultPanel } from './components/panels/ResultPanel';
 import { Footer } from './components/Footer';
-import { DownloadOptionsDialog } from './components/DownloadOptionsDialog';
-import { ShortcutsDialog } from './components/ShortcutsDialog';
-import { InfoDialog } from './components/InfoDialog';
+import { DownloadOptionsDialog } from './components/dialogs/DownloadOptionsDialog';
+import { FormatDialog } from './components/dialogs/FormatDialog';
+import { ImportDialog } from './components/dialogs/ImportDialog';
+import { InfoDialog } from './components/dialogs/InfoDialog';
+import { PhotoQueueDialog } from './components/dialogs/PhotoQueueDialog';
+import { PrintOptionsDialog } from './components/dialogs/PrintOptionsDialog';
+import { ShortcutsDialog } from './components/dialogs/ShortcutsDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
-import { ImportDialog } from './components/ImportDialog';
-import { useStore } from './store';
-import { PhotoQueueDialog } from './components/PhotoQueueDialog';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -35,10 +36,10 @@ function AppContent() {
   const {
     customFormats, selectedFormatId, watermarkEnabled, watermarkText,
     baseImage, stream, isCameraOn, facingMode, toasts,
-    isMobile, activeDialog, wizardStep,
+    isMobile, isTablet, activeDialog, wizardStep,
     setSelectedFormatId, setWatermarkEnabled, setWizardStep,
     setBaseImage, setCapturedImage, setHighResBlob, setStream, setIsCameraOn, setIsCameraLoading, setFacingMode,
-    setIsProcessingImage, setIsMobile, setIsPWA, setIsFullscreen, setActiveDialog,
+    setIsProcessingImage, setIsMobile, setIsTablet, setIsPWA, setIsFullscreen, setActiveDialog,
     addToast, removeToast, retakePhoto: storeRetakePhoto,
     addCustomFormat, updateCustomFormat, deleteCustomFormat,
     multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled } = useStore();
@@ -49,7 +50,7 @@ function AppContent() {
   const imageCaptureRef = useRef<ImageCapture | null>(null);
 
   // --- Local UI State ---
-  // State for the format dialog form is kept local as it's tightly coupled to the dialog's lifecycle
+  // State for dialogs and local UI is kept here
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
@@ -59,6 +60,7 @@ function AppContent() {
     printHeightMm: '',
   });
 
+  const [guidelinesCollapsed, setGuidelinesCollapsed] = useState(true);
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const wizardStepIndex = { guidelines: 0, camera: 1, result: 2 }[wizardStep];
@@ -68,12 +70,21 @@ function AppContent() {
     storeRetakePhoto(isMobile);
   }, [storeRetakePhoto, isMobile]);
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [setIsMobile]);
+ useEffect(() => {
+    const checkDeviceSize = () => {
+      const width = window.innerWidth;
+      const newIsMobile = width < 768;
+      // Consider devices up to 1280px as tablets to correctly handle
+      // landscape orientation and larger tablets like the iPad Pro.
+      const newIsTablet = width >= 768 && width < 1280;
+      setIsMobile(newIsMobile);
+      setIsTablet(newIsTablet);
+      setGuidelinesCollapsed(newIsTablet); // Collapse on tablet, expand on desktop
+    };
+    checkDeviceSize();
+    window.addEventListener('resize', checkDeviceSize);
+    return () => window.removeEventListener('resize', checkDeviceSize);
+  }, [setIsMobile, setIsTablet]);
 
   useEffect(() => {
     const checkPWA = () => {
@@ -846,12 +857,16 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen md:p-4 md:flex md:items-center md:justify-center">
-      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-4 md:p-0 ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header onToggleFullscreen={toggleFullscreen} />
+    <div className="h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 flex flex-col">
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 flex-grow min-h-0 ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+        <Header
+          onToggleFullscreen={toggleFullscreen}
+          onManageFormatsClick={() => setActiveDialog('customFormat')}
+          selectedFormatLabel={selectedFormat.label}
+        />
 
         {isMobile ? (
-          <div className="w-full flex-grow flex flex-col pb-2">
+          <div className="w-full flex-grow flex flex-col pb-2 min-h-0">
             {/* Step Indicator */}
             <div className="flex justify-center items-center gap-2 mb-4">
               {['Guidelines', 'Camera', 'Result'].map((label, index) => (
@@ -871,7 +886,7 @@ function AppContent() {
                 style={{ transform: `translateX(-${wizardStepIndex * (100 / 3)}%)` }}
               >
                 {/* Guidelines Step */}
-                <div className="w-1/3 px-1 flex flex-col h-full">
+                <div className="w-1/3 px-1 flex flex-col h-full min-h-0">
                   <div className="flex-grow overflow-y-auto">
                     <Guidelines />
                   </div>
@@ -884,30 +899,70 @@ function AppContent() {
                 </div>
 
                 {/* Camera Step */}
-                <div className="w-1/3 px-1 h-full">
-                  <CameraView videoRef={videoRef} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setActiveDialog('import')} onManageFormatsClick={() => setActiveDialog('customFormat')} onBack={() => setWizardStep('guidelines')} onSwitchCamera={switchCamera} />
+                <div className="w-1/3 px-1 h-full min-h-0">
+                  <CameraView videoRef={videoRef} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setActiveDialog('import')} onBack={() => setWizardStep('guidelines')} onSwitchCamera={switchCamera} />
                 </div>
 
                 {/* Result Step */}
-                <div className="w-1/3 px-1 h-full">
+                <div className="w-1/3 px-1 h-full min-h-0">
                   <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            <Guidelines />
-            <CameraView
-              videoRef={videoRef}
-              onStartCamera={() => startCamera()}
-              onStopCamera={stopCamera}
-              onCapturePhoto={capturePhoto}
-              onImportClick={() => setActiveDialog('import')}
-              onManageFormatsClick={() => setActiveDialog('customFormat')}
-              onSwitchCamera={switchCamera}
-            />
-            <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
+          <div className="relative flex-grow min-h-0">
+            {/* Main Grid for content */}
+            <div className={`grid ${isTablet ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-8 items-stretch h-full`}>
+              {!isTablet && <Guidelines />}
+
+              <div className="relative h-full min-h-0">
+                {isTablet && (
+                  <button
+                    onClick={() => setGuidelinesCollapsed(!guidelinesCollapsed)}
+                    className="absolute -left-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all"
+                    title={guidelinesCollapsed ? 'Show Guidelines' : 'Hide Guidelines'}
+                  >
+                    {guidelinesCollapsed ? <PanelLeftOpen size={20} className="text-gray-600 dark:text-gray-300" /> : <PanelLeftClose size={20} className="text-gray-600 dark:text-gray-300" />}
+                  </button>
+                )}
+                <CameraView
+                  videoRef={videoRef}
+                  onStartCamera={() => startCamera()}
+                  onStopCamera={stopCamera}
+                  onCapturePhoto={capturePhoto}
+                  onImportClick={() => setActiveDialog('import')}
+                  onSwitchCamera={switchCamera}
+                />
+              </div>
+
+              <ResultPanel
+                onDownload={() => setActiveDialog('download')}
+                onRetake={retakePhoto}
+                onOpenPrintDialog={() => setActiveDialog('print')} />
+            </div>
+
+            {/* Guidelines as an overlay on tablet */}
+            {isTablet && (
+              <>
+                {/* Backdrop for overlay */}
+                <div
+                  className={`absolute inset-0 z-10 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out
+                    ${guidelinesCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}
+                  `}
+                  onClick={() => setGuidelinesCollapsed(true)}
+                  aria-hidden="true"
+                />
+                {/* Sliding Panel */}
+                <div
+                  className={`absolute top-0 left-0 h-full z-20 w-96 max-w-[90vw] transition-transform duration-300 ease-in-out
+                    ${guidelinesCollapsed ? '-translate-x-full -ml-4' : 'translate-x-0 ml-0'}
+                  `}
+                >
+                  <Guidelines />
+                </div>
+              </>
+            )}
           </div>
         )}
 

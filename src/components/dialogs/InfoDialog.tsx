@@ -1,5 +1,5 @@
-import { XCircle, HelpCircle, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { XCircle, HelpCircle, ChevronDown } from 'lucide-react';
 
 type InfoDialogProps = {
   isOpen: boolean;

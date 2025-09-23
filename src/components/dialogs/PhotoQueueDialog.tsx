@@ -1,7 +1,7 @@
-import { useStore } from '../store';
+import { useState, useRef, DragEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { Trash2, XCircle, Images, X, Frown } from 'lucide-react';
-import { useState, useRef, DragEvent } from 'react';
+import { useStore } from '../../store';
 
 type PhotoQueueDialogProps = {
   isOpen: boolean;

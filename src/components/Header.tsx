@@ -1,13 +1,15 @@
-import { Maximize, Minimize, Info, Keyboard, Images } from 'lucide-react';
+import { Maximize, Minimize, Info, Keyboard, Images, SlidersHorizontal } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { useStore } from '../store';
 import { useShallow } from 'zustand/react/shallow';
 
 type HeaderProps = {
   onToggleFullscreen: () => void;
+  onManageFormatsClick: () => void;
+  selectedFormatLabel: string;
 };
 
-export function Header({ onToggleFullscreen }: HeaderProps) {
+export function Header({ onToggleFullscreen, onManageFormatsClick, selectedFormatLabel }: HeaderProps) {
   const {
     isFullscreen,
     isMobile,
@@ -42,6 +44,24 @@ export function Header({ onToggleFullscreen }: HeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-1 sm:gap-2">
+        {isMobile ? (
+          <button
+            onClick={onManageFormatsClick}
+            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            title="Format Settings (F)"
+          >
+            <SlidersHorizontal size={20} />
+          </button>
+        ) : (
+          <button
+            onClick={onManageFormatsClick}
+            className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            title="Change format or manage custom formats (F)"
+          >
+            <span className="truncate max-w-32 xl:max-w-48">{selectedFormatLabel}</span>
+            <SlidersHorizontal size={16} />
+          </button>
+        )}
         <ThemeSwitcher />
         <button
           onClick={() => {
