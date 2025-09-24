@@ -22,7 +22,7 @@ export function CameraView({
   onSwitchCamera,
   onBack,
 }: CameraViewProps) {
-  const { isCameraOn, isCameraLoading, selectedFormatId, customFormats, facingMode, isMobile } = useStore();
+  const { isCameraOn, isCameraLoading, selectedFormatId, customFormats, facingMode, isMobile, isTablet } = useStore();
   const allFormats = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
 
@@ -64,7 +64,7 @@ export function CameraView({
               muted
               className={`absolute inset-0 w-full h-full object-cover ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
             />
-            {isMobile && (
+            {isMobile || isTablet && (
               <button
                 onClick={onSwitchCamera}
                 className="absolute top-2 right-2 z-20 p-2 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
