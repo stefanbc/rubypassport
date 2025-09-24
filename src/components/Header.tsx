@@ -47,7 +47,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
         {isMobile ? (
           <button
             onClick={onManageFormatsClick}
-            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             title="Format Settings (F)"
           >
             <SlidersHorizontal size={20} />
@@ -55,7 +55,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
         ) : (
           <button
             onClick={onManageFormatsClick}
-            className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors px-3 py-2 rounded-lg"
             title="Change format or manage custom formats (F)"
           >
             <span className="truncate max-w-32 xl:max-w-48">{selectedFormatLabel}</span>
@@ -79,7 +79,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
               );
             }
           }}
-          className={`relative p-2 rounded-full transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600 ${multiCaptureEnabled || hasQueue
+          className={`relative p-2 rounded-full transition-colors cursor-pointer ${multiCaptureEnabled || hasQueue
             ? 'bg-red-600 text-white hover:bg-red-700'
             : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800'}
           `}
@@ -96,7 +96,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
         {!isMobile && (
           <button
             onClick={onToggleFullscreen}
-            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
           >
             {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
@@ -104,7 +104,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
         )}
         <button
           onClick={() => setActiveDialog('info')}
-          className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+          className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           title="Show info dialog (I)"
         >
           <Info size={20} />
@@ -112,7 +112,7 @@ export function Header({ onToggleFullscreen, onManageFormatsClick, selectedForma
         {!isMobile && (
           <button
             onClick={() => setActiveDialog('shortcuts')}
-            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-black focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             title="Show keyboard shortcuts (?)"
           >
             <Keyboard size={20} />

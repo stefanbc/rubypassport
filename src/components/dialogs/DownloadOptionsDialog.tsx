@@ -38,7 +38,7 @@ export function DownloadOptionsDialog({
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
             aria-label="Close download options dialog"
           >
             <XCircle size={22} />
@@ -51,7 +51,7 @@ export function DownloadOptionsDialog({
           </p>
           <button
             onClick={handleDownloadProcessed}
-            className="w-full flex items-center justify-center gap-3 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="w-full flex items-center justify-center gap-3 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
           >
             <Download size={20} />
             <span>Download Processed Photo</span>
@@ -59,7 +59,7 @@ export function DownloadOptionsDialog({
           <button
             onClick={handleDownloadHighRes}
             disabled={!hasHighRes}
-            className="w-full flex items-center justify-center gap-3 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="w-full flex items-center justify-center gap-3 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             title={!hasHighRes ? "High-resolution original is not available for this photo." : "Download the original, un-cropped photo."}
           >
             <ImageDown size={20} />

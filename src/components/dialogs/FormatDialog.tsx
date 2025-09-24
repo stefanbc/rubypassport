@@ -65,7 +65,7 @@ export function FormatDialog({
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
             aria-label="Close format settings dialog"
           >
             <XCircle size={22} />
@@ -82,7 +82,7 @@ export function FormatDialog({
               id="formatSelectorDialog"
               value={selectedFormatId}
               onChange={(e) => setSelectedFormatId(e.target.value)}
-              className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600"
+              className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40"
             >
               <optgroup label="Standard Formats">
                 {predefinedFormats.map(f => (
@@ -117,30 +117,30 @@ export function FormatDialog({
               <div className="space-y-3 mt-4 border-t border-red-200 dark:border-red-900/30 pt-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatLabel">Label</label>
-                  <input id="modalNewFormatLabel" value={newFormat.label} onChange={e => onNewFormatChange({ ...newFormat, label: e.target.value })} placeholder="e.g. Custom 4x6" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                  <input id="modalNewFormatLabel" value={newFormat.label} onChange={e => onNewFormatChange({ ...newFormat, label: e.target.value })} placeholder="e.g. Custom 4x6" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatWidthPx">Width (px)</label>
-                  <input id="modalNewFormatWidthPx" type="number" value={newFormat.widthPx} onChange={e => onNewFormatChange({ ...newFormat, widthPx: e.target.value })} placeholder="e.g. 600" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                  <input id="modalNewFormatWidthPx" type="number" value={newFormat.widthPx} onChange={e => onNewFormatChange({ ...newFormat, widthPx: e.target.value })} placeholder="e.g. 600" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatHeightPx">Height (px)</label>
-                  <input id="modalNewFormatHeightPx" type="number" value={newFormat.heightPx} onChange={e => onNewFormatChange({ ...newFormat, heightPx: e.target.value })} placeholder="e.g. 900" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                  <input id="modalNewFormatHeightPx" type="number" value={newFormat.heightPx} onChange={e => onNewFormatChange({ ...newFormat, heightPx: e.target.value })} placeholder="e.g. 900" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatPrintWidthMm">Print W (mm)</label>
-                  <input id="modalNewFormatPrintWidthMm" type="number" value={newFormat.printWidthMm} onChange={e => onNewFormatChange({ ...newFormat, printWidthMm: e.target.value })} placeholder="e.g. 101.6" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                  <input id="modalNewFormatPrintWidthMm" type="number" value={newFormat.printWidthMm} onChange={e => onNewFormatChange({ ...newFormat, printWidthMm: e.target.value })} placeholder="e.g. 101.6" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatPrintHeightMm">Print H (mm)</label>
-                  <input id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm} onChange={e => onNewFormatChange({ ...newFormat, printHeightMm: e.target.value })} placeholder="e.g. 152.4" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                  <input id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm} onChange={e => onNewFormatChange({ ...newFormat, printHeightMm: e.target.value })} placeholder="e.g. 152.4" className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <button onClick={editingFormat ? handleUpdateAndCollapse : onAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-700 dark:bg-red-800 text-white py-2 px-4 rounded hover:bg-red-600 dark:hover:bg-red-700 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
+                  <button onClick={editingFormat ? handleUpdateAndCollapse : onAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-700 dark:bg-red-800 text-white py-2 px-4 rounded hover:bg-red-600 dark:hover:bg-red-700 transition-colors cursor-pointer">
                     {editingFormat ? 'Update Format' : 'Add Format'}
                   </button>
                   {editingFormat && (
-                    <button onClick={handleCancelEditAndCollapse} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600">
+                    <button onClick={handleCancelEditAndCollapse} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer">
                       Cancel
                     </button>
                   )}
@@ -157,10 +157,10 @@ export function FormatDialog({
                   <li key={format.id} className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 bg-red-50/50 dark:bg-zinc-800/50 p-2 rounded-md hover:bg-red-100/50 dark:hover:bg-zinc-700/50 transition-colors">
                     <span>{format.label} ({format.widthPx}x{format.heightPx}px)</span>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-red-50 dark:focus:ring-offset-zinc-800 focus:ring-blue-500" title="Edit format">
+                      <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors" title="Edit format">
                         <Pencil size={16} />
                       </button>
-                      <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-red-50 dark:focus:ring-offset-zinc-800 focus:ring-red-500" title="Delete format">
+                      <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors" title="Delete format">
                         <Trash2 size={16} />
                       </button>
                     </div>

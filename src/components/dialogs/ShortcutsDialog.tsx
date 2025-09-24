@@ -35,7 +35,7 @@ export function ShortcutsDialog({ isOpen, onClose }: ShortcutsDialogProps) {
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
             aria-label="Close shortcuts dialog"
           >
             <XCircle size={22} />

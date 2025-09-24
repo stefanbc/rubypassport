@@ -70,7 +70,7 @@ function AppContent() {
     storeRetakePhoto(isMobile);
   }, [storeRetakePhoto, isMobile]);
 
- useEffect(() => {
+  useEffect(() => {
     const checkDeviceSize = () => {
       const width = window.innerWidth;
       const newIsMobile = width < 768;
@@ -892,7 +892,7 @@ function AppContent() {
                   </div>
                   <button
                     onClick={() => setWizardStep('camera')}
-                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 font-semibold"
+                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg font-semibold"
                   >
                     Continue
                   </button>
@@ -947,7 +947,7 @@ function AppContent() {
               <>
                 {/* Backdrop for overlay */}
                 <div
-                  className={`absolute inset-0 z-10 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out
+                  className={`absolute inset-0 z-10 blur-sm backdrop-blur-sm transition-opacity duration-300 ease-in-out
                     ${guidelinesCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}
                   `}
                   onClick={() => setGuidelinesCollapsed(true)}

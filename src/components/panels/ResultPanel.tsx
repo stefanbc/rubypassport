@@ -88,7 +88,7 @@ export function ResultPanel({
                 <Pencil size={isMobile ? 18 : 16} />
                 {!isMobile && <span>Details</span>}
               </button>
-              <button onClick={onRetake} className={`flex items-center gap-1.5 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 rounded-md bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 ${isMobile ? 'p-2.5' : 'py-2 px-3'}`}>
+              <button onClick={onRetake} className={`flex items-center gap-1.5 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 rounded-md bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer ${isMobile ? 'p-2.5' : 'py-2 px-3'}`}>
                 <Trash2 size={isMobile ? 18 : 16} />
                 {!isMobile && <span>Retake</span>}
               </button>
@@ -101,16 +101,16 @@ export function ResultPanel({
             >
               <div className="space-y-2">
                 <label htmlFor="personName" className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none">Person's Name</label>
-                <input id="personName" type="text" value={personName} onChange={(e) => setPersonName(e.target.value)} placeholder="Optional" className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600" />
+                <input id="personName" type="text" value={personName} onChange={(e) => setPersonName(e.target.value)} placeholder="Optional" className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40" />
               </div>
               <hr className="border-gray-200 dark:border-zinc-700" />
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label htmlFor="watermarkEnabled" className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none cursor-pointer flex-grow">Enable Watermark</label>
-                  <input id="watermarkEnabled" type="checkbox" checked={watermarkEnabled} onChange={(e) => setWatermarkEnabled(e.target.checked)} className="h-4 w-4 accent-red-600 text-red-600 bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500 dark:focus:ring-red-600 ring-offset-white dark:ring-offset-zinc-800 focus:ring-2 cursor-pointer" />
+                  <input id="watermarkEnabled" type="checkbox" checked={watermarkEnabled} onChange={(e) => setWatermarkEnabled(e.target.checked)} className="h-4 w-4 accent-red-600 text-red-600 bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded cursor-pointer" />
                 </div>
                 <div className="relative">
-                  <input type="text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder="Watermark Text" disabled={!watermarkEnabled} className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600 disabled:opacity-50 disabled:cursor-not-allowed" />
+                  <input type="text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder="Watermark Text" disabled={!watermarkEnabled} className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed" />
                   <button onClick={() => setWatermarkText('💎 RUBY PASSPORT')} disabled={!watermarkEnabled} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 disabled:opacity-0" title="Reset to default">
                     <RotateCcw size={14} />
                   </button>
@@ -160,7 +160,7 @@ export function ResultPanel({
         <button
           onClick={onDownload}
           disabled={(!capturedImage && captureQueue.length === 0) || isProcessingImage}
-          className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+          className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           <Download size={20} />
           Download
@@ -168,7 +168,7 @@ export function ResultPanel({
         <button
           onClick={onOpenPrintDialog}
           disabled={(!capturedImage && captureQueue.length === 0) || isProcessingImage}
-          className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600"
+          className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           <Printer size={20} />
           Print
