@@ -876,8 +876,8 @@ function AppContent() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 flex flex-col">
-      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 flex-grow min-h-0 ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+    <div className={`h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 flex flex-col ${!isMobile ? 'justify-center items-center' : ''}`}>
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 min-h-0 ${isMobile ? 'flex-grow' : ''} ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
         <Header
           onToggleFullscreen={toggleFullscreen}
           onManageFormatsClick={() => setActiveDialog('customFormat')}
@@ -932,7 +932,7 @@ function AppContent() {
         ) : (
           <div className="relative flex-grow min-h-0">
             {/* Main Grid for content */}
-            <div className={`grid ${isTablet ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-8 items-stretch h-full`}>
+            <div className={`grid ${isTablet ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4 items-stretch h-full`}>
               {!isTablet && <Guidelines />}
 
               <div className="relative h-full min-h-0">

@@ -53,7 +53,7 @@ export function CameraView({
 
       <div
         className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
-        style={{ paddingTop: `${(selectedFormat.heightPx / selectedFormat.widthPx) * 100}%` }}
+        style={{ aspectRatio: `${selectedFormat.widthPx} / ${selectedFormat.heightPx}` }}
       >
         {isCameraOn ? (
           <>

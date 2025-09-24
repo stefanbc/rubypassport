@@ -123,7 +123,7 @@ export function ResultPanel({
 
       <div
         className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
-        style={{ paddingTop: `${(heightPx / widthPx) * 100}%`, contain: 'strict' }}
+        style={{ aspectRatio: `${widthPx} / ${heightPx}`, contain: 'strict' }}
       >
         {/* Render image if we have one, regardless of processing state */}
         {capturedImage && (
