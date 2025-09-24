@@ -62,14 +62,27 @@ self.addEventListener('activate', (event) => {
  * Fetch event: Serves assets from cache, falling back to the network.
  */
 self.addEventListener('fetch', (event) => {
+  // We only want to cache GET requests.
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Network-first strategy
+      // If it's not in the cache, fetch it from the network.
+      try {
+        const networkResponse = await fetch(event.request);
+        // If we get a response, cache it and return it.
+        // This keeps the cache up-to-date.
+        cache.put(event.request, networkResponse.clone());
+        return networkResponse;
+      } catch (error) {
+        // If the network fails (e.g., user is offline),
+        // try to serve from the cache as a fallback.
+        console.log('Network request failed, trying cache.');
+        return cache.match(event.request);
+      }
+    })
   );
 });

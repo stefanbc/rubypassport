@@ -115,6 +115,25 @@ function AppContent() {
     }
   }, [toasts, removeToast]);
 
+  // Effect to show toasts when online/offline status changes.
+  useEffect(() => {
+    const handleOnline = () => {
+      addToast('You are back online!', 'success');
+    };
+
+    const handleOffline = () => {
+      addToast('You are offline. Some features may be unavailable.', 'info');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [addToast]);
+
   const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number, text: string) => {
     if (!text.trim()) return;
     context.save();
