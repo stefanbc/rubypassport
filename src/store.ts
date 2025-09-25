@@ -37,11 +37,13 @@ interface AppState {
   theme: Theme
   photosPerPage: PhotoCount
   watermarkEnabled: boolean
+  watermarkText: string
   autoFit10x15: boolean
 
   // Transient state
   isProcessingImage: boolean
   isMobile: boolean
+  isTablet: boolean
   isPWA: boolean
   isFullscreen: boolean
   activeDialog:
@@ -51,6 +53,7 @@ interface AppState {
     | 'print'
     | 'info'
     | 'import'
+    | 'photoQueue'
     | null
 
   wizardStep: WizardStep
@@ -62,6 +65,9 @@ interface AppState {
   isCameraLoading: boolean
   facingMode: FacingMode
   toasts: (Toast & { duration: number })[]
+  // Multi-capture queue
+  multiCaptureEnabled: boolean
+  captureQueue: string[]
 }
 
 interface AppActions {
@@ -77,11 +83,19 @@ interface AppActions {
   setPhotosPerPage: (count: PhotoCount) => void
   setTheme: (theme: Theme) => void
   setWatermarkEnabled: (enabled: boolean) => void
+  setWatermarkText: (text: string) => void
   setAutoFit10x15: (enabled: boolean) => void
+  // Multi-capture Actions
+  setMultiCaptureEnabled: (enabled: boolean) => void
+  enqueueToQueue: (imageDataUrl: string) => void
+  clearQueue: () => void
+  removeFromQueue: (index: number) => void
+  reorderQueue: (fromIndex: number, toIndex: number) => void
 
   // UI Actions
   setIsProcessingImage: (isProcessing: boolean) => void
   setIsMobile: (isMobile: boolean) => void
+  setIsTablet: (isTablet: boolean) => void
   setIsPWA: (isPWA: boolean) => void
   setIsFullscreen: (isFullscreen: boolean) => void
   setActiveDialog: (dialog: DialogType) => void
@@ -114,10 +128,12 @@ const initialState: AppState = {
   theme: getInitialTheme(),
   photosPerPage: 6,
   watermarkEnabled: false,
+  watermarkText: '💎 RUBY PASSPORT',
   autoFit10x15: false,
 
   isProcessingImage: false,
   isMobile: false,
+  isTablet: false,
   isPWA: false,
   isFullscreen: false,
   activeDialog: null,
@@ -131,6 +147,8 @@ const initialState: AppState = {
   isCameraLoading: false,
   facingMode: 'user',
   toasts: [],
+  multiCaptureEnabled: false,
+  captureQueue: [],
 }
 
 export const useStore = create<AppState & AppActions>()(
@@ -173,12 +191,32 @@ export const useStore = create<AppState & AppActions>()(
       setPhotosPerPage: (count) => set({ photosPerPage: count }),
       setTheme: (theme) => set({ theme }),
       setWatermarkEnabled: (enabled) => set({ watermarkEnabled: enabled }),
+      setWatermarkText: (text) => set({ watermarkText: text }),
       setAutoFit10x15: (enabled) => set({ autoFit10x15: enabled }),
+      // Multi-capture Actions
+      setMultiCaptureEnabled: (enabled) => set({ multiCaptureEnabled: enabled }),
+      enqueueToQueue: (imageDataUrl) =>
+        set((state) => ({ captureQueue: [...state.captureQueue, imageDataUrl] })),
+      clearQueue: () => set({ captureQueue: [] }),
+      removeFromQueue: (index) =>
+        set((state) => ({
+          captureQueue: state.captureQueue.filter((_, i) => i !== index),
+        })),
+      reorderQueue: (fromIndex, toIndex) =>
+        set((state) => {
+          const newQueue = [...state.captureQueue];
+          const [item] = newQueue.splice(fromIndex, 1);
+          if (item) {
+            newQueue.splice(toIndex, 0, item);
+          }
+          return { captureQueue: newQueue };
+        }),
 
       // UI Actions
       setIsProcessingImage: (isProcessing) =>
         set({ isProcessingImage: isProcessing }),
       setIsMobile: (isMobile) => set({ isMobile }),
+      setIsTablet: (isTablet) => set({ isTablet }),
       setIsPWA: (isPWA) => set({ isPWA }),
       setIsFullscreen: (isFullscreen) => set({ isFullscreen }),
       setActiveDialog: (dialog) => set({ activeDialog: dialog }),
@@ -201,7 +239,7 @@ export const useStore = create<AppState & AppActions>()(
       },
 
       // Toast Actions
-      addToast: (message, type = 'info', duration = 5000) => {
+      addToast: (message, type = 'info', duration = 1500) => {
         const id = Date.now() + Math.random()
         set((state) => ({
           toasts: [...state.toasts, { id, message, type, duration }],
@@ -219,6 +257,7 @@ export const useStore = create<AppState & AppActions>()(
         personName: state.personName,
         photosPerPage: state.photosPerPage,
         watermarkEnabled: state.watermarkEnabled,
+        watermarkText: state.watermarkText,
         theme: state.theme,
         autoFit10x15: state.autoFit10x15,
       }),

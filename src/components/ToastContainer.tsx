@@ -38,7 +38,7 @@ export function ToastContainer({ activeToast }: ToastContainerProps) {
         timeoutId = window.setTimeout(() => {
           setDisplayedToast(activeToast);
           isAnimatingOut.current = false;
-        }, 300); // Corresponds to transition duration
+        }, 150); // Corresponds to transition duration
       } else {
         setDisplayedToast(activeToast);
       }
@@ -48,7 +48,7 @@ export function ToastContainer({ activeToast }: ToastContainerProps) {
       timeoutId = window.setTimeout(() => {
         setDisplayedToast(null);
         isAnimatingOut.current = false;
-      }, 300);
+      }, 150);
     }
 
     return () => clearTimeout(timeoutId);
@@ -68,7 +68,7 @@ export function ToastContainer({ activeToast }: ToastContainerProps) {
     <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4 pointer-events-none">
       <div
         key={displayedToast.id}
-        className={`flex items-center text-sm select-none transition-all duration-300 ease-in-out shadow-2xl rounded-lg p-3.5 border backdrop-blur-md
+        className={`flex items-center text-sm select-none transition-all duration-150 ease-in-out shadow-2xl rounded-lg p-3.5 border backdrop-blur-md
           ${isToastVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}
           ${toastColorClasses[displayedToast.type]}`
         }

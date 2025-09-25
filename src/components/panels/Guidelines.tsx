@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Sun, ChevronDown } from 'lucide-react';
-import { Footer } from './Footer';
-import { useStore } from '../store';
+import { Footer } from '../Footer';
+import { useStore } from '../../store';
 
 export function Guidelines() {
-  const isMobile = useStore(state => state.isMobile);
+  const { isMobile, isTablet } = useStore();
   const [openSections, setOpenSections] = useState({
     do: true,
     dont: true,
@@ -12,12 +12,12 @@ export function Guidelines() {
   });
 
   useEffect(() => {
-    if (isMobile) {
+    if (isMobile || isTablet) {
       setOpenSections({ do: true, dont: false, lighting: false });
     } else {
       setOpenSections({ do: true, dont: true, lighting: true });
     }
-  }, [isMobile]);
+  }, [isMobile, isTablet]);
 
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -27,7 +27,7 @@ export function Guidelines() {
     <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
       <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 mb-1 select-none">Guidelines</h2>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">Follow these for most country standards.</p>
-      <div className="space-y-4 flex-grow flex flex-col">
+      <div className="space-y-4 flex-grow flex flex-col overflow-y-auto pr-2">
         <div>
           <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleSection('do')} role="button" aria-expanded={openSections.do}>
             <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export function Guidelines() {
         <div className="rounded-md bg-red-50 dark:bg-zinc-800/60 border border-red-100 dark:border-red-900/40 p-3">
           <p className="text-xs text-gray-700 dark:text-gray-300">
             <span className="font-semibold">Your Privacy Matters</span><br />
-            This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you’re done, they’re gone.
+            This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you're done, they're gone.
           </p>
         </div>
 

@@ -1,19 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Format, FORMATS, FacingMode, NewFormatState } from './types';
-import { FormatDialog } from './components/FormatDialog';
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { useStore } from './store';
 import { Header } from './components/Header';
-import { Guidelines } from './components/Guidelines';
-import { CameraView } from './components/CameraView';
-import { ResultPanel } from './components/ResultPanel';
-import { PrintOptionsDialog } from './components/PrintOptionsDialog';
+import { Guidelines } from './components/panels/Guidelines';
+import { CameraView } from './components/panels/CameraView';
+import { ResultPanel } from './components/panels/ResultPanel';
 import { Footer } from './components/Footer';
-import { DownloadOptionsDialog } from './components/DownloadOptionsDialog';
-import { ShortcutsDialog } from './components/ShortcutsDialog';
-import { InfoDialog } from './components/InfoDialog';
+import { DownloadOptionsDialog } from './components/dialogs/DownloadOptionsDialog';
+import { FormatDialog } from './components/dialogs/FormatDialog';
+import { ImportDialog } from './components/dialogs/ImportDialog';
+import { InfoDialog } from './components/dialogs/InfoDialog';
+import { PhotoQueueDialog } from './components/dialogs/PhotoQueueDialog';
+import { PrintOptionsDialog } from './components/dialogs/PrintOptionsDialog';
+import { ShortcutsDialog } from './components/dialogs/ShortcutsDialog';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
-import { ImportDialog } from './components/ImportDialog';
-import { useStore } from './store';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -32,15 +34,15 @@ function App() {
 function AppContent() {
   // --- Store State and Actions ---
   const {
-    customFormats, selectedFormatId, watermarkEnabled,
+    customFormats, selectedFormatId, watermarkEnabled, watermarkText,
     baseImage, stream, isCameraOn, facingMode, toasts,
-    isMobile, activeDialog, wizardStep,
+    isMobile, isTablet, activeDialog, wizardStep,
     setSelectedFormatId, setWatermarkEnabled, setWizardStep,
     setBaseImage, setCapturedImage, setHighResBlob, setStream, setIsCameraOn, setIsCameraLoading, setFacingMode,
-    setIsProcessingImage, setIsMobile, setIsPWA, setIsFullscreen, setActiveDialog,
+    setIsProcessingImage, setIsMobile, setIsTablet, setIsPWA, setIsFullscreen, setActiveDialog,
     addToast, removeToast, retakePhoto: storeRetakePhoto,
-    addCustomFormat, updateCustomFormat, deleteCustomFormat
-  } = useStore();
+    addCustomFormat, updateCustomFormat, deleteCustomFormat,
+    multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled } = useStore();
 
   // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -48,7 +50,7 @@ function AppContent() {
   const imageCaptureRef = useRef<ImageCapture | null>(null);
 
   // --- Local UI State ---
-  // State for the format dialog form is kept local as it's tightly coupled to the dialog's lifecycle
+  // State for dialogs and local UI is kept here
   const [editingFormat, setEditingFormat] = useState<Format | null>(null);
   const [newFormat, setNewFormat] = useState<NewFormatState>({
     label: '',
@@ -58,6 +60,7 @@ function AppContent() {
     printHeightMm: '',
   });
 
+  const [guidelinesCollapsed, setGuidelinesCollapsed] = useState(true);
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const wizardStepIndex = { guidelines: 0, camera: 1, result: 2 }[wizardStep];
@@ -68,11 +71,20 @@ function AppContent() {
   }, [storeRetakePhoto, isMobile]);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [setIsMobile]);
+    const checkDeviceSize = () => {
+      const width = window.innerWidth;
+      const newIsMobile = width < 768;
+      // Consider devices up to 1280px as tablets to correctly handle
+      // landscape orientation and larger tablets like the iPad Pro.
+      const newIsTablet = width >= 768 && width < 1280;
+      setIsMobile(newIsMobile);
+      setIsTablet(newIsTablet);
+      setGuidelinesCollapsed(newIsTablet); // Collapse on tablet, expand on desktop
+    };
+    checkDeviceSize();
+    window.addEventListener('resize', checkDeviceSize);
+    return () => window.removeEventListener('resize', checkDeviceSize);
+  }, [setIsMobile, setIsTablet]);
 
   useEffect(() => {
     const checkPWA = () => {
@@ -103,20 +115,39 @@ function AppContent() {
     }
   }, [toasts, removeToast]);
 
-  const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number) => {
+  // Effect to show toasts when online/offline status changes.
+  useEffect(() => {
+    const handleOnline = () => {
+      addToast('You are back online!', 'success');
+    };
+
+    const handleOffline = () => {
+      addToast('You are offline. Some features may be unavailable.', 'info');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [addToast]);
+
+  const applyWatermark = useCallback((context: CanvasRenderingContext2D, targetWidth: number, targetHeight: number, text: string) => {
+    if (!text.trim()) return;
     context.save();
     const diagonalRadians = -25 * Math.PI / 180;
     const baseSize = Math.min(targetWidth, targetHeight);
     const fontSize = Math.max(14, Math.floor(baseSize * 0.075));
     context.font = `600 ${fontSize}px 'EB Garamond', 'Garamond', 'Times New Roman', serif`;
-    context.fillStyle = 'rgba(255,255,255,0.04)';
-    context.strokeStyle = 'rgba(255,255,255,0.03)';
+    context.fillStyle = 'rgba(255,255,255,0.07)';
+    context.strokeStyle = 'rgba(255,255,255,0.06)';
     context.lineWidth = Math.max(0.4, Math.floor(fontSize * 0.02));
     context.textAlign = 'center';
     context.textBaseline = 'middle';
 
     // Create a tiled pattern of watermark text sized to avoid overlaps
-    const text = '💎 RUBY PASSPORT';
     const metrics = context.measureText(text);
     const textWidth = Math.max(metrics.width, fontSize * 6);
     const stepX = textWidth + fontSize * 1.25; // horizontal spacing
@@ -164,7 +195,7 @@ function AppContent() {
 
       const capabilities = videoTrack.getCapabilities();
       if (capabilities.width?.max && capabilities.height?.max) {
-        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 4000);
+        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 1500);
       }
 
       // Apply more specific constraints for the best quality and aspect ratio.
@@ -185,19 +216,19 @@ function AppContent() {
 
       const settings = videoTrack.getSettings();
       if (settings.width && settings.height) {
-        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 4000);
+        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 1500);
       }
 
       if ('ImageCapture' in window) {
         try {
           imageCaptureRef.current = new ImageCapture(videoTrack);
-          addToast('High-resolution capture is available.', 'info', 3000);
+          addToast('High-resolution capture is available.', 'info', 1500);
         } catch (e) {
           console.error('Could not create ImageCapture:', e);
           imageCaptureRef.current = null;
         }
       } else {
-        addToast('High-resolution capture not supported. Using video stream.', 'info', 3000);
+        addToast('High-resolution capture not supported. Using video stream.', 'info', 1500);
       }
     } catch (err) {
       addToast(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
@@ -218,7 +249,7 @@ function AppContent() {
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
       try {
-        addToast('Capturing high-resolution photo...', 'info', 2000);
+        addToast('Capturing high-resolution photo...', 'info', 1000);
         const blob = await imageCaptureRef.current.takePhoto();
         setHighResBlob(blob);
         const imageUrl = URL.createObjectURL(blob);
@@ -337,7 +368,7 @@ function AppContent() {
       setWizardStep('result');
     }
     addToast('Photo captured from video stream.', 'success');
-  }, [addToast, selectedFormat, isMobile, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
+  }, [addToast, selectedFormat, isMobile, multiCaptureEnabled, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
 
   const downloadProcessedImage = useCallback(() => {
     const { capturedImage, personName, selectedFormatId, customFormats } = useStore.getState();
@@ -470,7 +501,7 @@ function AppContent() {
           if (useStore.getState().capturedImage) setWatermarkEnabled(!useStore.getState().watermarkEnabled);
           break;
         case 'p':
-          if (useStore.getState().capturedImage) setActiveDialog('print');
+          if (useStore.getState().capturedImage || useStore.getState().captureQueue.length > 0) setActiveDialog('print');
           break;
         case 'f':
           setActiveDialog('customFormat');
@@ -482,6 +513,9 @@ function AppContent() {
           // Simulate a click on the theme switcher button
           document.querySelector<HTMLButtonElement>('button[title^="Switch to"]')?.click();
           break;
+        case 'b':
+          setMultiCaptureEnabled(!useStore.getState().multiCaptureEnabled);
+          break;
         case 'Enter':
           toggleFullscreen();
           break;
@@ -490,8 +524,9 @@ function AppContent() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled]);
+  }, [isCameraOn, activeDialog, startCamera, stopCamera, capturePhoto, retakePhoto, toggleFullscreen, handleCloseDialog, setActiveDialog, setWatermarkEnabled, setMultiCaptureEnabled]);
 
+  const lastQueuedBaseImageRef = useRef<string | null>(null);
   useEffect(() => {
     if (!baseImage) {
       setCapturedImage(null);
@@ -518,10 +553,16 @@ function AppContent() {
       context.drawImage(img, 0, 0);
 
       if (watermarkEnabled) {
-        applyWatermark(context, img.width, img.height);
+        applyWatermark(context, img.width, img.height, watermarkText);
       }
 
-      setCapturedImage(canvas.toDataURL('image/jpeg', 1.0));
+      const finalDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+      setCapturedImage(finalDataUrl);
+      if (multiCaptureEnabled && baseImage !== lastQueuedBaseImageRef.current) {
+        enqueueToQueue(finalDataUrl);
+        lastQueuedBaseImageRef.current = baseImage;
+        addToast(`Added to queue (${useStore.getState().captureQueue.length})`, 'success', 1000);
+      }
       setIsProcessingImage(false);
     };
     img.onerror = () => {
@@ -529,7 +570,7 @@ function AppContent() {
       setIsProcessingImage(false);
     };
     img.src = baseImage; // This triggers the onload
-  }, [baseImage, watermarkEnabled, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
+  }, [baseImage, watermarkEnabled, watermarkText, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
 
   useEffect(() => {
     return () => {
@@ -600,10 +641,11 @@ function AppContent() {
       selectedFormatId,
       customFormats,
       autoFit10x15,
-      photosPerPage
+      photosPerPage,
+      captureQueue
     } = useStore.getState();
 
-    if (!capturedImage) return;
+    if (!capturedImage && captureQueue.length === 0) return;
     addToast('Preparing print preview...', 'info');
     const printWin = window.open('', '_blank');
     if (!printWin) {
@@ -706,6 +748,7 @@ function AppContent() {
 
     const sheet = doc.createElement('div');
     sheet.className = 'sheet';
+    const imagesSource = captureQueue.length > 0 ? captureQueue : (capturedImage ? [capturedImage] : []);
     const countToRender = totalImages;
     for (let i = 0; i < countToRender; i++) {
       const photoContainer = doc.createElement('div');
@@ -713,7 +756,7 @@ function AppContent() {
 
       const img = doc.createElement('img');
       img.className = 'photo';
-      img.src = capturedImage;
+      img.src = imagesSource[i % imagesSource.length]!;
       img.alt = 'Passport portrait';
       photoContainer.appendChild(img);
       photoContainer.appendChild(doc.createElement('span'));
@@ -833,12 +876,16 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen md:p-4 md:flex md:items-center md:justify-center">
-      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col h-screen md:h-auto p-4 md:p-0 ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
-        <Header onToggleFullscreen={toggleFullscreen} />
+    <div className={`h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 flex flex-col ${!isMobile ? 'justify-center items-center' : ''}`}>
+      <div className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 min-h-0 ${isMobile ? 'flex-grow' : ''} ${activeDialog ? 'blur-sm backdrop-blur-sm' : ''} transition-all duration-300`}>
+        <Header
+          onToggleFullscreen={toggleFullscreen}
+          onManageFormatsClick={() => setActiveDialog('customFormat')}
+          selectedFormatLabel={selectedFormat.label}
+        />
 
         {isMobile ? (
-          <div className="w-full flex-grow flex flex-col pb-2">
+          <div className="w-full flex-grow flex flex-col pb-2 min-h-0">
             {/* Step Indicator */}
             <div className="flex justify-center items-center gap-2 mb-4">
               {['Guidelines', 'Camera', 'Result'].map((label, index) => (
@@ -858,43 +905,83 @@ function AppContent() {
                 style={{ transform: `translateX(-${wizardStepIndex * (100 / 3)}%)` }}
               >
                 {/* Guidelines Step */}
-                <div className="w-1/3 px-1 flex flex-col h-full">
+                <div className="w-1/3 px-1 flex flex-col h-full min-h-0">
                   <div className="flex-grow overflow-y-auto">
                     <Guidelines />
                   </div>
                   <button
                     onClick={() => setWizardStep('camera')}
-                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 focus:ring-red-500 dark:focus:ring-red-600 font-semibold"
+                    className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg font-semibold"
                   >
                     Continue
                   </button>
                 </div>
 
                 {/* Camera Step */}
-                <div className="w-1/3 px-1 h-full">
-                  <CameraView videoRef={videoRef} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setActiveDialog('import')} onManageFormatsClick={() => setActiveDialog('customFormat')} onBack={() => setWizardStep('guidelines')} onSwitchCamera={switchCamera} />
+                <div className="w-1/3 px-1 h-full min-h-0">
+                  <CameraView videoRef={videoRef} onStartCamera={() => startCamera()} onStopCamera={stopCamera} onCapturePhoto={capturePhoto} onImportClick={() => setActiveDialog('import')} onBack={() => setWizardStep('guidelines')} onSwitchCamera={switchCamera} />
                 </div>
 
                 {/* Result Step */}
-                <div className="w-1/3 px-1 h-full">
+                <div className="w-1/3 px-1 h-full min-h-0">
                   <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            <Guidelines />
-            <CameraView
-              videoRef={videoRef}
-              onStartCamera={() => startCamera()}
-              onStopCamera={stopCamera}
-              onCapturePhoto={capturePhoto}
-              onImportClick={() => setActiveDialog('import')}
-              onManageFormatsClick={() => setActiveDialog('customFormat')}
-              onSwitchCamera={switchCamera}
-            />
-            <ResultPanel onDownload={() => setActiveDialog('download')} onRetake={retakePhoto} onOpenPrintDialog={() => setActiveDialog('print')} />
+          <div className="relative flex-grow min-h-0">
+            {/* Main Grid for content */}
+            <div className={`grid ${isTablet ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4 items-stretch h-full`}>
+              {!isTablet && <Guidelines />}
+
+              <div className="relative h-full min-h-0">
+                {isTablet && (
+                  <button
+                    onClick={() => setGuidelinesCollapsed(!guidelinesCollapsed)}
+                    className="absolute -left-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all"
+                    title={guidelinesCollapsed ? 'Show Guidelines' : 'Hide Guidelines'}
+                  >
+                    {guidelinesCollapsed ? <PanelLeftOpen size={20} className="text-gray-600 dark:text-gray-300" /> : <PanelLeftClose size={20} className="text-gray-600 dark:text-gray-300" />}
+                  </button>
+                )}
+                <CameraView
+                  videoRef={videoRef}
+                  onStartCamera={() => startCamera()}
+                  onStopCamera={stopCamera}
+                  onCapturePhoto={capturePhoto}
+                  onImportClick={() => setActiveDialog('import')}
+                  onSwitchCamera={switchCamera}
+                />
+              </div>
+
+              <ResultPanel
+                onDownload={() => setActiveDialog('download')}
+                onRetake={retakePhoto}
+                onOpenPrintDialog={() => setActiveDialog('print')} />
+            </div>
+
+            {/* Guidelines as an overlay on tablet */}
+            {isTablet && (
+              <>
+                {/* Backdrop for overlay */}
+                <div
+                  className={`absolute inset-0 z-10 blur-sm backdrop-blur-sm transition-opacity duration-300 ease-in-out
+                    ${guidelinesCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}
+                  `}
+                  onClick={() => setGuidelinesCollapsed(true)}
+                  aria-hidden="true"
+                />
+                {/* Sliding Panel */}
+                <div
+                  className={`absolute top-0 left-0 h-full z-20 w-96 max-w-[90vw] transition-transform duration-300 ease-in-out
+                    ${guidelinesCollapsed ? '-translate-x-full -ml-4' : 'translate-x-0 ml-0'}
+                  `}
+                >
+                  <Guidelines />
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -905,6 +992,11 @@ function AppContent() {
         {/* Hidden canvas for photo processing */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />
       </div>
+
+      <PhotoQueueDialog
+        isOpen={activeDialog === 'photoQueue'}
+        onClose={handleCloseDialog}
+      />
 
       <ToastContainer activeToast={toasts[0] ?? null} />
 

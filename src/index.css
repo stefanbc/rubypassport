@@ -18,6 +18,39 @@ body {
   h1 { @apply font-extrabold tracking-tight leading-tight; }
   h2 { @apply font-bold tracking-tight leading-tight; }
   h3 { @apply font-semibold tracking-tight leading-snug; }
+
+  /* Modern, uniform scrollbars */
+  /* For Webkit-based browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-lg border-4 border-solid border-gray-100 dark:bg-red-800 dark:border-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-red-700;
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
+  }
+
+  .dark * {
+    scrollbar-color: theme('colors.red.800') theme('colors.gray.900');
+  }
+
+  /* Global focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-red-500 dark:ring-red-600 ring-offset-gray-50 dark:ring-offset-black;
+  }
 }
 
 @keyframes fade-in {
