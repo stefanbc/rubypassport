@@ -2,6 +2,7 @@ import { useState, useRef, DragEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { Trash2, XCircle, Images, X, Frown } from 'lucide-react';
 import { useStore } from '../../store';
+import { useTranslation } from 'react-i18next';
 
 type PhotoQueueDialogProps = {
   isOpen: boolean;
@@ -9,6 +10,7 @@ type PhotoQueueDialogProps = {
 };
 
 export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
+  const { t } = useTranslation();
   const { captureQueue, clearQueue, addToast, removeFromQueue, reorderQueue } = useStore(
     useShallow((state) => ({
       captureQueue: state.captureQueue,
@@ -27,13 +29,13 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
 
   const handleClearQueue = () => {
     clearQueue();
-    addToast('Photo queue cleared', 'success');
+    addToast(t('toasts.photoQueueCleared', 'Photo queue cleared'), 'success');
     onClose();
   };
 
   const handleRemovePhoto = (index: number) => {
     removeFromQueue(index);
-    addToast('Photo removed from queue', 'success', 2000);
+    addToast(t('toasts.photoRemovedFromQueue', 'Photo removed from queue'), 'success', 2000);
   };
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
@@ -62,23 +64,23 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
         <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
             <Images size={24} />
-            Photo Booth Queue ({captureQueue.length})
+            {t('dialogs.photoQueue.title', { count: captureQueue.length })}
           </h2>
           <div className="flex items-center gap-2">
             {captureQueue.length > 0 && (
               <button
                 onClick={handleClearQueue}
                 className="flex items-center gap-1.5 text-xs sm:text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                aria-label="Clear photo queue"
+                aria-label={t('dialogs.photoQueue.clear_queue_aria')}
               >
                 <Trash2 size={14} />
-                Clear All
+                {t('dialogs.photoQueue.clear_all_button')}
               </button>
             )}
             <button
               onClick={onClose}
               className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-              aria-label="Close photo queue dialog"
+              aria-label={t('dialogs.photoQueue.close_aria')}
             >
               <XCircle size={22} />
             </button>
@@ -99,11 +101,11 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                   onDragEnd={handleDragEnd}
                   onDragOver={(e) => e.preventDefault()}
                 >
-                  <img src={imgSrc} alt={`Queued photo ${index + 1}`} className="w-full h-full object-cover group-hover:brightness-75 transition-all duration-200" />
+                  <img src={imgSrc} alt={t('dialogs.photoQueue.queued_photo_alt', { index: index + 1 })} className="w-full h-full object-cover group-hover:brightness-75 transition-all duration-200" />
                   <button
                     onClick={() => handleRemovePhoto(index)}
                     className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
-                    aria-label={`Remove photo ${index + 1}`}
+                    aria-label={t('dialogs.photoQueue.remove_photo_aria', { index: index + 1 })}
                   >
                     <X size={14} />
                   </button>
@@ -113,8 +115,8 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400">
               <Frown size={48} className="mb-4 opacity-50" />
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">The queue is empty</h3>
-              <p className="mt-1 text-sm">Enable Photo Booth mode and capture some photos to see them here.</p>
+              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">{t('dialogs.photoQueue.empty_title')}</h3>
+              <p className="mt-1 text-sm">{t('dialogs.photoQueue.empty_description')}</p>
             </div>
           )}
         </div>

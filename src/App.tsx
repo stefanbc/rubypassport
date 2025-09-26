@@ -16,6 +16,7 @@ import { PrintOptionsDialog } from './components/dialogs/PrintOptionsDialog';
 import { ShortcutsDialog } from './components/dialogs/ShortcutsDialog';
 import { ThemeProvider, useTheme } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
+import { useTranslation } from 'react-i18next';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
 declare class ImageCapture {
@@ -36,13 +37,13 @@ function AppContent() {
   const {
     customFormats, selectedFormatId, watermarkEnabled, watermarkText,
     baseImage, stream, isCameraOn, facingMode, toasts,
-    isMobile, isTablet, activeDialog, wizardStep,
+    isMobile, isTablet, activeDialog, wizardStep, hasVisited,
     setSelectedFormatId, setWatermarkEnabled, setWizardStep,
     setBaseImage, setCapturedImage, setHighResBlob, setStream, setIsCameraOn, setIsCameraLoading, setFacingMode,
-    setIsProcessingImage, setIsMobile, setIsTablet, setIsPWA, setIsFullscreen, setActiveDialog,
+    setIsProcessingImage, setIsMobile, setIsTablet, setIsPWA, setIsFullscreen, setActiveDialog, setHasVisited,
     addToast, removeToast, retakePhoto: storeRetakePhoto,
     addCustomFormat, updateCustomFormat, deleteCustomFormat,
-    multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled } = useStore();
+    multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled, captureQueue } = useStore();
   const { toggleTheme } = useTheme();
 
   // --- Refs ---
@@ -65,11 +66,23 @@ function AppContent() {
   const allFormats: Format[] = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const wizardStepIndex = { guidelines: 0, camera: 1, result: 2 }[wizardStep];
+  const { t } = useTranslation();
 
   // Wrapper to match previous signature
   const retakePhoto = useCallback(() => {
     storeRetakePhoto(isMobile);
   }, [storeRetakePhoto, isMobile]);
+
+  useEffect(() => {
+    // On first visit, show the info dialog.
+    if (!hasVisited) {
+      const timer = setTimeout(() => {
+        setActiveDialog('info');
+        setHasVisited(true);
+      }, 500); // Small delay to allow the app to render
+      return () => clearTimeout(timer);
+    }
+  }, [hasVisited, setActiveDialog, setHasVisited]);
 
   useEffect(() => {
     const checkDeviceSize = () => {
@@ -119,11 +132,11 @@ function AppContent() {
   // Effect to show toasts when online/offline status changes.
   useEffect(() => {
     const handleOnline = () => {
-      addToast('You are back online!', 'success');
+      addToast(t('toasts.backOnline'), 'success');
     };
 
     const handleOffline = () => {
-      addToast('You are offline. Some features may be unavailable.', 'info');
+      addToast(t('toasts.offline'), 'info');
     };
 
     window.addEventListener('online', handleOnline);
@@ -180,7 +193,7 @@ function AppContent() {
 
   const startCamera = useCallback(async (modeToSet: FacingMode = facingMode) => {
     try {
-      addToast('Starting camera...', 'info');
+      addToast(t('toasts.startingCamera'), 'info');
       setIsCameraLoading(true);
 
       // Get a stream with basic constraints first to access track capabilities.
@@ -196,7 +209,7 @@ function AppContent() {
 
       const capabilities = videoTrack.getCapabilities();
       if (capabilities.width?.max && capabilities.height?.max) {
-        addToast(`Max camera resolution: ${capabilities.width.max}x${capabilities.height.max}`, 'info', 1500);
+        addToast(t('toasts.maxCameraResolution', { width: capabilities.width.max, height: capabilities.height.max }), 'info', 1500);
       }
 
       // Apply more specific constraints for the best quality and aspect ratio.
@@ -217,22 +230,22 @@ function AppContent() {
 
       const settings = videoTrack.getSettings();
       if (settings.width && settings.height) {
-        addToast(`Camera stream: ${settings.width}x${settings.height}`, 'info', 1500);
+        addToast(t('toasts.cameraStream', { width: settings.width, height: settings.height }), 'info', 1500);
       }
 
       if ('ImageCapture' in window) {
         try {
           imageCaptureRef.current = new ImageCapture(videoTrack);
-          addToast('High-resolution capture is available.', 'info', 1500);
+          addToast(t('toasts.highResAvailable'), 'info', 1500);
         } catch (e) {
           console.error('Could not create ImageCapture:', e);
           imageCaptureRef.current = null;
         }
       } else {
-        addToast('High-resolution capture not supported. Using video stream.', 'info', 1500);
+        addToast(t('toasts.highResNotSupported'), 'info', 1500);
       }
     } catch (err) {
-      addToast(`Camera error: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
+      addToast(t('toasts.cameraError', { message: err instanceof Error ? err.message : 'Unknown error' }), 'error');
       setIsCameraOn(false);
       setIsCameraLoading(false);
     }
@@ -250,7 +263,7 @@ function AppContent() {
     // High-res capture with ImageCapture API if available
     if (imageCaptureRef.current) {
       try {
-        addToast('Capturing high-resolution photo...', 'info', 1000);
+        addToast(t('toasts.capturingHighRes'), 'info', 1000);
         const blob = await imageCaptureRef.current.takePhoto();
         setHighResBlob(blob);
         const imageUrl = URL.createObjectURL(blob);
@@ -303,11 +316,11 @@ function AppContent() {
           if (isMobile) {
             setWizardStep('result');
           }
-          addToast('Photo captured successfully!', 'success');
+          addToast(t('toasts.photoCaptured'), 'success');
           URL.revokeObjectURL(imageUrl);
         };
         img.onerror = () => {
-          addToast('Failed to process captured photo.', 'error');
+          addToast(t('toasts.photoCaptureFailed'), 'error');
           URL.revokeObjectURL(imageUrl);
           setIsProcessingImage(false);
         };
@@ -315,7 +328,7 @@ function AppContent() {
         return; // Exit after handling ImageCapture
       } catch (e) {
         const error = e as Error;
-        addToast(`High-res capture failed: ${error.message}. Falling back to video frame.`, 'error');
+        addToast(t('toasts.highResCaptureFailed', { message: error.message }), 'error');
       }
     }
 
@@ -368,7 +381,7 @@ function AppContent() {
     if (isMobile) {
       setWizardStep('result');
     }
-    addToast('Photo captured from video stream.', 'success');
+    addToast(t('toasts.photoFromStream'), 'success');
   }, [addToast, selectedFormat, isMobile, multiCaptureEnabled, setHighResBlob, setBaseImage, setWizardStep, setIsProcessingImage]);
 
   const downloadProcessedImage = useCallback(() => {
@@ -384,7 +397,7 @@ function AppContent() {
     link.download = `${namePart}passport-${selectedFormat.id}-${selectedFormat.widthPx}x${selectedFormat.heightPx}-${Date.now()}.jpg`;
     link.href = capturedImage;
     link.click();
-    addToast('Processed image downloaded!', 'success');
+    addToast(t('toasts.processedDownloaded'), 'success');
   }, [addToast]);
 
   const downloadHighResImage = useCallback(() => {
@@ -399,14 +412,14 @@ function AppContent() {
     link.href = URL.createObjectURL(highResBlob);
     link.click();
     URL.revokeObjectURL(link.href);
-    addToast('Original image downloaded!', 'success');
+    addToast(t('toasts.originalDownloaded'), 'success');
   }, [addToast]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
         addToast(
-          `Error attempting to enable full-screen mode: ${err.message}`,
+          t('toasts.fullscreenError', { message: err.message }),
           'error'
         );
       });
@@ -560,13 +573,13 @@ function AppContent() {
       setCapturedImage(finalDataUrl);
       if (multiCaptureEnabled && baseImage !== lastQueuedBaseImageRef.current) {
         enqueueToQueue(finalDataUrl);
-        lastQueuedBaseImageRef.current = baseImage;
-        addToast(`Added to queue (${useStore.getState().captureQueue.length})`, 'success', 1000);
+        lastQueuedBaseImageRef.current = baseImage; // Avoid re-queuing on re-render
+        addToast(t('toasts.addedToQueue', { count: captureQueue.length + 1 }), 'success', 1000);
       }
       setIsProcessingImage(false);
     };
     img.onerror = () => {
-      addToast('Failed to load image for processing.', 'error');
+      addToast(t('toasts.imageLoadFailed'), 'error');
       setIsProcessingImage(false);
     };
     img.src = baseImage; // This triggers the onload
@@ -597,9 +610,9 @@ function AppContent() {
           setIsCameraLoading(false);
         } catch (playError: unknown) {
           if (playError instanceof Error) {
-            addToast(`Could not start video playback: ${playError.message}`, 'error');
+            addToast(t('toasts.videoPlaybackErrorMessage', { message: playError.message }), 'error');
           } else {
-            addToast('Could not start video playback.', 'error');
+            addToast(t('toasts.videoPlaybackError'), 'error');
           }
         }
       };
@@ -613,7 +626,7 @@ function AppContent() {
 
       // Force play attempt
       video.play().catch(() => {
-        addToast('Waiting for camera permissions...', 'info');
+        addToast(t('toasts.cameraPermission'), 'info');
       });
 
       // Cleanup event listeners
@@ -631,7 +644,7 @@ function AppContent() {
     if (isMobile) {
       setWizardStep('result');
     }
-    addToast('Image imported and cropped successfully!', 'success');
+    addToast(t('toasts.imageImportSuccess'), 'success');
   }, [addToast, isMobile, setBaseImage, setHighResBlob, setWizardStep, setActiveDialog]);
 
   const openPrintPreview = useCallback(() => {
@@ -645,10 +658,10 @@ function AppContent() {
     } = useStore.getState();
 
     if (!capturedImage && captureQueue.length === 0) return;
-    addToast('Preparing print preview...', 'info');
+    addToast(t('toasts.printPreview'), 'info');
     const printWin = window.open('', '_blank');
     if (!printWin) {
-      addToast('Could not open print window. Please disable your pop-up blockers.', 'error');
+      addToast(t('toasts.printWindowError'), 'error');
       return;
     }
     const allFormats = [...FORMATS, ...customFormats];
@@ -671,7 +684,7 @@ function AppContent() {
     metaViewport.name = 'viewport';
     metaViewport.content = 'width=device-width, initial-scale=1';
     const title = doc.createElement('title');
-    title.textContent = personName ? `${personName} – Print Preview` : 'Print Preview';
+    title.textContent = personName ? t('components.app.printPreviewTitleWithName', { name: personName }) : t('components.app.printPreviewTitle');
     const style = doc.createElement('style');
     style.textContent = `
       @page { margin: 0.5in; }
@@ -733,7 +746,7 @@ function AppContent() {
       const img = doc.createElement('img');
       img.className = 'photo';
       img.src = imagesSource[i % imagesSource.length]!;
-      img.alt = 'Passport portrait';
+      img.alt = t('components.app.passportPortraitAlt');
       photoContainer.appendChild(img);
       photoContainer.appendChild(doc.createElement('span'));
       sheet.appendChild(photoContainer);
@@ -785,7 +798,7 @@ function AppContent() {
 
     const { label, widthPx, heightPx, printWidthMm, printHeightMm } = newFormat;
     if (!label.trim() || !widthPx || !heightPx || !printWidthMm || !printHeightMm) {
-      addToast('Please fill all custom format fields.', 'error');
+      addToast(t('dialogs.format.errorAllFields'), 'error');
       return;
     }
 
@@ -796,7 +809,7 @@ function AppContent() {
       isNaN(updatedFormat.printWidthIn) || updatedFormat.printWidthIn <= 0 ||
       isNaN(updatedFormat.printHeightIn) || updatedFormat.printHeightIn <= 0
     ) {
-      addToast('Invalid number values for format. All dimensions must be positive.', 'error');
+      addToast(t('dialogs.format.errorInvalidNumber'), 'error');
       return;
     }
 
@@ -814,7 +827,7 @@ function AppContent() {
   const handleAddCustomFormat = () => {
     const { label, widthPx, heightPx, printWidthMm, printHeightMm } = newFormat;
     if (!label.trim() || !widthPx || !heightPx || !printWidthMm || !printHeightMm) {
-      addToast('Please fill all custom format fields.', 'error');
+      addToast(t('dialogs.format.errorAllFields'), 'error');
       return;
     }
 
@@ -832,7 +845,7 @@ function AppContent() {
       isNaN(newCustomFormat.printWidthIn) || newCustomFormat.printWidthIn <= 0 ||
       isNaN(newCustomFormat.printHeightIn) || newCustomFormat.printHeightIn <= 0
     ) {
-      addToast('Invalid number values for format. All dimensions must be positive.', 'error');
+      addToast(t('dialogs.format.errorInvalidNumber'), 'error');
       return;
     }
 
@@ -864,7 +877,7 @@ function AppContent() {
           <div className="w-full flex-grow flex flex-col pb-2 min-h-0">
             {/* Step Indicator */}
             <div className="flex justify-center items-center gap-2 mb-4">
-              {['Guidelines', 'Camera', 'Result'].map((label, index) => (
+              {['guidelines', 'camera', 'result'].map((label, index) => (
                 <div key={label} className="flex flex-col items-center gap-1 text-center w-1/3">
                   <div
                     className={`w-full h-1.5 rounded-full transition-colors ${wizardStepIndex >= index ? 'bg-red-600' : 'bg-gray-300 dark:bg-zinc-700'}`}
@@ -888,7 +901,7 @@ function AppContent() {
                     onClick={() => setWizardStep('camera')}
                     className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg font-semibold"
                   >
-                    Continue
+                    {t('common.continue')}
                   </button>
                 </div>
 
@@ -915,7 +928,7 @@ function AppContent() {
                   <button
                     onClick={() => setGuidelinesCollapsed(!guidelinesCollapsed)}
                     className="absolute -left-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all"
-                    title={guidelinesCollapsed ? 'Show Guidelines' : 'Hide Guidelines'}
+                    title={guidelinesCollapsed ? t('tooltips.showGuidelines') : t('tooltips.hideGuidelines')}
                   >
                     {guidelinesCollapsed ? <PanelLeftOpen size={20} className="text-gray-600 dark:text-gray-300" /> : <PanelLeftClose size={20} className="text-gray-600 dark:text-gray-300" />}
                   </button>

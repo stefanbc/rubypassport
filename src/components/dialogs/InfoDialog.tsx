@@ -1,48 +1,16 @@
 import { useState } from 'react';
 import { XCircle, HelpCircle, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type InfoDialogProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const faqs = [
-  {
-    q: 'What is Ruby Passport?',
-    a: 'Ruby Passport is a modern web app for capturing and generating compliant passport/ID photos directly in your browser. It helps you create photos that meet specific size and alignment requirements for various countries.'
-  },
-  {
-    q: 'Is my data secure?',
-    a: 'Yes. All photo processing happens locally in your browser. Your photos are never uploaded to a server, ensuring your privacy and security.'
-  },
-  {
-    q: 'How accurate is the printing?',
-    a: 'The Print Preview feature generates a page with photos tiled to exact physical dimensions. For best results, ensure your printer settings are at 100% scale and "fit to page" is disabled.'
-  },
-  {
-    q: 'Can I create custom photo formats?',
-    a: 'Absolutely. You can add, edit, and delete your own photo formats with precise pixel and physical print dimensions using the "Format Settings" (F) dialog.'
-  },
-  {
-    q: 'Can I use an existing photo instead of the camera?',
-    a: "Yes! You can import an image from your computer by clicking the 'Import' button or by dragging and dropping a file. If your image is larger than the selected format, you'll be able to drag it to reposition it for the perfect crop before it's processed."
-  },
-  {
-    q: 'What are the alignment guides for?',
-    a: 'The live guides on the camera view help you align your face correctly according to the selected format\'s requirements, ensuring your photo is compliant.'
-  },
-  {
-    q: 'Can I add a watermark to my photos?',
-    a: 'Yes. On the Result screen, click the pencil icon to open the details settings. From there, you can enable or disable the watermark and customize the text that appears on your photo.'
-  },
-  {
-    q: 'What is Photo Booth mode?',
-    a: 'Photo Booth mode allows you to capture multiple photos that are queued for batch printing on the same paper. Enable it with the Photo Booth icon (multiple images) in the header or by pressing "B". When photos are in the queue, this button shows the count and opens the queue dialog. Inside the dialog, you can rearrange photos by dragging them or delete individual photos by hovering over them. You can then print all queued photos together.'
-  }
-];
-
 export function InfoDialog({ isOpen, onClose }: InfoDialogProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { t } = useTranslation();
+  const faqs: { q: string, a: string }[] = t('dialogs.info.faqs', { returnObjects: true }) as { q: string, a: string }[];
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -57,12 +25,12 @@ export function InfoDialog({ isOpen, onClose }: InfoDialogProps) {
         <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
             <HelpCircle size={24} />
-            Frequently Asked Questions
+            {t('dialogs.info.title')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-            aria-label="Close FAQ dialog"
+            aria-label={t('dialogs.info.close_aria')}
           >
             <XCircle size={22} />
           </button>

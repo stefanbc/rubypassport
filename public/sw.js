@@ -68,21 +68,29 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      // Network-first strategy
-      // If it's not in the cache, fetch it from the network.
-      try {
-        const networkResponse = await fetch(event.request);
-        // If we get a response, cache it and return it.
-        // This keeps the cache up-to-date.
-        cache.put(event.request, networkResponse.clone());
-        return networkResponse;
-      } catch (error) {
-        // If the network fails (e.g., user is offline),
-        // try to serve from the cache as a fallback.
-        console.log('Network request failed, trying cache.');
-        return cache.match(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      // Cache-first strategy
+      if (cachedResponse) {
+        // If a cached response is found, return it.
+        return cachedResponse;
       }
+
+      // If the request is not in the cache, fetch it from the network.
+      return fetch(event.request).then((networkResponse) => {
+        // Don't cache opaque or error responses.
+        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+          return networkResponse;
+        }
+
+        // Clone the response to put it in the cache and to be served.
+        const responseToCache = networkResponse.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+
+        return networkResponse;
+      });
     })
   );
 });

@@ -2,6 +2,7 @@ import { RefObject } from 'react';
 import { Camera, Computer, Loader2, CheckCircle, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useStore } from '../../store';
 import { FORMATS } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 type CameraViewProps = {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -22,6 +23,7 @@ export function CameraView({
   onSwitchCamera,
   onBack,
 }: CameraViewProps) {
+  const { t } = useTranslation();
   const { isCameraOn, isCameraLoading, selectedFormatId, customFormats, facingMode, isMobile, isTablet } = useStore();
   const allFormats = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
@@ -40,24 +42,24 @@ export function CameraView({
           <button
             onClick={onBack}
             className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-            aria-label="Back to guidelines"
+            aria-label={t('components.panels.camera.back_aria')}
           >
             <ArrowLeft size={24} />
-            <span className="hidden sm:inline">Back</span>
+            <span className="hidden sm:inline">{t('components.panels.camera.back')}</span>
           </button>
         )}
         <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">
-          Preview
+          {t('components.panels.camera.preview')}
         </h2>
         <div className="relative flex items-center gap-2">
           {isCameraOn && (isMobile || isTablet) && (
             <button
               onClick={onSwitchCamera}
               className={`flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors rounded-md ${isMobile ? 'p-2.5' : 'py-2 px-3'}`}
-              title="Switch camera"
+              title={t('components.panels.camera.switch_camera_tooltip')}
             >
               <RefreshCw size={isMobile ? 18 : 16} />
-              {!isMobile && <span>Switch camera</span>}
+              {!isMobile && <span>{t('components.panels.camera.switch_camera_button')}</span>}
             </button>
           )}
         </div>
@@ -114,9 +116,9 @@ export function CameraView({
             <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
             <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
             <div className="absolute bottom-4 left-4 right-4">
-              <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
-                Align your face with the oval guide<br />
-                Eyes on the horizontal line
+              <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none" dangerouslySetInnerHTML={{
+                __html: `${t('components.panels.camera.guide_align_face')}<br />${t('components.panels.camera.guide_eyes_on_line')}`
+              }}>
               </p>
             </div>
           </>
@@ -126,12 +128,12 @@ export function CameraView({
               {isCameraLoading ? (
                 <>
                   <Loader2 size={32} className="animate-spin mb-2 text-red-500" />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Starting camera…</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('components.panels.camera.starting_camera')}</p>
                 </>
               ) : (
                 <>
                   <Camera size={42} className="mx-auto mb-2 opacity-70" />
-                  <p className="select-none text-sm text-gray-500 dark:text-gray-400">Camera not started</p>
+                  <p className="select-none text-sm text-gray-500 dark:text-gray-400">{t('components.panels.camera.camera_not_started')}</p>
                 </>
               )}
             </div>
@@ -151,7 +153,7 @@ export function CameraView({
                 disabled={isCameraLoading}
               >
                 {isCameraLoading ? <Loader2 size={18} className="animate-spin" /> : <Camera size={20} />}
-                {isCameraLoading ? 'Starting…' : 'Start Camera'}
+                {isCameraLoading ? t('components.panels.camera.starting_button') : t('components.panels.camera.start_camera_button')}
               </button>
               <button
                 onClick={onImportClick}
@@ -159,7 +161,7 @@ export function CameraView({
                 disabled={isCameraLoading}
               >
                 <Computer size={20} />
-                Import Image
+                {t('components.panels.camera.import_image_button')}
               </button>
             </>
           ) : (
@@ -169,13 +171,13 @@ export function CameraView({
                 className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
               >
                 <CheckCircle size={20} />
-                Capture Photo
+                {t('components.panels.camera.capture_photo_button')}
               </button>
               <button
                 onClick={onStopCamera}
                 className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
               >
-                Stop
+                {t('components.panels.camera.stop_button')}
               </button>
             </>
           )}

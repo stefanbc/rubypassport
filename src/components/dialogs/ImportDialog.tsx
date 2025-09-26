@@ -2,6 +2,7 @@ import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent
 import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
 import { useStore } from '../../store';
 import { FORMATS } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 interface ImportDialogProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface ImportDialogProps {
 
 export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogProps) {
   const { selectedFormatId, customFormats, addToast, isMobile } = useStore();
+  const { t } = useTranslation();
   const allFormats = [...FORMATS, ...customFormats];
   const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
   const [isDragging, setIsDragging] = useState(false);
@@ -264,12 +266,12 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
         <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
             <UploadCloud size={24} />
-            {imageSrc ? 'Reposition Image' : 'Import Image'}
+            {imageSrc ? t('dialogs.import.title_reposition') : t('dialogs.import.title_import')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-            aria-label="Close dialog"
+            aria-label={t('dialogs.import.close_aria')}
           >
             <XCircle size={22} />
           </button>
@@ -337,8 +339,8 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
                   <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
-                      Align face with the oval guide<br />
-                      Drag to reposition
+                      {t('dialogs.import.guide_align')}<br />
+                      {t('dialogs.import.guide_drag')}
                     </p>
                   </div>
                 </div>
@@ -367,11 +369,11 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
               <div className="flex flex-col sm:flex-row gap-3 mt-4">
                 <button onClick={handleReset} className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg">
                   <RotateCcw size={18} />
-                  Change Image
+                  {t('dialogs.import.change_image_button')}
                 </button>
                 <button onClick={handleCrop} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg">
                   <Check size={18} />
-                  Confirm & Crop
+                  {t('dialogs.import.confirm_crop_button')}
                 </button>
               </div>
             </div>
@@ -381,10 +383,10 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
               className={`flex flex-col items-center justify-center p-6 sm:p-10 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-red-500 bg-red-50 dark:bg-zinc-800' : 'border-gray-300 dark:border-zinc-700'}`}
             >
               <UploadCloud className={`w-12 h-12 mb-3 transition-colors ${isDragging ? 'text-red-600' : 'text-gray-400'}`} />
-              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Drag & drop</span> an image here</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">or</p>
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">{t('dialogs.import.drag_drop_text')}</span> {t('dialogs.import.drag_drop_subtext')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{t('dialogs.import.or')}</p>
               <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded text-center transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg">
-                {isMobile ? 'Choose from phone' : 'Choose from computer'}
+                {isMobile ? t('dialogs.import.choose_from_phone_button') : t('dialogs.import.choose_from_computer_button')}
               </button>
             </div>
           )}

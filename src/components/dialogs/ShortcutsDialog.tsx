@@ -1,27 +1,30 @@
 import { XCircle, Keyboard } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type ShortcutsDialogProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const shortcuts = [
-  { key: '?', description: 'Show this help dialog' },
-  { key: 'C', description: 'Start / Stop camera' },
-  { key: 'Space', description: 'Capture photo' },
-  { key: 'U', description: 'Import image' },
-  { key: 'D', description: 'Download result' },
-  { key: 'R', description: 'Retake photo' },
-  { key: 'W', description: 'Toggle watermark' },
-  { key: 'P', description: 'Open print options' },
-  { key: 'F', description: 'Open format settings' },
-  { key: 'B', description: 'Toggle Photo Booth mode' },
-  { key: 'T', description: 'Toggle theme' },
-  { key: 'Enter', description: 'Toggle fullscreen' },
-  { key: 'I', description: 'Show info dialog' },
-];
-
 export function ShortcutsDialog({ isOpen, onClose }: ShortcutsDialogProps) {
+  const { t } = useTranslation();
+
+  const shortcuts = [
+    { key: '?', description: t('dialogs.shortcuts.items.show_help') },
+    { key: 'C', description: t('dialogs.shortcuts.items.toggle_camera') },
+    { key: 'Space', description: t('dialogs.shortcuts.items.capture') },
+    { key: 'U', description: t('dialogs.shortcuts.items.import') },
+    { key: 'D', description: t('dialogs.shortcuts.items.download') },
+    { key: 'R', description: t('dialogs.shortcuts.items.retake') },
+    { key: 'W', description: t('dialogs.shortcuts.items.toggle_watermark') },
+    { key: 'P', description: t('dialogs.shortcuts.items.print') },
+    { key: 'F', description: t('dialogs.shortcuts.items.format_settings') },
+    { key: 'B', description: t('dialogs.shortcuts.items.toggle_photobooth') },
+    { key: 'T', description: t('dialogs.shortcuts.items.toggle_theme') },
+    { key: 'Enter', description: t('dialogs.shortcuts.items.toggle_fullscreen') },
+    { key: 'I', description: t('dialogs.shortcuts.items.show_info') },
+  ];
+
   if (!isOpen) return null;
 
   return (
@@ -31,12 +34,12 @@ export function ShortcutsDialog({ isOpen, onClose }: ShortcutsDialogProps) {
         <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
             <Keyboard size={24} />
-            Keyboard Shortcuts
+            {t('dialogs.shortcuts.title')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-            aria-label="Close shortcuts dialog"
+            aria-label={t('dialogs.shortcuts.close_aria')}
           >
             <XCircle size={22} />
           </button>

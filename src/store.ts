@@ -38,6 +38,7 @@ interface AppState {
   photosPerPage: PhotoCount
   watermarkEnabled: boolean
   watermarkText: string
+  hasVisited: boolean
 
   // Transient state
   isProcessingImage: boolean
@@ -83,6 +84,7 @@ interface AppActions {
   setTheme: (theme: Theme) => void
   setWatermarkEnabled: (enabled: boolean) => void
   setWatermarkText: (text: string) => void
+  setHasVisited: (hasVisited: boolean) => void
   // Multi-capture Actions
   setMultiCaptureEnabled: (enabled: boolean) => void
   enqueueToQueue: (imageDataUrl: string) => void
@@ -127,6 +129,7 @@ const initialState: AppState = {
   photosPerPage: 6,
   watermarkEnabled: false,
   watermarkText: '💎 RUBY PASSPORT',
+  hasVisited: false,
 
   isProcessingImage: false,
   isMobile: false,
@@ -189,6 +192,7 @@ export const useStore = create<AppState & AppActions>()(
       setTheme: (theme) => set({ theme }),
       setWatermarkEnabled: (enabled) => set({ watermarkEnabled: enabled }),
       setWatermarkText: (text) => set({ watermarkText: text }),
+      setHasVisited: (hasVisited) => set({ hasVisited }),
       // Multi-capture Actions
       setMultiCaptureEnabled: (enabled) => set({ multiCaptureEnabled: enabled }),
       enqueueToQueue: (imageDataUrl) =>
@@ -255,6 +259,7 @@ export const useStore = create<AppState & AppActions>()(
         watermarkEnabled: state.watermarkEnabled,
         watermarkText: state.watermarkText,
         theme: state.theme,
+        hasVisited: state.hasVisited,
       }),
       merge: (persistedState, currentState) => {
         const merged = {

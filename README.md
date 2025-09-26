@@ -23,7 +23,6 @@ Ruby Passport is a modern web app for capturing and generating compliant passpor
 ### Printing & Export
 
 - **Precise Print Preview**: Generate a print-ready page with multiple photos tiled to exact physical dimensions.
-- **Auto-Fit to 10x15cm**: Automatically arrange the maximum number of photos to fit on a standard 10x15 cm (4x6 inch) photo paper sheet.
 - **Download Image**: Save the final photo with a dynamic, descriptive filename.
 - **Personalization**: Optionally add a person's name to be used in filenames and print preview titles.
 
@@ -74,7 +73,6 @@ npm run preview
 4. Optionally set the person name for filenames and print titles.
 5. Toggle the official watermark if desired.
 6. Download the image or open Print Preview.
-7. In Print Preview, optionally enable Auto-fit 10×15 cm to tile optimally.
 
 ## Accessibility & Notes
 
