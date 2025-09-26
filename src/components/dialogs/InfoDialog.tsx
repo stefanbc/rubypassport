@@ -32,12 +32,8 @@ const faqs = [
     a: 'The live guides on the camera view help you align your face correctly according to the selected format\'s requirements, ensuring your photo is compliant.'
   },
   {
-    q: 'What is the "Auto-fit to 10x15cm" option?',
-    a: 'This option in the Print Preview automatically arranges the maximum number of photos to fit perfectly on a standard 10x15 cm (4x6 inch) photo paper sheet, minimizing waste.'
-  },
-  {
     q: 'Can I add a watermark to my photos?',
-    a: 'Yes. On the Result screen, click the copyright icon (©) to open the watermark settings. From there, you can enable or disable the watermark and customize the text that appears on your photo.'
+    a: 'Yes. On the Result screen, click the pencil icon to open the details settings. From there, you can enable or disable the watermark and customize the text that appears on your photo.'
   },
   {
     q: 'What is Photo Booth mode?',

@@ -570,7 +570,7 @@ function AppContent() {
       setIsProcessingImage(false);
     };
     img.src = baseImage; // This triggers the onload
-  }, [baseImage, watermarkEnabled, watermarkText, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage]);
+  }, [baseImage, watermarkEnabled, watermarkText, multiCaptureEnabled, enqueueToQueue, applyWatermark, addToast, setIsProcessingImage, setCapturedImage, selectedFormat]);
 
   useEffect(() => {
     return () => {
@@ -869,7 +869,6 @@ function AppContent() {
                   <div
                     className={`w-full h-1.5 rounded-full transition-colors ${wizardStepIndex >= index ? 'bg-red-600' : 'bg-gray-300 dark:bg-zinc-700'}`}
                   />
-                  <span className={`text-xs font-medium transition-colors ${wizardStepIndex >= index ? 'text-red-600 dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`}>{label}</span>
                 </div>
               ))}
             </div>
