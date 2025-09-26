@@ -13,7 +13,7 @@ export function PrintOptionsDialog({
     onClose,
     onPrint,
 }: PrintOptionsDialogProps) {
-    const { photosPerPage, setPhotosPerPage, autoFit10x15, setAutoFit10x15, selectedFormatId, customFormats } = useStore();
+    const { photosPerPage, setPhotosPerPage, selectedFormatId, customFormats } = useStore();
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
 
@@ -52,27 +52,14 @@ export function PrintOptionsDialog({
                                 value={photosPerPage}
                                 onChange={(e) => setPhotosPerPage(Number(e.target.value) as PhotoCount)}
                                 className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40"
-                                disabled={autoFit10x15}
                             >
                                 {PHOTO_COUNTS.map(c => (
                                     <option key={c} value={c}>{c}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="flex items-center justify-between sm:justify-start sm:gap-3">
-                            <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-40 select-none" htmlFor="autoFitDialog">Auto-fit 10×15 cm</label>
-                            <input
-                                id="autoFitDialog"
-                                type="checkbox"
-                                checked={autoFit10x15}
-                                onChange={(e) => setAutoFit10x15(e.target.checked)}
-                                className="h-4 w-4 accent-red-600 text-red-600 bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
-                            />
-                        </div>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {autoFit10x15
-                                ? 'Count is determined automatically to fit the paper.'
-                                : `Prints on a standard sheet. Your photo size is ${selectedFormat.printWidthIn.toFixed(2)}×${selectedFormat.printHeightIn.toFixed(2)} in.`}
+                            {`Prints on a standard sheet. Your photo size is ${selectedFormat.printWidthIn.toFixed(2)}×${selectedFormat.printHeightIn.toFixed(2)} in.`}
                         </p>
                     </div>
 

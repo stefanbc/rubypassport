@@ -640,7 +640,6 @@ function AppContent() {
       personName,
       selectedFormatId,
       customFormats,
-      autoFit10x15,
       photosPerPage,
       captureQueue
     } = useStore.getState();
@@ -656,28 +655,11 @@ function AppContent() {
     const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
     const widthIn = selectedFormat.printWidthIn;
     const heightIn = selectedFormat.printHeightIn;
-    // Paper size: 10x15 cm (approx 3.94 x 5.91 in)
-    const paperW = 15 / 2.54; // ~5.91 in
-    const paperH = 10 / 2.54; // ~3.94 in
     const gapIn = 0.10; // equal row/column gap
     const cutMarkLengthIn = gapIn / 2;
     const cutMarkOffsetIn = -cutMarkLengthIn;
 
-    // Compute best orientation fit (landscape or portrait for the sheet)
-    const fitFor = (sheetW: number, sheetH: number) => {
-      const cols = Math.max(1, Math.floor((sheetW + gapIn) / (widthIn + gapIn)));
-      const rows = Math.max(1, Math.floor((sheetH + gapIn) / (heightIn + gapIn)));
-      return { cols, rows, count: cols * rows, sheetW, sheetH };
-    };
-    const landscape = fitFor(paperW, paperH);
-    const portrait = fitFor(paperH, paperW);
-    const best = landscape.count >= portrait.count ? landscape : portrait;
-    const fitCount = best.count;
-    const sheetWidthIn = best.sheetW;
-    const sheetHeightIn = best.sheetH;
-    const cols = best.cols;
-
-    const totalImages = autoFit10x15 ? fitCount : photosPerPage;
+    const totalImages = photosPerPage;
     const doc = printWin.document;
     const html = doc.documentElement;
     const head = doc.createElement('head');
@@ -697,20 +679,14 @@ function AppContent() {
       body { background: #fff; margin: 0; display: flex; align-items: center; justify-content: center; }
       .sheet {
         display: grid;
-        ${autoFit10x15
-        ? `grid-template-columns: repeat(${cols}, ${widthIn}in);`
-        : `grid-template-columns: repeat(auto-fill, minmax(${widthIn}in, ${widthIn}in));`
-      }
+        grid-template-columns: repeat(auto-fill, minmax(${widthIn}in, ${widthIn}in));
         grid-auto-rows: ${heightIn}in;
         gap: ${gapIn}in; /* equal gap for rows and columns */
         align-content: start;
         justify-content: start;
         padding: 0;
         box-sizing: border-box;
-        ${autoFit10x15
-        ? `width: ${sheetWidthIn}in; height: ${sheetHeightIn}in;`
-        : 'width: 100%; height: 100%;'
-      }
+        width: 100%; height: 100%;
       }
       .photo-container {
         position: relative;
