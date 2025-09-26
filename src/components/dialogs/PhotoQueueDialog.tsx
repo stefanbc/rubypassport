@@ -68,7 +68,7 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
             {captureQueue.length > 0 && (
               <button
                 onClick={handleClearQueue}
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 hover:bg-red-100 dark:hover:bg-red-900/20"
+                className="flex items-center gap-1.5 text-xs sm:text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
                 aria-label="Clear photo queue"
               >
                 <Trash2 size={14} />

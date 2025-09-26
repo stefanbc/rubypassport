@@ -35,11 +35,11 @@ export function CameraView({
 
   return (
     <div className={`bg-white dark:bg-zinc-900 rounded-lg p-4 sm:p-6 border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/5 h-full flex flex-col transition-shadow duration-200 relative overflow-y-auto ${!isMobile && 'shadow-xl hover:shadow-2xl'}`}>
-      <div className={`relative flex ${isMobile ? 'justify-center' : ''} items-center mb-4`}>
+      <div className={`relative flex justify-between items-center ${isCameraOn ? 'mb-2' : 'mb-4'}`}>
         {isMobile && onBack && (
           <button
             onClick={onBack}
-            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             aria-label="Back to guidelines"
           >
             <ArrowLeft size={24} />
@@ -49,6 +49,18 @@ export function CameraView({
         <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">
           Preview
         </h2>
+        <div className="relative flex items-center gap-2">
+          {isCameraOn && (isMobile || isTablet) && (
+            <button
+              onClick={onSwitchCamera}
+              className={`flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors rounded-md ${isMobile ? 'p-2.5' : 'py-2 px-3'}`}
+              title="Switch camera"
+            >
+              <RefreshCw size={isMobile ? 18 : 16} />
+              {!isMobile && <span>Switch camera</span>}
+            </button>
+          )}
+        </div>
       </div>
 
       <div
@@ -64,15 +76,6 @@ export function CameraView({
               muted
               className={`absolute inset-0 w-full h-full object-cover ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
             />
-            {isMobile || isTablet && (
-              <button
-                onClick={onSwitchCamera}
-                className="absolute top-2 right-2 z-20 p-2 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
-                title="Switch camera"
-              >
-                <RefreshCw size={18} />
-              </button>
-            )}
             {/* Guide overlay (responsive to selected format) */}
             <div className="absolute inset-0 pointer-events-none">
               {/* Face bounding oval */}

@@ -14,8 +14,6 @@ export function Footer() {
 
         {/* Right side */}
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-2">
-          <a href="https://www.rubytriathlon.com/" className="text-red-600/80 hover:text-red-500 dark:text-red-300/80 dark:hover:text-red-300" target="_blank" rel="noopener noreferrer">Ruby Triathlon Project</a>
-          <span className="hidden sm:inline text-gray-300 dark:text-zinc-700">|</span>
           <span>Made with ❤️ by <a href="https://stefancosma.xyz" className="text-red-600/80 hover:text-red-500 dark:text-red-300/80 dark:hover:text-red-300" target="_blank" rel="noopener noreferrer">Stefan</a></span>
           <span className="hidden sm:inline text-gray-300 dark:text-zinc-700">|</span>
           <div className="flex items-center gap-x-3">

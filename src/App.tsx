@@ -14,7 +14,7 @@ import { InfoDialog } from './components/dialogs/InfoDialog';
 import { PhotoQueueDialog } from './components/dialogs/PhotoQueueDialog';
 import { PrintOptionsDialog } from './components/dialogs/PrintOptionsDialog';
 import { ShortcutsDialog } from './components/dialogs/ShortcutsDialog';
-import { ThemeProvider } from './contexts/ThemeProvider';
+import { ThemeProvider, useTheme } from './contexts/ThemeProvider';
 import { ToastContainer } from './components/ToastContainer';
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
@@ -43,6 +43,7 @@ function AppContent() {
     addToast, removeToast, retakePhoto: storeRetakePhoto,
     addCustomFormat, updateCustomFormat, deleteCustomFormat,
     multiCaptureEnabled, enqueueToQueue, setMultiCaptureEnabled } = useStore();
+  const { toggleTheme } = useTheme();
 
   // --- Refs ---
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -510,8 +511,7 @@ function AppContent() {
           setActiveDialog('info');
           break;
         case 't':
-          // Simulate a click on the theme switcher button
-          document.querySelector<HTMLButtonElement>('button[title^="Switch to"]')?.click();
+          toggleTheme();
           break;
         case 'b':
           setMultiCaptureEnabled(!useStore.getState().multiCaptureEnabled);
