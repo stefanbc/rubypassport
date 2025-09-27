@@ -1,0 +1,264 @@
+{
+  "common": {
+    "english": "English",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română",
+    "github": "GitHub",
+    "continue": "Weiter"
+  },
+  "components": {
+    "header": {
+      "title": "Ruby Passport",
+      "subtitle": "Passfoto-Generator"
+    },
+    "app": {
+      "wizard": {
+        "guidelines": "Richtlinien",
+        "camera": "Kamera",
+        "result": "Ergebnis"
+      },
+      "printPreviewTitle": "Druckvorschau",
+      "printPreviewTitleWithName": "{{name}} - Druckvorschau",
+      "passportPortraitAlt": "Passfoto-Porträt"
+    },
+    "panels": {
+      "guidelines": {
+        "title": "Richtlinien",
+        "subtitle": "Beachten Sie diese für die Standards der meisten Länder.",
+        "do_title": "Vorgehensweise",
+        "do_item_1": "• Halten Sie den Kopf mittig und gerade",
+        "do_item_2": "• Schauen Sie direkt in die Kamera",
+        "do_item_3": "• Bewahren Sie einen neutralen Gesichtsausdruck (Mund geschlossen)",
+        "do_item_4": "• Brille und Kopfbedeckung abnehmen (es sei denn, aus religiösen Gründen)",
+        "do_item_5": "• Stellen Sie sicher, dass die Augen klar sichtbar sind",
+        "do_item_6": "• Richten Sie Ihr Gesicht im Oval aus, Augen auf der Linie",
+        "dont_title": "Verboten",
+        "dont_item_1": "• Nicht lächeln, kippen oder schielen",
+        "dont_item_2": "• Kein starkes Make-up oder Filter",
+        "dont_item_3": "• Vermeiden Sie Hüte, Kopfhörer oder Accessoires",
+        "dont_item_4": "• Vermeiden Sie harte Schatten oder Gegenlicht",
+        "lighting_title": "Beleuchtung & Hintergrund",
+        "lighting_item_1": "• Verwenden Sie eine helle, gleichmäßige Beleuchtung von vorne",
+        "lighting_item_2": "• Stehen Sie ~0,5 m vor einem schlichten, hellen Hintergrund",
+        "lighting_item_3": "• Vermeiden Sie starke Schatten unter Kinn oder Nase",
+        "lighting_item_4": "• Bevorzugen Sie mittlere Farbtöne bei der Kleidung (nicht weiß)",
+        "privacy_title": "Ihre Privatsphäre ist uns wichtig",
+        "privacy_body": "Diese App wurde mit dem Gedanken an Ihre Privatsphäre entwickelt. Alles geschieht direkt in Ihrem Browser – wir laden Ihre Bilder nirgendwo hoch, speichern oder sichern sie. Wenn Sie fertig sind, sind sie verschwunden."
+      },
+      "camera": {
+        "back": "Zurück",
+        "back_aria": "Zurück zu den Richtlinien",
+        "preview": "Vorschau",
+        "switch_camera_tooltip": "Kamera wechseln",
+        "switch_camera_button": "Kamera wechseln",
+        "guide_align_face": "Richten Sie Ihr Gesicht an der ovalen Führungslinie aus",
+        "guide_eyes_on_line": "Augen auf die horizontale Linie",
+        "starting_camera": "Kamera wird gestartet…",
+        "camera_not_started": "Kamera nicht gestartet",
+        "starting_button": "Wird gestartet…",
+        "start_camera_button": "Kamera starten",
+        "import_image_button": "Bild importieren",
+        "capture_photo_button": "Foto aufnehmen",
+        "stop_button": "Stopp"
+      },
+      "result": {
+        "title": "Ergebnis",
+        "edit_details_tooltip": "Details bearbeiten (Name & Wasserzeichen)",
+        "details_button": "Details",
+        "retake_button": "Neu aufnehmen",
+        "person_name_label": "Name der Person",
+        "optional_placeholder": "Optional",
+        "enable_watermark_label": "Wasserzeichen aktivieren",
+        "watermark_text_placeholder": "Wasserzeichen-Text",
+        "reset_watermark_tooltip": "Auf Standard zurücksetzen",
+        "captured_alt": "Aufgenommenes Passfoto",
+        "processing": "Foto wird verarbeitet...",
+        "placeholder": "Foto aufnehmen oder importieren",
+        "download_button": "Herunterladen",
+        "print_button": "Drucken",
+        "before_unload_prompt": "Sind Sie sicher, dass Sie die Seite verlassen möchten? Ihr generiertes Foto geht verloren."
+      }
+    },
+    "footer": {
+      "copyright": "© {{year}} Ruby Passport. Alle Rechte vorbehalten.",
+      "copyright_mobile": "© {{year}} Ruby Passport.",
+      "madeWith": "Mit ❤️ erstellt von"
+    }
+  },
+  "tooltips": {
+    "formatSettings": "Formateinstellungen (F)",
+    "changeFormat": "Format ändern oder benutzerdefinierte Formate verwalten (F)",
+    "viewPhotoQueue": "Foto-Warteschlange anzeigen ({{count}})",
+    "photoBoothEnabled": "Foto-Booth aktiviert (B)",
+    "enablePhotoBooth": "Foto-Booth aktivieren (B)",
+    "changeLanguage": "Sprache ändern",
+    "showInfo": "Infodialog anzeigen (I)",
+    "switchToDark": "Zum dunklen Design wechseln (T)",
+    "switchToLight": "Zum hellen Design wechseln (T)",
+    "exitFullscreen": "Vollbild verlassen",
+    "enterFullscreen": "Vollbild aktivieren",
+    "showShortcuts": "Tastenkürzel anzeigen (?)",
+    "showGuidelines": "Richtlinien anzeigen",
+    "hideGuidelines": "Richtlinien ausblenden"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Foto-Booth-Modus aktiviert - Fotos werden für den Stapeldruck in die Warteschlange gestellt",
+    "photoBoothDisabled": "Foto-Booth-Modus deaktiviert - Einzelbildmodus",
+    "backOnline": "Sie sind wieder online!",
+    "offline": "Sie sind offline. Einige Funktionen sind möglicherweise nicht verfügbar.",
+    "startingCamera": "Kamera wird gestartet...",
+    "maxCameraResolution": "Maximale Kameraauflösung: {{width}}x{{height}}",
+    "cameraStream": "Kamera-Stream: {{width}}x{{height}}",
+    "highResAvailable": "Hochauflösende Aufnahme ist verfügbar.",
+    "highResNotSupported": "Hochauflösende Aufnahme wird nicht unterstützt. Video-Stream wird verwendet.",
+    "cameraError": "Kamerafehler: {{message}}",
+    "capturingHighRes": "Hochauflösendes Foto wird aufgenommen...",
+    "photoCaptured": "Foto erfolgreich aufgenommen!",
+    "photoCaptureFailed": "Fehler bei der Verarbeitung des aufgenommenen Fotos.",
+    "highResCaptureFailed": "Hochauflösende Aufnahme fehlgeschlagen: {{message}}. Es wird auf Videoframe zurückgegriffen.",
+    "photoFromStream": "Foto aus Videostream aufgenommen.",
+    "processedDownloaded": "Verarbeitetes Bild heruntergeladen!",
+    "originalDownloaded": "Originalbild heruntergeladen!",
+    "fullscreenError": "Fehler beim Versuch, den Vollbildmodus zu aktivieren: {{message}}",
+    "addedToQueue": "Zur Warteschlange hinzugefügt ({{count}})",
+    "imageLoadFailed": "Fehler beim Laden des Bildes zur Verarbeitung.",
+    "cameraPermission": "Warte auf Kamera-Berechtigungen...",
+    "videoPlaybackError": "Videowiedergabe konnte nicht gestartet werden.",
+    "videoPlaybackErrorMessage": "Videowiedergabe konnte nicht gestartet werden: {{message}}",
+    "imageImportSuccess": "Bild erfolgreich importiert und zugeschnitten!",
+    "printPreview": "Druckvorschau wird vorbereitet...",
+    "printWindowError": "Druckfenster konnte nicht geöffnet werden. Bitte deaktivieren Sie Ihre Pop-up-Blocker."
+  },
+  "dialogs": {
+    "format": {
+      "errorAllFields": "Bitte füllen Sie alle benutzerdefinierten Formatfelder aus.",
+      "errorInvalidNumber": "Ungültige Zahlenwerte für das Format. Alle Abmessungen müssen positiv sein."
+    },
+    "download": {
+      "title": "Download-Optionen",
+      "close_aria": "Download-Optionen-Dialog schließen",
+      "description": "Wählen Sie, welche Version des Fotos Sie herunterladen möchten.",
+      "processed_button": "Verarbeitetes Foto herunterladen",
+      "original_button": "Original herunterladen (hochauflösend)",
+      "original_tooltip_unavailable": "Hochauflösendes Original ist für dieses Foto nicht verfügbar.",
+      "original_tooltip_available": "Das Original, unbeschnittenes Foto herunterladen.",
+      "original_unavailable_note": "Ein hochauflösendes Original ist nur für Fotos verfügbar, die mit der hochauflösenden Kameraoption aufgenommen oder aus einer importierten Datei stammen."
+    },
+    "info": {
+      "title": "Häufig gestellte Fragen",
+      "close_aria": "FAQ-Dialog schließen",
+      "faqs": [
+        {
+          "q": "Was ist Ruby Passport?",
+          "a": "Ruby Passport ist eine moderne Web-App zur Aufnahme und Erstellung konformer Pass-/ID-Fotos direkt in Ihrem Browser. Es hilft Ihnen, Fotos zu erstellen, die spezifische Größen- und Ausrichtungsanforderungen für verschiedene Länder erfüllen."
+        },
+        {
+          "q": "Sind meine Daten sicher?",
+          "a": "Ja. Die gesamte Fotoverarbeitung findet lokal in Ihrem Browser statt. Ihre Fotos werden niemals auf einen Server hochgeladen, was Ihre Privatsphäre und Sicherheit gewährleistet."
+        },
+        {
+          "q": "Wie genau ist der Druck?",
+          "a": "Die Funktion „Druckvorschau“ erstellt eine Seite mit Fotos, die in exakten physischen Abmessungen gekachelt sind. Für beste Ergebnisse stellen Sie sicher, dass Ihre Druckereinstellungen 100% Skalierung betragen und \"an Seite anpassen\" deaktiviert ist."
+        },
+        {
+          "q": "Kann ich eigene Fotoformate erstellen?",
+          "a": "Absolut. Sie können Ihre eigenen Fotoformate mit präzisen Pixel- und physischen Druckmaßen über den Dialog „Formateinstellungen“ (F) hinzufügen, bearbeiten und löschen."
+        },
+        {
+          "q": "Kann ich ein vorhandenes Foto anstelle der Kamera verwenden?",
+          "a": "Ja! Sie können ein Bild von Ihrem Computer importieren, indem Sie auf die Schaltfläche „Importieren“ klicken oder eine Datei per Drag & Drop ziehen. Wenn Ihr Bild größer als das ausgewählte Format ist, können Sie es ziehen, um es für den perfekten Zuschnitt neu zu positionieren, bevor es verarbeitet wird."
+        },
+        {
+          "q": "Wozu dienen die Ausrichtungshilfen?",
+          "a": "Die Live-Hilfslinien in der Kameraansicht helfen Ihnen, Ihr Gesicht gemäß den Anforderungen des ausgewählten Formats korrekt auszurichten und so sicherzustellen, dass Ihr Foto konform ist."
+        },
+        {
+          "q": "Kann ich meinen Fotos ein Wasserzeichen hinzufügen?",
+          "a": "Ja. Klicken Sie auf dem Ergebnisbildschirm auf das Stiftsymbol, um die Detaileinstellungen zu öffnen. Dort können Sie das Wasserzeichen aktivieren oder deaktivieren und den Text anpassen, der auf Ihrem Foto erscheint."
+        },
+        {
+          "q": "Was ist der Foto-Booth-Modus?",
+          "a": "Der Foto-Booth-Modus ermöglicht es Ihnen, mehrere Fotos aufzunehmen, die für den Stapeldruck auf demselben Papier in die Warteschlange gestellt werden. Aktivieren Sie ihn mit dem Foto-Booth-Symbol (mehrere Bilder) im Header oder durch Drücken von „B“. Wenn sich Fotos in der Warteschlange befinden, zeigt diese Schaltfläche die Anzahl an und öffnet den Warteschlangendialog. Im Dialog können Sie Fotos durch Ziehen neu anordnen oder einzelne Fotos durch darüber schweben löschen. Sie können dann alle in der Warteschlange befindlichen Fotos zusammen drucken."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Tastenkürzel",
+      "close_aria": "Tastenkürzel-Dialog schließen",
+      "items": {
+        "show_help": "Diesen Hilfe-Dialog anzeigen",
+        "toggle_camera": "Kamera starten / stoppen",
+        "capture": "Foto aufnehmen",
+        "import": "Bild importieren",
+        "download": "Ergebnis herunterladen",
+        "retake": "Foto neu aufnehmen",
+        "toggle_watermark": "Wasserzeichen umschalten",
+        "print": "Druckoptionen öffnen",
+        "format_settings": "Formateinstellungen öffnen",
+        "toggle_photobooth": "Foto-Booth-Modus umschalten",
+        "toggle_theme": "Design umschalten",
+        "toggle_fullscreen": "Vollbild umschalten",
+        "show_info": "Infodialog anzeigen"
+      }
+    },
+    "formatDialog": {
+      "title": "Formateinstellungen",
+      "close_aria": "Formateinstellungen-Dialog schließen",
+      "current_format_label": "Aktuelles Format",
+      "standard_formats_group": "Standardformate",
+      "custom_formats_group": "Benutzerdefinierte Formate",
+      "edit_format_header": "Format bearbeiten",
+      "add_format_header": "Neues Format hinzufügen",
+      "label_label": "Etikett",
+      "label_placeholder": "z.B. Benutzerdefiniert 4x6",
+      "width_px_label": "Breite (px)",
+      "width_px_placeholder": "z.B. 600",
+      "height_px_label": "Höhe (px)",
+      "height_px_placeholder": "z.B. 900",
+      "print_w_mm_label": "Druck B (mm)",
+      "print_w_mm_placeholder": "z.B. 101.6",
+      "print_h_mm_label": "Druck H (mm)",
+      "print_h_mm_placeholder": "z.B. 152.4",
+      "update_button": "Format aktualisieren",
+      "add_button": "Format hinzufügen",
+      "cancel_button": "Abbrechen",
+      "your_custom_formats_header": "Ihre benutzerdefinierten Formate",
+      "edit_format_tooltip": "Format bearbeiten",
+      "delete_format_tooltip": "Format löschen"
+    },
+    "photoQueue": {
+      "title": "Foto-Booth-Warteschlange ({{count}})",
+      "clear_all_button": "Alle löschen",
+      "clear_queue_aria": "Foto-Warteschlange leeren",
+      "close_aria": "Foto-Warteschlangen-Dialog schließen",
+      "queued_photo_alt": "Foto {{index}} in der Warteschlange",
+      "remove_photo_aria": "Foto {{index}} entfernen",
+      "empty_title": "Die Warteschlange ist leer",
+      "empty_description": "Aktivieren Sie den Foto-Booth-Modus und nehmen Sie einige Fotos auf, um sie hier zu sehen."
+    },
+    "print": {
+      "title": "Druckoptionen",
+      "close_aria": "Druckoptionen-Dialog schließen",
+      "photos_per_page_label": "Fotos pro Seite",
+      "description": "Druckt auf ein Standardblatt. Ihre Fotogröße beträgt {{width}}×{{height}} in.",
+      "cancel_button": "Abbrechen",
+      "print_now_button": "Jetzt drucken"
+    },
+    "import": {
+      "title_reposition": "Bild neu positionieren",
+      "title_import": "Bild importieren",
+      "close_aria": "Dialog schließen",
+      "guide_align": "Gesicht mit der ovalen Führungslinie ausrichten",
+      "guide_drag": "Zum Neupositionieren ziehen",
+      "change_image_button": "Bild ändern",
+      "confirm_crop_button": "Bestätigen & zuschneiden",
+      "drag_drop_text": "Ziehen & ablegen",
+      "drag_drop_subtext": "ein Bild hier",
+      "or": "oder",
+      "choose_from_phone_button": "Vom Telefon auswählen",
+      "choose_from_computer_button": "Vom Computer auswählen"
+    }
+  }
+}

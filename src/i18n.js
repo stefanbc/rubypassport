@@ -1,27 +1,27 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
 
-// import translationDE from './locales/de.json';
-import translationEN from './locales/en.json';
-// import translationES from './locales/es.json';
-import translationRO from './locales/ro.json';
+import translationDE from './locales/de.json'
+import translationEN from './locales/en.json'
+import translationRO from './locales/ro.json'
+import translationES from './locales/es.json'
 
 // the translations
 const resources = {
-  //de: {
-  //  translation: translationDE
-  //},
-  en: {
-    translation: translationEN
+  de: {
+    translation: translationDE,
   },
-  //es: {
-  //  translation: translationES
-  //},
+  en: {
+    translation: translationEN,
+  },
   ro: {
-    translation: translationRO
-  }
-};
+    translation: translationRO,
+  },
+  es: {
+    translation: translationES,
+  },
+}
 
 i18n
   .use(LanguageDetector) // Detects user language
@@ -30,12 +30,12 @@ i18n
     resources,
     fallbackLng: 'en', // Use 'en' if detected language is not available
     interpolation: {
-      escapeValue: false // React already safes from xss
+      escapeValue: false, // React already safes from xss
     },
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
-  });
+  })
 
-export default i18n;
+export default i18n

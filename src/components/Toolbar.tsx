@@ -71,6 +71,24 @@ export function Toolbar({ onToggleFullscreen, onManageFormatsClick, selectedForm
     );
     const { theme, toggleTheme } = useTheme();
     const { t, i18n } = useTranslation();
+    const languages = [
+        {
+            label: t('common.german'),
+            value: 'de',
+        },
+        {
+            label: t('common.english'),
+            value: 'en',
+        },
+        {
+            label: t('common.romanian'),
+            value: 'ro',
+        },
+        {
+            label: t('common.spanish'),
+            value: 'es',
+        },
+    ]
 
     const hasQueue = captureQueue.length > 0;
 
@@ -126,8 +144,9 @@ export function Toolbar({ onToggleFullscreen, onManageFormatsClick, selectedForm
                         </TooltipContent>
                     </Tooltip>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} disabled={i18n.language === 'en'}>{t('common.english')}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => i18n.changeLanguage('ro')} disabled={i18n.language === 'ro'}>{t('common.romanian')}</DropdownMenuItem>
+                        {languages.map((language, index) => (
+                            <DropdownMenuItem onClick={() => i18n.changeLanguage(language.value)} disabled={i18n.language === language.value} key={index}>{language.label}</DropdownMenuItem>
+                        ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <ToolbarButton onClick={() => setActiveDialog('info')} title={t('tooltips.showInfo')} defaultStyle><Info size={20} /></ToolbarButton>

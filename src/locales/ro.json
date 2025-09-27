@@ -1,8 +1,9 @@
 {
     "common": {
-        "english": "Engleză",
-        "spanish": "Spaniolă",
-        "japanese": "Japoneză",
+        "english": "English",
+        "spanish": "Español",
+        "german": "Deutsch",
+        "japanese": "日本語",
         "romanian": "Română",
         "github": "GitHub",
         "continue": "Continuă"
@@ -59,7 +60,7 @@
                 "starting_button": "Pornire…",
                 "start_camera_button": "Pornește camera",
                 "import_image_button": "Importă imagine",
-                "capture_photo_button": "Fă fotografie",
+                "capture_photo_button": "Fotografiază",
                 "stop_button": "Oprire"
             },
             "result": {
