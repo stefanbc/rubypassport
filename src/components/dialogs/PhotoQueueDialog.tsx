@@ -1,8 +1,9 @@
 import { useState, useRef, DragEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { Trash2, XCircle, Images, X, Frown } from 'lucide-react';
+import { Trash2, Images, X, Frown } from 'lucide-react';
 import { useStore } from '../../store';
 import { useTranslation } from 'react-i18next';
+import { Dialog } from '../ui/Dialog';
 
 type PhotoQueueDialogProps = {
   isOpen: boolean;
@@ -24,8 +25,6 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
-  if (!isOpen) return null;
 
   const handleClearQueue = () => {
     clearQueue();
@@ -58,37 +57,28 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-2xl border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
-          <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
-            <Images size={24} />
-            {t('dialogs.photoQueue.title', { count: captureQueue.length })}
-          </h2>
-          <div className="flex items-center gap-2">
-            {captureQueue.length > 0 && (
-              <button
-                onClick={handleClearQueue}
-                className="flex items-center gap-1.5 text-xs sm:text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                aria-label={t('dialogs.photoQueue.clear_queue_aria')}
-              >
-                <Trash2 size={14} />
-                {t('dialogs.photoQueue.clear_all_button')}
-              </button>
-            )}
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('dialogs.photoQueue.title', { count: captureQueue.length })}
+      icon={Images}
+      closeAriaLabel={t('dialogs.photoQueue.close_aria')}
+      maxWidth="max-w-4xl"
+    >
+      <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
+        {captureQueue.length > 0 && (
+          <div className="flex-shrink-0 p-4 border-b border-gray-200 dark:border-zinc-800 flex justify-end">
             <button
-              onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-              aria-label={t('dialogs.photoQueue.close_aria')}
+              onClick={handleClearQueue}
+              className="flex items-center gap-1.5 text-xs sm:text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              aria-label={t('dialogs.photoQueue.clear_queue_aria')}
             >
-              <XCircle size={22} />
+              <Trash2 size={14} />
+              {t('dialogs.photoQueue.clear_all_button')}
             </button>
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-grow overflow-y-auto p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
+        )}
+        <div className="flex-grow overflow-y-auto p-4 sm:p-6">
           {captureQueue.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
               {captureQueue.map((imgSrc, index) => (
@@ -121,6 +111,6 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
           )}
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 }

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { XCircle, Pencil, Trash2, SlidersHorizontal, Plus, List, Wrench, Search, ChevronDown } from 'lucide-react';
+import { Pencil, Trash2, SlidersHorizontal, Plus, List, Wrench, Search, ChevronDown } from 'lucide-react';
 import { Format, NewFormatState, FORMATS } from '../../types';
 import { useStore } from '../../store';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/shallow';
+import { Dialog } from '../ui/Dialog';
+import { Tab, Tabs } from '../ui/Tabs';
 
 type FormatDialogProps = {
   isOpen: boolean;
@@ -54,8 +56,6 @@ export function FormatDialog({
       setSearchQuery(''); // Reset search when not editing
     }
   }, [editingFormat]);
-
-  if (!isOpen) return null;
 
   const handleCancelEditAndSwitch = () => {
     onCancelEdit();
@@ -110,46 +110,24 @@ export function FormatDialog({
   );
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-2xl border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg max-h-[80vh] flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
-          <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
-            <SlidersHorizontal size={24} />
-            {t('dialogs.formatDialog.title')}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-            aria-label={t('dialogs.formatDialog.close_aria')}
-          >
-            <XCircle size={22} />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
-          <div className="flex-shrink-0 border-b border-gray-200 dark:border-zinc-800">
-            <div className="flex items-center gap-2 p-2" role="tablist" aria-label={t('dialogs.formatDialog.tabs_aria_label')}>
-              <TabButton
-                icon={List}
-                label="Select Format"
-                isActive={activeTab === 'select'}
-                onClick={() => {
-                  if (!isEditing) {
-                    setActiveTab('select');
-                    setSearchQuery('');
-                  }
-                }}
-              />
-              <TabButton
-                icon={Wrench}
-                label="Manage Custom"
-                isActive={activeTab === 'manage'}
-                onClick={() => setActiveTab('manage')}
-              />
-            </div>
-          </div>
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('dialogs.formatDialog.title')}
+      icon={SlidersHorizontal}
+      closeAriaLabel={t('dialogs.formatDialog.close_aria')}
+    >
+      <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
+        <Tabs ariaLabel={t('dialogs.formatDialog.tabs_aria_label')}>
+          <Tab
+            icon={List}
+            label={t('dialogs.formatDialog.select_format_tab')}
+            isActive={activeTab === 'select'}
+            onClick={() => { setActiveTab('select'); setSearchQuery(''); }}
+            disabled={isEditing}
+          />
+          <Tab icon={Wrench} label={t('dialogs.formatDialog.manage_custom_tab')} isActive={activeTab === 'manage'} onClick={() => setActiveTab('manage')} />
+        </Tabs>
 
           <div className="flex-grow flex flex-col overflow-hidden">
             {activeTab === 'select' && (
@@ -276,25 +254,9 @@ export function FormatDialog({
             )}
           </div>
         </div>
-      </div>
-    </div>
+    </Dialog>
   );
-}
-
-const TabButton = ({ icon: Icon, label, isActive, onClick }: { icon: React.ElementType, label: string, isActive: boolean, onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${isActive
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      ? 'bg-red-100 dark:bg-zinc-700 text-red-700 dark:text-red-300'
-      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800'
-      }`}
-  >
-    <Icon size={16} />
-    <span>{label}</span>
-  </button>
-);
+};
 
 const FormatItem = ({ format, selectedFormatId, onSelect }: { format: Format, selectedFormatId: string, onSelect: (id: string) => void }) => {
   const isSelected = format.id === selectedFormatId;

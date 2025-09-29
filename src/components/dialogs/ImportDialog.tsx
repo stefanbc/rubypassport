@@ -1,8 +1,9 @@
 import { useCallback, useState, DragEvent, useRef, MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent, useEffect, ChangeEvent, SyntheticEvent, WheelEvent as ReactWheelEvent } from 'react';
-import { XCircle, Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
+import { Check, RotateCcw, UploadCloud, ZoomIn, ZoomOut } from 'lucide-react';
 import { useStore } from '../../store';
 import { FORMATS } from '../../types';
 import { useTranslation } from 'react-i18next';
+import { Dialog } from '../ui/Dialog';
 
 interface ImportDialogProps {
   isOpen: boolean;
@@ -257,29 +258,16 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
     onImageCropped(originalFile, croppedDataUrl);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={handleBackdropClick}>
-      <div className="bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-2xl border border-red-200 dark:border-red-800/50 dark:ring-1 dark:ring-white/10 w-full max-w-lg flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex-shrink-0 flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 dark:border-zinc-800">
-          <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none flex items-center gap-3">
-            <UploadCloud size={24} />
-            {imageSrc ? t('dialogs.import.title_reposition') : t('dialogs.import.title_import')}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer rounded-full"
-            aria-label={t('dialogs.import.close_aria')}
-          >
-            <XCircle size={22} />
-          </button>
-        </div>
-
-        <input type="file" ref={fileInputRef} onChange={handleFileSelected} accept="image/*" className="hidden" />
-
-        <div className="p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
+    <Dialog
+      isOpen={isOpen}
+      onClose={handleBackdropClick}
+      title={imageSrc ? t('dialogs.import.title_reposition') : t('dialogs.import.title_import')}
+      icon={UploadCloud}
+      closeAriaLabel={t('dialogs.import.close_aria')}
+    >
+      <input type="file" ref={fileInputRef} onChange={handleFileSelected} accept="image/*" className="hidden" />
+      <div className="p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
           {imageSrc ? (
             <div>
               <div
@@ -390,8 +378,7 @@ export function ImportDialog({ isOpen, onClose, onImageCropped }: ImportDialogPr
               </button>
             </div>
           )}
-        </div>
       </div>
-    </div>
+    </Dialog>
   );
 }
