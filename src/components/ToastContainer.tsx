@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, HTMLAttributes } from 'react';
-import { XCircle, CheckCircle, Info } from 'lucide-react';
+import { XCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
 import { Toast } from '../types';
 
 const ToastIcon = ({ type, ...props }: { type: Toast['type'] } & HTMLAttributes<HTMLDivElement>) => (
   <div {...props}>
     {type === 'error' && <XCircle size={20} />}
     {type === 'success' && <CheckCircle size={20} />}
+    {type === 'warning' && <AlertTriangle size={20} />}
     {type === 'info' && <Info size={20} />}
   </div>
 );
@@ -13,6 +14,7 @@ const ToastIcon = ({ type, ...props }: { type: Toast['type'] } & HTMLAttributes<
 const toastColorClasses: Record<Toast['type'], string> = {
   error: 'bg-red-100 border-red-200 text-red-800 dark:bg-red-900/60 dark:border-red-800/50 dark:text-red-200',
   success: 'bg-green-100 border-green-200 text-green-800 dark:bg-green-900/60 dark:border-green-800/50 dark:text-green-200',
+  warning: 'bg-amber-100 border-amber-200 text-amber-800 dark:bg-amber-900/60 dark:border-amber-800/50 dark:text-amber-200',
   info: 'bg-zinc-100 border-zinc-200 text-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200',
 };
 

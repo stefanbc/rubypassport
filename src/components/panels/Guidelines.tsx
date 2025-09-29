@@ -17,7 +17,7 @@ export function Guidelines() {
     if (isMobile || isTablet) {
       setOpenSections({ do: true, dont: false, lighting: false });
     } else {
-      setOpenSections({ do: true, dont: true, lighting: true });
+      setOpenSections({ do: true, dont: true, lighting: false });
     }
   }, [isMobile, isTablet]);
 

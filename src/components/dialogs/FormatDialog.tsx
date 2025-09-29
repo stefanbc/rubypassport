@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { XCircle, Pencil, Trash2, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { XCircle, Pencil, Trash2, SlidersHorizontal, Plus, List, Wrench, Search, ChevronDown } from 'lucide-react';
 import { Format, NewFormatState, FORMATS } from '../../types';
 import { useStore } from '../../store';
 import { useTranslation } from 'react-i18next';
+import { useShallow } from 'zustand/shallow';
 
 type FormatDialogProps = {
   isOpen: boolean;
@@ -29,32 +30,84 @@ export function FormatDialog({
   onEditClick,
   onCancelEdit,
 }: FormatDialogProps) {
-  const { customFormats, selectedFormatId, setSelectedFormatId } = useStore();
+  const { customFormats, selectedFormatId, setSelectedFormatId, addToast } = useStore(
+    useShallow((state) => ({
+      customFormats: state.customFormats,
+      selectedFormatId: state.selectedFormatId,
+      setSelectedFormatId: state.setSelectedFormatId,
+      addToast: state.addToast,
+    }))
+  );
   const { t } = useTranslation();
   const allFormats = [...FORMATS, ...customFormats];
 
-  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<'select' | 'manage'>('select');
+  const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (editingFormat) {
-      setIsAddFormVisible(true);
+      setActiveTab('manage');
+      setIsEditing(true);
+    } else {
+      setIsEditing(false);
+      setSearchQuery(''); // Reset search when not editing
     }
   }, [editingFormat]);
 
   if (!isOpen) return null;
 
-  const handleCancelEditAndCollapse = () => {
+  const handleCancelEditAndSwitch = () => {
     onCancelEdit();
-    setIsAddFormVisible(false);
+    setActiveTab('select');
+    setSearchQuery('');
   };
 
-  const handleUpdateAndCollapse = () => {
-    onUpdate();
-    setIsAddFormVisible(false);
+  const handleAdd = () => {
+    if (customFormats.length >= 4) {
+      addToast(t('toasts.customFormatLimit'), 'warning');
+      return;
+    }
+
+    const widthPx = parseInt(newFormat.widthPx, 10);
+    const heightPx = parseInt(newFormat.heightPx, 10);
+    const printWidthMm = parseFloat(newFormat.printWidthMm);
+    const printHeightMm = parseFloat(newFormat.printHeightMm);
+
+    const isValidNumber = (num: number) => !isNaN(num) && num > 0 && num <= 10000;
+
+    if (!isValidNumber(widthPx) || !isValidNumber(heightPx) || !isValidNumber(printWidthMm) || !isValidNumber(printHeightMm)) {
+      addToast(t('toasts.invalidFormatDimensions'), 'error');
+      return;
+    }
+
+    const existingFormat = allFormats.find(
+      (f) =>
+        String(f.widthPx) === String(newFormat.widthPx) &&
+        String(f.heightPx) === String(newFormat.heightPx) &&
+        String(f.printWidthMm) === String(newFormat.printWidthMm) &&
+        String(f.printHeightMm) === String(newFormat.printHeightMm)
+    );
+
+    if (existingFormat) {
+      addToast(t('toasts.formatExists', { label: existingFormat.label }), 'warning');
+      return;
+    }
+
+    onAdd();
   };
 
   const predefinedFormats = allFormats.filter(f => !f.id.startsWith('custom_'));
-  const customFormatsList = allFormats.filter(f => f.id.startsWith('custom_'));
+  const customFormatsList = allFormats
+    .filter(f => f.id.startsWith('custom_'))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const filteredPredefined = predefinedFormats.filter(f =>
+    f.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredCustom = customFormatsList.filter(f =>
+    f.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -75,104 +128,249 @@ export function FormatDialog({
         </div>
 
         {/* Content */}
-        <div className="flex-grow overflow-y-auto p-6 sm:p-8 bg-white dark:bg-zinc-800/50">
-          <div className="mb-6">
-            <label className="block text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3 select-none" htmlFor="formatSelectorDialog">
-              {t('dialogs.formatDialog.current_format_label')}
-            </label>
-            <select
-              id="formatSelectorDialog"
-              value={selectedFormatId}
-              onChange={(e) => setSelectedFormatId(e.target.value)}
-              className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-3 px-4 rounded border border-red-200 dark:border-red-900/40"
-            >
-              <optgroup label={t('dialogs.formatDialog.standard_formats_group')}>
-                {predefinedFormats.map(f => (
-                  <option key={f.id} value={f.id}>{f.label}</option>
-                ))}
-              </optgroup>
-              {customFormatsList.length > 0 && (
-                <optgroup label={t('dialogs.formatDialog.custom_formats_group')}>
-                  {customFormatsList.map(f => (
-                    <option key={f.id} value={f.id}>{f.label}</option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
+        <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
+          <div className="flex-shrink-0 border-b border-gray-200 dark:border-zinc-800">
+            <div className="flex items-center gap-2 p-2" role="tablist" aria-label={t('dialogs.formatDialog.tabs_aria_label')}>
+              <TabButton
+                icon={List}
+                label="Select Format"
+                isActive={activeTab === 'select'}
+                onClick={() => {
+                  if (!isEditing) {
+                    setActiveTab('select');
+                    setSearchQuery('');
+                  }
+                }}
+              />
+              <TabButton
+                icon={Wrench}
+                label="Manage Custom"
+                isActive={activeTab === 'manage'}
+                onClick={() => setActiveTab('manage')}
+              />
+            </div>
           </div>
 
-          <div className="mb-6 p-4 bg-red-50/50 dark:bg-zinc-800/50 rounded border border-red-100 dark:border-red-900/40">
-            <div
-              className={`flex items-center justify-between ${!editingFormat ? 'cursor-pointer' : 'cursor-default'}`}
-              onClick={() => !editingFormat && setIsAddFormVisible(!isAddFormVisible)}
-              role="button"
-              aria-expanded={isAddFormVisible}
-            >
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 select-none">{editingFormat ? t('dialogs.formatDialog.edit_format_header') : t('dialogs.formatDialog.add_format_header')}</h3>
-              {!editingFormat && (
-                <span className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white p-1 -mr-1">
-                  <ChevronDown size={20} className={`transition-transform duration-300 ${isAddFormVisible ? 'rotate-180' : ''}`} />
-                </span>
-              )}
-            </div>
-            <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isAddFormVisible ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="space-y-3 mt-4 border-t border-red-200 dark:border-red-900/30 pt-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatLabel">{t('dialogs.formatDialog.label_label')}</label>
-                  <input id="modalNewFormatLabel" value={newFormat.label} onChange={e => onNewFormatChange({ ...newFormat, label: e.target.value })} placeholder={t('dialogs.formatDialog.label_placeholder')} className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
+          <div className="flex-grow flex flex-col overflow-hidden">
+            {activeTab === 'select' && (
+              <div className="flex flex-col overflow-hidden p-4 sm:p-6" role="tabpanel">
+                <div className="relative flex-shrink-0 mb-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
+                  <input
+                    type="text"
+                    placeholder={t('dialogs.formatDialog.search_placeholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 pl-10 pr-4 rounded-md border border-red-200 dark:border-red-900/40 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                  />
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatWidthPx">{t('dialogs.formatDialog.width_px_label')}</label>
-                  <input id="modalNewFormatWidthPx" type="number" value={newFormat.widthPx} onChange={e => onNewFormatChange({ ...newFormat, widthPx: e.target.value })} placeholder={t('dialogs.formatDialog.width_px_placeholder')} className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatHeightPx">{t('dialogs.formatDialog.height_px_label')}</label>
-                  <input id="modalNewFormatHeightPx" type="number" value={newFormat.heightPx} onChange={e => onNewFormatChange({ ...newFormat, heightPx: e.target.value })} placeholder={t('dialogs.formatDialog.height_px_placeholder')} className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatPrintWidthMm">{t('dialogs.formatDialog.print_w_mm_label')}</label>
-                  <input id="modalNewFormatPrintWidthMm" type="number" value={newFormat.printWidthMm} onChange={e => onNewFormatChange({ ...newFormat, printWidthMm: e.target.value })} placeholder={t('dialogs.formatDialog.print_w_mm_placeholder')} className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor="modalNewFormatPrintHeightMm">{t('dialogs.formatDialog.print_h_mm_label')}</label>
-                  <input id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm} onChange={e => onNewFormatChange({ ...newFormat, printHeightMm: e.target.value })} placeholder={t('dialogs.formatDialog.print_h_mm_placeholder')} className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40" />
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <button onClick={editingFormat ? handleUpdateAndCollapse : onAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-700 dark:bg-red-800 text-white py-2 px-4 rounded hover:bg-red-600 dark:hover:bg-red-700 transition-colors cursor-pointer">
-                    {editingFormat ? t('dialogs.formatDialog.update_button') : t('dialogs.formatDialog.add_button')}
-                  </button>
-                  {editingFormat && (
-                    <button onClick={handleCancelEditAndCollapse} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer">
-                      {t('dialogs.formatDialog.cancel_button')}
-                    </button>
+
+                <div className="flex-grow overflow-y-auto space-y-4 -mr-2 pr-2">
+                  <CollapsibleFormatSection
+                    title={t('dialogs.formatDialog.standard_formats_group')}
+                    formats={filteredPredefined}
+                    selectedFormatId={selectedFormatId}
+                    onSelect={setSelectedFormatId}
+                    isInitiallyCollapsed={false}
+                  />
+                  {filteredCustom.length > 0 && (
+                    <CollapsibleFormatSection
+                      title={t('dialogs.formatDialog.custom_formats_group')}
+                      formats={filteredCustom}
+                      selectedFormatId={selectedFormatId}
+                      onSelect={setSelectedFormatId}
+                      // Collapse custom formats by default if there are many
+                      isInitiallyCollapsed={customFormatsList.length > 6}
+                    />
                   )}
                 </div>
               </div>
-            </div>
-          </div>
+            )}
 
-          {customFormatsList.length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">{t('dialogs.formatDialog.your_custom_formats_header')}</h3>
-              <ul className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                {customFormatsList.map(format => (
-                  <li key={format.id} className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 bg-red-50/50 dark:bg-zinc-800/50 p-2 rounded-md hover:bg-red-100/50 dark:hover:bg-zinc-700/50 transition-colors">
-                    <span>{format.label} ({format.widthPx}x{format.heightPx}px)</span>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors" title={t('dialogs.formatDialog.edit_format_tooltip')}>
-                        <Pencil size={16} />
-                      </button>
-                      <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors" title={t('dialogs.formatDialog.delete_format_tooltip')}>
-                        <Trash2 size={16} />
-                      </button>
+            {activeTab === 'manage' && (
+              <div className="flex-grow overflow-y-auto p-4 sm:p-6">
+                <div className="space-y-6" role="tabpanel">
+                  {/* Add/Edit Form */}
+                  <div className="p-4 bg-red-50/50 dark:bg-zinc-800/50 rounded-lg border border-red-100 dark:border-red-900/40">
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 select-none mb-3">{isEditing ? t('dialogs.formatDialog.edit_format_header') : t('dialogs.formatDialog.add_format_header')}</h3>
+                    <div className="space-y-3">
+                      <FormatInputRow label={t('dialogs.formatDialog.label_label')} id="modalNewFormatLabel">
+                        <input
+                          id="modalNewFormatLabel"
+                          value={newFormat.label}
+                          onChange={e => onNewFormatChange({ ...newFormat, label: e.target.value })}
+                          placeholder={t('dialogs.formatDialog.label_placeholder')}
+                          className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                          required
+                        />
+                      </FormatInputRow>
+                      <FormatInputRow label={t('dialogs.formatDialog.width_px_label')} id="modalNewFormatWidthPx">
+                        <input
+                          id="modalNewFormatWidthPx" type="number" value={newFormat.widthPx}
+                          onChange={e => onNewFormatChange({ ...newFormat, widthPx: e.target.value })}
+                          placeholder={t('dialogs.formatDialog.width_px_placeholder')}
+                          className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                          required min="1" max="10000"
+                        />
+                      </FormatInputRow>
+                      <FormatInputRow label={t('dialogs.formatDialog.height_px_label')} id="modalNewFormatHeightPx">
+                        <input
+                          id="modalNewFormatHeightPx" type="number" value={newFormat.heightPx}
+                          onChange={e => onNewFormatChange({ ...newFormat, heightPx: e.target.value })}
+                          placeholder={t('dialogs.formatDialog.height_px_placeholder')}
+                          className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                          required min="1" max="10000"
+                        />
+                      </FormatInputRow>
+                      <FormatInputRow label={t('dialogs.formatDialog.print_w_mm_label')} id="modalNewFormatPrintWidthMm">
+                        <input
+                          id="modalNewFormatPrintWidthMm" type="number" value={newFormat.printWidthMm}
+                          onChange={e => onNewFormatChange({ ...newFormat, printWidthMm: e.target.value })}
+                          placeholder={t('dialogs.formatDialog.print_w_mm_placeholder')}
+                          className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                          required min="1" max="10000" step="0.1"
+                        />
+                      </FormatInputRow>
+                      <FormatInputRow label={t('dialogs.formatDialog.print_h_mm_label')} id="modalNewFormatPrintHeightMm">
+                        <input
+                          id="modalNewFormatPrintHeightMm" type="number" value={newFormat.printHeightMm}
+                          onChange={e => onNewFormatChange({ ...newFormat, printHeightMm: e.target.value })}
+                          placeholder={t('dialogs.formatDialog.print_h_mm_placeholder')}
+                          className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                          required min="1" max="10000" step="0.1"
+                        />
+                      </FormatInputRow>
+                      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onClick={isEditing ? onUpdate : handleAdd} className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer">
+                          <Plus size={18} className={`${isEditing ? 'hidden' : ''}`} />
+                          {isEditing ? t('dialogs.formatDialog.update_button') : t('dialogs.formatDialog.add_button')}
+                        </button>
+                        {isEditing && (
+                          <button onClick={handleCancelEditAndSwitch} className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer">
+                            {t('dialogs.formatDialog.cancel_button')}
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                  </div>
+                  {/* Custom Formats List */}
+                  {customFormatsList.length > 0 && !isEditing && (
+                    <CollapsibleSection title={t('dialogs.formatDialog.your_custom_formats_header')} isInitiallyCollapsed={false}>
+                      <div className="max-h-48 overflow-y-auto -mr-2 pr-2">
+                        <ul className="space-y-2">
+                          {customFormatsList.map(format => (
+                            <li key={format.id} className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 bg-red-50/50 dark:bg-zinc-800/50 p-2 rounded-md hover:bg-red-100/50 dark:hover:bg-zinc-700/50 transition-colors">
+                              <span>{format.label} ({format.widthPx}x{format.heightPx}px)</span>
+                              <div className="flex items-center gap-2">
+                                <button onClick={() => onEditClick(format)} className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors" title={t('dialogs.formatDialog.edit_format_tooltip')}><Pencil size={16} /></button>
+                                <button onClick={() => onDelete(format.id)} className="text-red-500 hover:text-red-400 p-1 rounded-full hover:bg-red-900/50 transition-colors" title={t('dialogs.formatDialog.delete_format_tooltip')}><Trash2 size={16} /></button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CollapsibleSection>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+const TabButton = ({ icon: Icon, label, isActive, onClick }: { icon: React.ElementType, label: string, isActive: boolean, onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${isActive
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      ? 'bg-red-100 dark:bg-zinc-700 text-red-700 dark:text-red-300'
+      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800'
+      }`}
+  >
+    <Icon size={16} />
+    <span>{label}</span>
+  </button>
+);
+
+const FormatItem = ({ format, selectedFormatId, onSelect }: { format: Format, selectedFormatId: string, onSelect: (id: string) => void }) => {
+  const isSelected = format.id === selectedFormatId;
+  return (
+    <button
+      onClick={() => { onSelect(format.id); }}
+      className={`p-3 text-left rounded-lg border-2 transition-all duration-150 ${isSelected
+        ? 'bg-red-100 dark:bg-red-900/30 border-red-500 dark:border-red-500 ring-2 ring-red-500/30'
+        : 'bg-gray-100 dark:bg-zinc-800 border-transparent hover:border-red-300 dark:hover:border-red-700'
+        }`}
+    >
+      <p className="font-semibold text-gray-800 dark:text-gray-100">{format.label}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">~{format.widthPx}x{format.heightPx}px</p>
+    </button>
+  );
+};
+
+const FormatInputRow = ({ label, id, children }: { label: string, id: string, children: React.ReactNode }) => (
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+    <label className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center" htmlFor={id}>{label}</label>
+    {children}
+  </div>
+);
+
+const CollapsibleFormatSection = ({ title, formats, selectedFormatId, onSelect, isInitiallyCollapsed }: { title: string, formats: Format[], selectedFormatId: string, onSelect: (id: string) => void, isInitiallyCollapsed: boolean }) => {
+  const [isCollapsed, setIsCollapsed] = useState(isInitiallyCollapsed);
+
+  if (formats.length === 0) return null;
+
+  return (
+    <div className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0">
+      <button
+        className="w-full flex items-center justify-between text-left py-2"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-expanded={!isCollapsed}
+      >
+        <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300">{title}</h3>
+        <ChevronDown
+          size={20}
+          className={`text-gray-500 transition-transform duration-300 ${isCollapsed ? '' : 'rotate-180'}`}
+        />
+      </button>
+      <div className={`grid transition-all duration-500 ease-in-out ${isCollapsed ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}`}>
+        <div className="overflow-hidden max-h-64 overflow-y-auto -mr-2 pr-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+            {formats.map(f => <FormatItem key={f.id} format={f} selectedFormatId={selectedFormatId} onSelect={onSelect} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CollapsibleSection = ({ title, children, isInitiallyCollapsed }: { title: string, children: React.ReactNode, isInitiallyCollapsed: boolean }) => {
+  const [isCollapsed, setIsCollapsed] = useState(isInitiallyCollapsed);
+
+  return (
+    <div className="border-t border-gray-200 dark:border-zinc-700/50 pt-2">
+      <button
+        className="w-full flex items-center justify-between text-left py-2"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-expanded={!isCollapsed}
+      >
+        <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">{title}</h3>
+        <ChevronDown
+          size={20}
+          className={`text-gray-500 transition-transform duration-300 ${isCollapsed ? '' : 'rotate-180'}`}
+        />
+      </button>
+      <div className={`grid transition-all duration-500 ease-in-out ${isCollapsed ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}`}>
+        <div className="overflow-hidden">
+          <div className="pt-2">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

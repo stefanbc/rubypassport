@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { Camera, Computer, Loader2, CheckCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Camera, CameraOff, Computer, Loader2, CheckCircle, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useStore } from '../../store';
 import { FORMATS } from '../../types';
 import { useTranslation } from 'react-i18next';
@@ -132,7 +132,7 @@ export function CameraView({
                 </>
               ) : (
                 <>
-                  <Camera size={42} className="mx-auto mb-2 opacity-70" />
+                  <CameraOff size={42} className="mx-auto mb-2 opacity-70" />
                   <p className="select-none text-sm text-gray-500 dark:text-gray-400">{t('components.panels.camera.camera_not_started')}</p>
                 </>
               )}

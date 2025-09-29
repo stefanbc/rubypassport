@@ -61,7 +61,7 @@ export function PrintOptionsDialog({
                             </select>
                         </div>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {t('dialogs.print.description', { width: selectedFormat.printWidthIn.toFixed(2), height: selectedFormat.printHeightIn.toFixed(2) })}
+                            {t('dialogs.print.description', { width: (selectedFormat.printWidthMm / 25.4).toFixed(2), height: (selectedFormat.printHeightMm / 25.4).toFixed(2) })}
                         </p>
                     </div>
 

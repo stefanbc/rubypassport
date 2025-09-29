@@ -666,8 +666,8 @@ function AppContent() {
     }
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat = allFormats.find(f => f.id === selectedFormatId) || FORMATS[0];
-    const widthIn = selectedFormat.printWidthIn;
-    const heightIn = selectedFormat.printHeightIn;
+    const widthIn = selectedFormat.printWidthMm / 25.4;
+    const heightIn = selectedFormat.printHeightMm / 25.4;
     const gapIn = 0.10; // equal row/column gap
     const cutMarkLengthIn = gapIn / 2;
     const cutMarkOffsetIn = -cutMarkLengthIn;
@@ -788,8 +788,8 @@ function AppContent() {
       label: formatToEdit.label,
       widthPx: String(formatToEdit.widthPx),
       heightPx: String(formatToEdit.heightPx),
-      printWidthMm: (formatToEdit.printWidthIn * 25.4).toFixed(2),
-      printHeightMm: (formatToEdit.printHeightIn * 25.4).toFixed(2),
+      printWidthMm: String(formatToEdit.printWidthMm),
+      printHeightMm: String(formatToEdit.printHeightMm),
     });
   };
 
@@ -802,12 +802,12 @@ function AppContent() {
       return;
     }
 
-    const updatedFormat: Format = { ...editingFormat, label: label.trim(), widthPx: parseInt(widthPx, 10), heightPx: parseInt(heightPx, 10), printWidthIn: parseFloat(printWidthMm) / 25.4, printHeightIn: parseFloat(printHeightMm) / 25.4 };
+    const updatedFormat: Format = { ...editingFormat, label: label.trim(), widthPx: parseInt(widthPx, 10), heightPx: parseInt(heightPx, 10), printWidthMm: parseFloat(printWidthMm), printHeightMm: parseFloat(printHeightMm) };
     if (
       isNaN(updatedFormat.widthPx) || updatedFormat.widthPx <= 0 ||
       isNaN(updatedFormat.heightPx) || updatedFormat.heightPx <= 0 ||
-      isNaN(updatedFormat.printWidthIn) || updatedFormat.printWidthIn <= 0 ||
-      isNaN(updatedFormat.printHeightIn) || updatedFormat.printHeightIn <= 0
+      isNaN(updatedFormat.printWidthMm) || updatedFormat.printWidthMm <= 0 ||
+      isNaN(updatedFormat.printHeightMm) || updatedFormat.printHeightMm <= 0
     ) {
       addToast(t('dialogs.format.errorInvalidNumber'), 'error');
       return;
@@ -835,15 +835,15 @@ function AppContent() {
       label: label.trim(),
       widthPx: parseInt(widthPx, 10),
       heightPx: parseInt(heightPx, 10),
-      printWidthIn: parseFloat(printWidthMm) / 25.4,
-      printHeightIn: parseFloat(printHeightMm) / 25.4,
+      printWidthMm: parseFloat(printWidthMm),
+      printHeightMm: parseFloat(printHeightMm),
     };
 
     if (
       isNaN(newCustomFormat.widthPx) || newCustomFormat.widthPx <= 0 ||
       isNaN(newCustomFormat.heightPx) || newCustomFormat.heightPx <= 0 ||
-      isNaN(newCustomFormat.printWidthIn) || newCustomFormat.printWidthIn <= 0 ||
-      isNaN(newCustomFormat.printHeightIn) || newCustomFormat.printHeightIn <= 0
+      isNaN(newCustomFormat.printWidthMm) || newCustomFormat.printWidthMm <= 0 ||
+      isNaN(newCustomFormat.printHeightMm) || newCustomFormat.printHeightMm <= 0
     ) {
       addToast(t('dialogs.format.errorInvalidNumber'), 'error');
       return;
