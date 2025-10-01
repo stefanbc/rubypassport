@@ -4,11 +4,14 @@ import App from "@/App.tsx";
 import "@/index.css";
 import "@/locales/i18n.js";
 
-createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <App />
-    </StrictMode>,
-);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+    createRoot(rootElement).render(
+        <StrictMode>
+            <App />
+        </StrictMode>,
+    );
+}
 
 // Register the service worker for PWA functionality
 if ("serviceWorker" in navigator) {

@@ -43,6 +43,7 @@ export function DownloadOptionsDialog({
                     {t("dialogs.download.description")}
                 </p>
                 <button
+                    type="button"
                     onClick={handleDownloadProcessed}
                     className="w-full flex items-center justify-center gap-3 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                 >
@@ -50,6 +51,7 @@ export function DownloadOptionsDialog({
                     <span>{t("dialogs.download.processed_button")}</span>
                 </button>
                 <button
+                    type="button"
                     onClick={handleDownloadHighRes}
                     disabled={!hasHighRes}
                     className="w-full flex items-center justify-center gap-3 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"

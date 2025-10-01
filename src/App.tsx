@@ -188,7 +188,7 @@ function AppContent() {
             window.removeEventListener("online", handleOnline);
             window.removeEventListener("offline", handleOffline);
         };
-    }, [addToast]);
+    }, [addToast, t]);
 
     const applyWatermark = useCallback(
         (
@@ -234,9 +234,9 @@ function AppContent() {
 
     const stopCamera = useCallback(() => {
         if (stream) {
-            stream
-                .getTracks()
-                .forEach((track: MediaStreamTrack) => track.stop());
+            stream.getTracks().forEach((track: MediaStreamTrack) => {
+                track.stop();
+            });
             setStream(null);
             setIsCameraOn(false);
             imageCaptureRef.current = null;
@@ -334,6 +334,7 @@ function AppContent() {
             setFacingMode,
             setIsCameraOn,
             setIsCameraLoading,
+            t,
         ],
     );
 
@@ -486,14 +487,15 @@ function AppContent() {
         }
         addToast(t("toasts.photoFromStream"), "success");
     }, [
-        addToast,
-        selectedFormat,
-        isMobile,
-        multiCaptureEnabled,
-        setHighResBlob,
-        setBaseImage,
-        setWizardStep,
         setIsProcessingImage,
+        setHighResBlob,
+        selectedFormat.widthPx,
+        selectedFormat.heightPx,
+        setBaseImage,
+        isMobile,
+        addToast,
+        t,
+        setWizardStep,
     ]);
 
     const downloadProcessedImage = useCallback(() => {
@@ -516,7 +518,7 @@ function AppContent() {
         link.href = capturedImage;
         link.click();
         addToast(t("toasts.processedDownloaded"), "success");
-    }, [addToast]);
+    }, [addToast, t]);
 
     const downloadHighResImage = useCallback(() => {
         const { highResBlob, personName } = useStore.getState();
@@ -535,7 +537,7 @@ function AppContent() {
         link.click();
         URL.revokeObjectURL(link.href);
         addToast(t("toasts.originalDownloaded"), "success");
-    }, [addToast]);
+    }, [addToast, t]);
 
     const toggleFullscreen = useCallback(() => {
         if (!document.fullscreenElement) {
@@ -550,7 +552,7 @@ function AppContent() {
                 document.exitFullscreen();
             }
         }
-    }, [addToast]);
+    }, [addToast, t]);
 
     const handleCancelEdit = useCallback(() => {
         setEditingFormat(null);
@@ -684,10 +686,10 @@ function AppContent() {
         capturePhoto,
         retakePhoto,
         toggleFullscreen,
-        handleCloseDialog,
         setActiveDialog,
         setWatermarkEnabled,
         setMultiCaptureEnabled,
+        toggleTheme,
     ]);
 
     const lastQueuedBaseImageRef = useRef<string | null>(null);
@@ -753,16 +755,17 @@ function AppContent() {
         addToast,
         setIsProcessingImage,
         setCapturedImage,
-        selectedFormat,
+        t,
+        captureQueue.length,
     ]);
 
     useEffect(() => {
         return () => {
             if (stream) {
                 // Ensure camera is off on unmount
-                stream
-                    .getTracks()
-                    .forEach((track: MediaStreamTrack) => track.stop());
+                stream.getTracks().forEach((track: MediaStreamTrack) => {
+                    track.stop();
+                });
             }
         };
     }, [stream]);
@@ -817,7 +820,7 @@ function AppContent() {
                 video.removeEventListener("canplay", handleCanPlay);
             };
         }
-    }, [stream, addToast, setIsCameraLoading]);
+    }, [stream, addToast, setIsCameraLoading, t]);
 
     const handleImageCropped = useCallback(
         (originalFile: File, croppedDataUrl: string) => {
@@ -830,12 +833,13 @@ function AppContent() {
             addToast(t("toasts.imageImportSuccess"), "success");
         },
         [
-            addToast,
-            isMobile,
-            setBaseImage,
             setHighResBlob,
-            setWizardStep,
+            setBaseImage,
             setActiveDialog,
+            isMobile,
+            addToast,
+            t,
+            setWizardStep,
         ],
     );
 
@@ -947,7 +951,7 @@ function AppContent() {
 
             const img = doc.createElement("img");
             img.className = "photo";
-            img.src = imagesSource[i % imagesSource.length]!;
+            img.src = imagesSource[i % imagesSource.length];
             img.alt = t("components.app.passportPortraitAlt");
             photoContainer.appendChild(img);
             photoContainer.appendChild(doc.createElement("span"));
@@ -985,7 +989,7 @@ function AppContent() {
             });
         };
         waitForImages();
-    }, [addToast]);
+    }, [addToast, t]);
 
     const handleEditClick = (formatToEdit: Format) => {
         setEditingFormat(formatToEdit);
@@ -1023,13 +1027,13 @@ function AppContent() {
             printHeightMm: parseFloat(printHeightMm),
         };
         if (
-            isNaN(updatedFormat.widthPx) ||
+            Number.isNaN(updatedFormat.widthPx) ||
             updatedFormat.widthPx <= 0 ||
-            isNaN(updatedFormat.heightPx) ||
+            Number.isNaN(updatedFormat.heightPx) ||
             updatedFormat.heightPx <= 0 ||
-            isNaN(updatedFormat.printWidthMm) ||
+            Number.isNaN(updatedFormat.printWidthMm) ||
             updatedFormat.printWidthMm <= 0 ||
-            isNaN(updatedFormat.printHeightMm) ||
+            Number.isNaN(updatedFormat.printHeightMm) ||
             updatedFormat.printHeightMm <= 0
         ) {
             addToast(t("dialogs.format.errorInvalidNumber"), "error");
@@ -1070,13 +1074,13 @@ function AppContent() {
         };
 
         if (
-            isNaN(newCustomFormat.widthPx) ||
+            Number.isNaN(newCustomFormat.widthPx) ||
             newCustomFormat.widthPx <= 0 ||
-            isNaN(newCustomFormat.heightPx) ||
+            Number.isNaN(newCustomFormat.heightPx) ||
             newCustomFormat.heightPx <= 0 ||
-            isNaN(newCustomFormat.printWidthMm) ||
+            Number.isNaN(newCustomFormat.printWidthMm) ||
             newCustomFormat.printWidthMm <= 0 ||
-            isNaN(newCustomFormat.printHeightMm) ||
+            Number.isNaN(newCustomFormat.printHeightMm) ||
             newCustomFormat.printHeightMm <= 0
         ) {
             addToast(t("dialogs.format.errorInvalidNumber"), "error");
@@ -1144,6 +1148,7 @@ function AppContent() {
                                         <Guidelines />
                                     </div>
                                     <button
+                                        type="button"
                                         onClick={() => setWizardStep("camera")}
                                         className="mt-4 w-full bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer shadow-lg font-semibold"
                                     >
@@ -1194,6 +1199,7 @@ function AppContent() {
                             <div className="relative h-full min-h-0">
                                 {isTablet && (
                                     <button
+                                        type="button"
                                         onClick={() =>
                                             setGuidelinesCollapsed(
                                                 !guidelinesCollapsed,

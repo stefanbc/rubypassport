@@ -1,4 +1,5 @@
 import { Printer } from "lucide-react";
+import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import { Dialog } from "@/components/ui";
 import { useStore } from "@/store";
@@ -18,6 +19,7 @@ export function PrintOptionsDialog({
     const { photosPerPage, setPhotosPerPage, selectedFormatId, customFormats } =
         useStore();
     const { t } = useTranslation();
+    const photosPerPageId = useId();
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat =
         allFormats.find((f) => f.id === selectedFormatId) || FORMATS[0];
@@ -41,12 +43,12 @@ export function PrintOptionsDialog({
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                         <label
                             className="text-gray-600 dark:text-gray-300 text-sm sm:w-40 select-none"
-                            htmlFor="photosPerPageDialog"
+                            htmlFor={photosPerPageId}
                         >
                             {t("dialogs.print.photos_per_page_label")}
                         </label>
                         <select
-                            id="photosPerPageDialog"
+                            id={photosPerPageId}
                             value={photosPerPage}
                             onChange={(e) =>
                                 setPhotosPerPage(
@@ -76,12 +78,14 @@ export function PrintOptionsDialog({
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-8">
                     <button
+                        type="button"
                         onClick={onClose}
                         className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                     >
                         {t("dialogs.print.cancel_button")}
                     </button>
                     <button
+                        type="button"
                         onClick={handlePrint}
                         className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                     >

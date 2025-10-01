@@ -61,6 +61,7 @@ export function CameraView({
             >
                 {isMobile && onBack && (
                     <button
+                        type="button"
                         onClick={onBack}
                         className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                         aria-label={t("components.panels.camera.back_aria")}
@@ -77,6 +78,7 @@ export function CameraView({
                 <div className="relative flex items-center gap-2">
                     {isCameraOn && (isMobile || isTablet) && (
                         <button
+                            type="button"
                             onClick={onSwitchCamera}
                             className={`flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors rounded-md ${isMobile ? "p-2.5" : "py-2 px-3"}`}
                             title={t(
@@ -149,12 +151,19 @@ export function CameraView({
                         <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
                         <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
                         <div className="absolute bottom-4 left-4 right-4">
-                            <p
-                                className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none"
-                                dangerouslySetInnerHTML={{
-                                    __html: `${t("components.panels.camera.guide_align_face")}<br />${t("components.panels.camera.guide_eyes_on_line")}`,
-                                }}
-                            ></p>
+                            <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
+                                <span>
+                                    {t(
+                                        "components.panels.camera.guide_align_face",
+                                    )}
+                                </span>
+                                <br />
+                                <span>
+                                    {t(
+                                        "components.panels.camera.guide_eyes_on_line",
+                                    )}
+                                </span>
+                            </p>
                         </div>
                     </>
                 ) : (
@@ -197,6 +206,7 @@ export function CameraView({
                     {!isCameraOn ? (
                         <>
                             <button
+                                type="button"
                                 onClick={onStartCamera}
                                 className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                                 disabled={isCameraLoading}
@@ -218,6 +228,7 @@ export function CameraView({
                                       )}
                             </button>
                             <button
+                                type="button"
                                 onClick={onImportClick}
                                 className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                                 disabled={isCameraLoading}
@@ -231,6 +242,7 @@ export function CameraView({
                     ) : (
                         <>
                             <button
+                                type="button"
                                 onClick={onCapturePhoto}
                                 className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                             >
@@ -240,6 +252,7 @@ export function CameraView({
                                 )}
                             </button>
                             <button
+                                type="button"
                                 onClick={onStopCamera}
                                 className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                             >

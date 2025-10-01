@@ -151,7 +151,7 @@ export function ImportDialog({
             const cropAspectRatio =
                 selectedFormat.widthPx / selectedFormat.heightPx;
 
-            let imgDisplayW, imgDisplayH;
+            let imgDisplayW: number, imgDisplayH: number;
             if (imageAspectRatio > cropAspectRatio) {
                 imgDisplayH = cropH;
                 imgDisplayW = imgDisplayH * imageAspectRatio;
@@ -224,7 +224,9 @@ export function ImportDialog({
             // from closing the dialog if it lands on the backdrop.
             // We reset the flag after a tick, so the click event handler on the backdrop
             // can check it, but subsequent clicks will behave normally.
-            setTimeout(() => (panStartedOnCropper.current = false), 0);
+            setTimeout(() => {
+                panStartedOnCropper.current = false;
+            }, 0);
         };
 
         const handlePanMove = (e: MouseEvent | TouchEvent) => {
@@ -265,7 +267,7 @@ export function ImportDialog({
             window.removeEventListener("mouseup", handlePanEnd);
             window.removeEventListener("touchend", handlePanEnd);
         };
-    }, [isPanning, panStart]);
+    }, [isPanning, panStart, zoom]);
 
     const handleBackdropClick = () => {
         // If a pan just ended (the flag is true), we don't close the dialog.
@@ -439,6 +441,7 @@ export function ImportDialog({
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 mt-4">
                             <button
+                                type="button"
                                 onClick={handleReset}
                                 className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                             >
@@ -446,6 +449,7 @@ export function ImportDialog({
                                 {t("dialogs.import.change_image_button")}
                             </button>
                             <button
+                                type="button"
                                 onClick={handleCrop}
                                 className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer transition-transform duration-150 hover:-translate-y-0.5 shadow-lg"
                             >

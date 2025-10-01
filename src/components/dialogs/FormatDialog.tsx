@@ -8,7 +8,7 @@ import {
     Trash2,
     Wrench,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/shallow";
 import { Dialog, Tab, Tabs } from "@/components/ui";
@@ -56,6 +56,12 @@ export function FormatDialog({
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const formatLabelId = useId();
+    const widthPxId = useId();
+    const heightPxId = useId();
+    const printWidthMmId = useId();
+    const printHeightMmId = useId();
+
     useEffect(() => {
         if (editingFormat) {
             setActiveTab("manage");
@@ -84,7 +90,7 @@ export function FormatDialog({
         const printHeightMm = parseFloat(newFormat.printHeightMm);
 
         const isValidNumber = (num: number) =>
-            !isNaN(num) && num > 0 && num <= 10000;
+            !Number.isNaN(num) && num > 0 && num <= 10000;
 
         if (
             !isValidNumber(widthPx) ||
@@ -228,10 +234,10 @@ export function FormatDialog({
                                             label={t(
                                                 "dialogs.formatDialog.label_label",
                                             )}
-                                            id="modalNewFormatLabel"
+                                            id={formatLabelId}
                                         >
                                             <input
-                                                id="modalNewFormatLabel"
+                                                id={formatLabelId}
                                                 value={newFormat.label}
                                                 onChange={(e) =>
                                                     onNewFormatChange({
@@ -250,10 +256,10 @@ export function FormatDialog({
                                             label={t(
                                                 "dialogs.formatDialog.width_px_label",
                                             )}
-                                            id="modalNewFormatWidthPx"
+                                            id={widthPxId}
                                         >
                                             <input
-                                                id="modalNewFormatWidthPx"
+                                                id={widthPxId}
                                                 type="number"
                                                 value={newFormat.widthPx}
                                                 onChange={(e) =>
@@ -275,10 +281,10 @@ export function FormatDialog({
                                             label={t(
                                                 "dialogs.formatDialog.height_px_label",
                                             )}
-                                            id="modalNewFormatHeightPx"
+                                            id={heightPxId}
                                         >
                                             <input
-                                                id="modalNewFormatHeightPx"
+                                                id={heightPxId}
                                                 type="number"
                                                 value={newFormat.heightPx}
                                                 onChange={(e) =>
@@ -301,10 +307,10 @@ export function FormatDialog({
                                             label={t(
                                                 "dialogs.formatDialog.print_w_mm_label",
                                             )}
-                                            id="modalNewFormatPrintWidthMm"
+                                            id={printWidthMmId}
                                         >
                                             <input
-                                                id="modalNewFormatPrintWidthMm"
+                                                id={printWidthMmId}
                                                 type="number"
                                                 value={newFormat.printWidthMm}
                                                 onChange={(e) =>
@@ -328,10 +334,10 @@ export function FormatDialog({
                                             label={t(
                                                 "dialogs.formatDialog.print_h_mm_label",
                                             )}
-                                            id="modalNewFormatPrintHeightMm"
+                                            id={printHeightMmId}
                                         >
                                             <input
-                                                id="modalNewFormatPrintHeightMm"
+                                                id={printHeightMmId}
                                                 type="number"
                                                 value={newFormat.printHeightMm}
                                                 onChange={(e) =>
@@ -353,6 +359,7 @@ export function FormatDialog({
                                         </FormatInputRow>
                                         <div className="flex flex-col sm:flex-row gap-3 pt-2">
                                             <button
+                                                type="button"
                                                 onClick={
                                                     isEditing
                                                         ? onUpdate
@@ -374,6 +381,7 @@ export function FormatDialog({
                                             </button>
                                             {isEditing && (
                                                 <button
+                                                    type="button"
                                                     onClick={
                                                         handleCancelEditAndSwitch
                                                     }
@@ -414,6 +422,7 @@ export function FormatDialog({
                                                             </span>
                                                             <div className="flex items-center gap-2">
                                                                 <button
+                                                                    type="button"
                                                                     onClick={() =>
                                                                         onEditClick(
                                                                             format,
@@ -431,6 +440,7 @@ export function FormatDialog({
                                                                     />
                                                                 </button>
                                                                 <button
+                                                                    type="button"
                                                                     onClick={() =>
                                                                         onDelete(
                                                                             format.id,
@@ -476,6 +486,7 @@ const FormatItem = ({
     const isSelected = format.id === selectedFormatId;
     return (
         <button
+            type="button"
             onClick={() => {
                 onSelect(format.id);
             }}
@@ -535,6 +546,7 @@ const CollapsibleFormatSection = ({
     return (
         <div className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0">
             <button
+                type="button"
                 className="w-full flex items-center justify-between text-left py-2"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 aria-expanded={!isCollapsed}
@@ -581,6 +593,7 @@ const CollapsibleSection = ({
     return (
         <div className="border-t border-gray-200 dark:border-zinc-700/50 pt-2">
             <button
+                type="button"
                 className="w-full flex items-center justify-between text-left py-2"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 aria-expanded={!isCollapsed}

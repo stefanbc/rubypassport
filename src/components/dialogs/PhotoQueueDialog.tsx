@@ -88,6 +88,7 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                 {captureQueue.length > 0 && (
                     <div className="flex-shrink-0 p-4 border-b border-gray-200 dark:border-zinc-800 flex justify-end">
                         <button
+                            type="button"
                             onClick={handleClearQueue}
                             className="flex items-center gap-1.5 text-xs sm:text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors rounded-md px-3 py-1.5 bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
                             aria-label={t(
@@ -104,7 +105,7 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
                             {captureQueue.map((imgSrc, index) => (
                                 <div
-                                    key={index}
+                                    key={imgSrc}
                                     className={`relative group aspect-square bg-gray-200 dark:bg-zinc-700 rounded-lg overflow-hidden border border-gray-300 dark:border-zinc-700 shadow-sm cursor-grab active:cursor-grabbing transition-opacity duration-200 ${draggedIndex === index ? "opacity-30 scale-95" : "hover:scale-105 hover:shadow-lg"} transition-transform`}
                                     draggable
                                     onDragStart={(e) =>
@@ -123,6 +124,7 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                                         className="w-full h-full object-cover group-hover:brightness-75 transition-all duration-200"
                                     />
                                     <button
+                                        type="button"
                                         onClick={() => handleRemovePhoto(index)}
                                         className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
                                         aria-label={t(

@@ -7,7 +7,7 @@ import {
     RotateCcw,
     Trash2,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@/store";
 import { FORMATS } from "@/types";
@@ -46,6 +46,8 @@ export function ResultPanel({
     const [isDetailsPopoverOpen, setIsDetailsPopoverOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
     const detailsButtonRef = useRef<HTMLButtonElement>(null);
+    const personNameId = useId();
+    const watermarkEnabledId = useId();
 
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
@@ -83,7 +85,7 @@ export function ResultPanel({
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [capturedImage]);
+    }, [capturedImage, t]);
 
     return (
         <div
@@ -99,6 +101,7 @@ export function ResultPanel({
                     {capturedImage && !isProcessingImage && (
                         <>
                             <button
+                                type="button"
                                 ref={detailsButtonRef}
                                 onClick={() =>
                                     setIsDetailsPopoverOpen(
@@ -120,6 +123,7 @@ export function ResultPanel({
                                 )}
                             </button>
                             <button
+                                type="button"
                                 onClick={onRetake}
                                 className={`flex items-center gap-1.5 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 rounded-md bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer ${isMobile ? "p-2.5" : "py-2 px-3"}`}
                             >
@@ -141,7 +145,7 @@ export function ResultPanel({
                         >
                             <div className="space-y-2">
                                 <label
-                                    htmlFor="personName"
+                                    htmlFor={personNameId}
                                     className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none"
                                 >
                                     {t(
@@ -149,7 +153,7 @@ export function ResultPanel({
                                     )}
                                 </label>
                                 <input
-                                    id="personName"
+                                    id={personNameId}
                                     type="text"
                                     value={personName}
                                     onChange={(e) =>
@@ -165,7 +169,7 @@ export function ResultPanel({
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
                                     <label
-                                        htmlFor="watermarkEnabled"
+                                        htmlFor={watermarkEnabledId}
                                         className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none cursor-pointer flex-grow"
                                     >
                                         {t(
@@ -173,7 +177,7 @@ export function ResultPanel({
                                         )}
                                     </label>
                                     <input
-                                        id="watermarkEnabled"
+                                        id={watermarkEnabledId}
                                         type="checkbox"
                                         checked={watermarkEnabled}
                                         onChange={(e) =>
@@ -198,6 +202,7 @@ export function ResultPanel({
                                         className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed"
                                     />
                                     <button
+                                        type="button"
                                         onClick={() =>
                                             setWatermarkText("💎 RUBY PASSPORT")
                                         }
@@ -266,6 +271,7 @@ export function ResultPanel({
 
             <div className="flex flex-col sm:flex-row gap-3">
                 <button
+                    type="button"
                     onClick={onDownload}
                     disabled={
                         (!capturedImage && captureQueue.length === 0) ||
@@ -277,6 +283,7 @@ export function ResultPanel({
                     {t("components.panels.result.download_button")}
                 </button>
                 <button
+                    type="button"
                     onClick={onOpenPrintDialog}
                     disabled={
                         (!capturedImage && captureQueue.length === 0) ||

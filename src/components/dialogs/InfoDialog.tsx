@@ -34,7 +34,7 @@ export function InfoDialog({ isOpen, onClose }: InfoDialogProps) {
                         const isFaqOpen = openIndex === index;
                         return (
                             <div
-                                key={index}
+                                key={faq.q}
                                 className="border-b border-red-100 dark:border-red-900/30 last:border-b-0"
                             >
                                 <div

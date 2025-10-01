@@ -34,14 +34,19 @@ type ToolbarButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     defaultStyle?: boolean;
 };
 
-const ToolbarButton = ({ title, children, ...props }: ToolbarButtonProps) => {
+const ToolbarButton = ({
+    title,
+    children,
+    defaultStyle,
+    ...props
+}: ToolbarButtonProps) => {
     const buttonProps = { ...props, "aria-label": title };
     return (
         <Tooltip>
             <TooltipTrigger asChild>
                 <button
                     {...buttonProps}
-                    className={`${props.defaultStyle ? "text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-800" : ""} p-2 rounded-full transition-all duration-300 ease-in-out hover:scale-110 ${props.className ?? ""}`}
+                    className={`${defaultStyle ? "text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-800" : ""} p-2 rounded-full transition-all duration-300 ease-in-out hover:scale-110 ${props.className ?? ""}`}
                 >
                     {children}
                 </button>
@@ -212,7 +217,7 @@ export function Toolbar({
                                 </TooltipContent>
                             </Tooltip>
                             <DropdownMenuContent align="end">
-                                {languages.map((language, index) => (
+                                {languages.map((language) => (
                                     <DropdownMenuItem
                                         onClick={() =>
                                             i18n.changeLanguage(language.value)
@@ -220,7 +225,7 @@ export function Toolbar({
                                         disabled={
                                             i18n.language === language.value
                                         }
-                                        key={index}
+                                        key={language.value}
                                     >
                                         {language.label}
                                     </DropdownMenuItem>
