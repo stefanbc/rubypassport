@@ -7,6 +7,7 @@ import {
     Menu,
     Minimize,
     Moon,
+    Settings,
     SlidersHorizontal,
     Sun,
 } from "lucide-react";
@@ -253,6 +254,13 @@ export function Toolbar({
                             defaultStyle
                         >
                             <Keyboard size={20} />
+                        </ToolbarButton>
+                        <ToolbarButton
+                            onClick={() => setActiveDialog("settings")}
+                            title={t("tooltips.showSettings")}
+                            defaultStyle
+                        >
+                            <Settings size={20} />
                         </ToolbarButton>
                     </>
                 )}

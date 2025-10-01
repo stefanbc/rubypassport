@@ -33,6 +33,7 @@ export function ShortcutsDialog({ isOpen, onClose }: ShortcutsDialogProps) {
             description: t("dialogs.shortcuts.items.toggle_fullscreen"),
         },
         { key: "I", description: t("dialogs.shortcuts.items.show_info") },
+        { key: "S", description: t("dialogs.shortcuts.items.show_settings") },
     ];
 
     return (

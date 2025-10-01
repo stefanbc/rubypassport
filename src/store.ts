@@ -58,6 +58,7 @@ interface AppState {
         | "info"
         | "import"
         | "photoQueue"
+        | "settings"
         | null;
 
     wizardStep: WizardStep;

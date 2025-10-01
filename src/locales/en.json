@@ -104,7 +104,8 @@
     "enterFullscreen": "Enter Fullscreen",
     "showShortcuts": "Show keyboard shortcuts (?)",
     "showGuidelines": "Show Guidelines",
-    "hideGuidelines": "Hide Guidelines"
+    "hideGuidelines": "Hide Guidelines",
+    "showSettings": "Show settings dialog (S)"
   },
   "toasts": {
     "photoBoothEnabled": "Photo Booth mode enabled - photos will be queued for batch printing",
@@ -206,8 +207,16 @@
         "toggle_photobooth": "Toggle Photo Booth mode",
         "toggle_theme": "Toggle theme",
         "toggle_fullscreen": "Toggle fullscreen",
-        "show_info": "Show info dialog"
+        "show_info": "Show info dialog",
+        "show_settings": "Show settings dialog"
       }
+    },
+    "settingsDialog": {
+      "title": "Settings",
+      "close_aria": "Close settings dialog",
+      "tabs_aria_label": "Settings tabs",
+      "general_tab": "General",
+      "experimental_tab": "Experimental"
     },
     "formatDialog": {
       "title": "Format Settings",

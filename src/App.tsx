@@ -7,6 +7,7 @@ import { ImportDialog } from "@/components/dialogs/ImportDialog";
 import { InfoDialog } from "@/components/dialogs/InfoDialog";
 import { PhotoQueueDialog } from "@/components/dialogs/PhotoQueueDialog";
 import { PrintOptionsDialog } from "@/components/dialogs/PrintOptionsDialog";
+import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 import { ShortcutsDialog } from "@/components/dialogs/ShortcutsDialog";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -670,6 +671,9 @@ function AppContent() {
                         !useStore.getState().multiCaptureEnabled,
                     );
                     break;
+                case "s":
+                    setActiveDialog("settings");
+                    break;
                 case "Enter":
                     toggleFullscreen();
                     break;
@@ -1322,6 +1326,11 @@ function AppContent() {
 
             <InfoDialog
                 isOpen={activeDialog === "info"}
+                onClose={() => setActiveDialog(null)}
+            />
+
+            <SettingsDialog
+                isOpen={activeDialog === "settings"}
                 onClose={() => setActiveDialog(null)}
             />
         </div>
