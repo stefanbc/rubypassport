@@ -1,3 +1,4 @@
+export * from "./CollapsibleSection";
 export * from "./Dialog";
 export * from "./DropdownMenu";
 export * from "./Tabs";

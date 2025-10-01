@@ -1,5 +1,4 @@
 import {
-    ChevronDown,
     List,
     Pencil,
     Plus,
@@ -11,7 +10,7 @@ import {
 import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/shallow";
-import { Dialog, Tab, Tabs } from "@/components/ui";
+import { CollapsibleSection, Dialog, Tab, Tabs } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS, Format, NewFormatState } from "@/types";
 
@@ -188,28 +187,36 @@ export function FormatDialog({
                             </div>
 
                             <div className="flex-grow overflow-y-auto space-y-4 -mr-2 pr-2">
-                                <CollapsibleFormatSection
+                                <CollapsibleSection
                                     title={t(
                                         "dialogs.formatDialog.standard_formats_group",
                                     )}
-                                    formats={filteredPredefined}
-                                    selectedFormatId={selectedFormatId}
-                                    onSelect={setSelectedFormatId}
                                     isInitiallyCollapsed={false}
-                                />
+                                    titleClassName="text-base font-semibold text-gray-700 dark:text-gray-300"
+                                    className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0"
+                                >
+                                    <FormatGrid
+                                        formats={filteredPredefined}
+                                        selectedFormatId={selectedFormatId}
+                                        onSelect={setSelectedFormatId}
+                                    />
+                                </CollapsibleSection>
                                 {filteredCustom.length > 0 && (
-                                    <CollapsibleFormatSection
+                                    <CollapsibleSection
                                         title={t(
                                             "dialogs.formatDialog.custom_formats_group",
                                         )}
-                                        formats={filteredCustom}
-                                        selectedFormatId={selectedFormatId}
-                                        onSelect={setSelectedFormatId}
                                         // Collapse custom formats by default if there are many
                                         isInitiallyCollapsed={
-                                            customFormatsList.length > 6
+                                            customFormatsList.length > 2
                                         }
-                                    />
+                                    >
+                                        <FormatGrid
+                                            formats={filteredCustom}
+                                            selectedFormatId={selectedFormatId}
+                                            onSelect={setSelectedFormatId}
+                                        />
+                                    </CollapsibleSection>
                                 )}
                             </div>
                         </div>
@@ -474,6 +481,27 @@ export function FormatDialog({
     );
 }
 
+const FormatGrid = ({
+    formats,
+    selectedFormatId,
+    onSelect,
+}: {
+    formats: Format[];
+    selectedFormatId: string;
+    onSelect: (id: string) => void;
+}) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {formats.map((f) => (
+            <FormatItem
+                key={f.id}
+                format={f}
+                selectedFormatId={selectedFormatId}
+                onSelect={onSelect}
+            />
+        ))}
+    </div>
+);
+
 const FormatItem = ({
     format,
     selectedFormatId,
@@ -525,94 +553,3 @@ const FormatInputRow = ({
         {children}
     </div>
 );
-
-const CollapsibleFormatSection = ({
-    title,
-    formats,
-    selectedFormatId,
-    onSelect,
-    isInitiallyCollapsed,
-}: {
-    title: string;
-    formats: Format[];
-    selectedFormatId: string;
-    onSelect: (id: string) => void;
-    isInitiallyCollapsed: boolean;
-}) => {
-    const [isCollapsed, setIsCollapsed] = useState(isInitiallyCollapsed);
-
-    if (formats.length === 0) return null;
-
-    return (
-        <div className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0">
-            <button
-                type="button"
-                className="w-full flex items-center justify-between text-left py-2"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                aria-expanded={!isCollapsed}
-            >
-                <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300">
-                    {title}
-                </h3>
-                <ChevronDown
-                    size={20}
-                    className={`text-gray-500 transition-transform duration-300 ${isCollapsed ? "" : "rotate-180"}`}
-                />
-            </button>
-            <div
-                className={`grid transition-all duration-500 ease-in-out ${isCollapsed ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"}`}
-            >
-                <div className="overflow-hidden max-h-64 overflow-y-auto -mr-2 pr-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-                        {formats.map((f) => (
-                            <FormatItem
-                                key={f.id}
-                                format={f}
-                                selectedFormatId={selectedFormatId}
-                                onSelect={onSelect}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const CollapsibleSection = ({
-    title,
-    children,
-    isInitiallyCollapsed,
-}: {
-    title: string;
-    children: React.ReactNode;
-    isInitiallyCollapsed: boolean;
-}) => {
-    const [isCollapsed, setIsCollapsed] = useState(isInitiallyCollapsed);
-
-    return (
-        <div className="border-t border-gray-200 dark:border-zinc-700/50 pt-2">
-            <button
-                type="button"
-                className="w-full flex items-center justify-between text-left py-2"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                aria-expanded={!isCollapsed}
-            >
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    {title}
-                </h3>
-                <ChevronDown
-                    size={20}
-                    className={`text-gray-500 transition-transform duration-300 ${isCollapsed ? "" : "rotate-180"}`}
-                />
-            </button>
-            <div
-                className={`grid transition-all duration-500 ease-in-out ${isCollapsed ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"}`}
-            >
-                <div className="overflow-hidden">
-                    <div className="pt-2">{children}</div>
-                </div>
-            </div>
-        </div>
-    );
-};
