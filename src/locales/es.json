@@ -206,9 +206,12 @@
         "formatDialog": {
             "title": "Configuración de Formato",
             "close_aria": "Cerrar diálogo de configuración de formato",
-            "current_format_label": "Formato Actual",
+            "tabs_aria_label": "Configuración de formato Tabs",
+            "select_format_tab": "Seleccionar Formato",
+            "manage_custom_tab": "Gestionar Formatos Personalizados",
             "standard_formats_group": "Formatos Estándar",
             "custom_formats_group": "Formatos Personalizados",
+            "search_placeholder": "Buscar formatos...",
             "edit_format_header": "Editar Formato",
             "add_format_header": "Añadir Nuevo Formato",
             "label_label": "Etiqueta",

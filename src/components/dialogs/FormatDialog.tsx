@@ -210,6 +210,7 @@ export function FormatDialog({
                                         isInitiallyCollapsed={
                                             customFormatsList.length > 2
                                         }
+                                        className="border-b-0"
                                     >
                                         <FormatGrid
                                             formats={filteredCustom}

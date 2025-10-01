@@ -206,9 +206,12 @@
         "formatDialog": {
             "title": "Setări format",
             "close_aria": "Închide dialogul de setări format",
-            "current_format_label": "Format curent",
+            "tabs_aria_label": "Setări format Tabs",
+            "select_format_tab": "Selectează format",
+            "manage_custom_tab": "Formate personalizate",
             "standard_formats_group": "Formate standard",
             "custom_formats_group": "Formate personalizate",
+            "search_placeholder": "Caută formate...",
             "edit_format_header": "Editează format",
             "add_format_header": "Adaugă format nou",
             "label_label": "Etichetă",

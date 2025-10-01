@@ -212,7 +212,9 @@
     "formatDialog": {
       "title": "Format Settings",
       "close_aria": "Close format settings dialog",
-      "current_format_label": "Current Format",
+      "tabs_aria_label": "Format settings tabs",
+      "select_format_tab": "Select Format",
+      "manage_custom_tab": "Manage Custom Formats",
       "standard_formats_group": "Standard Formats",
       "custom_formats_group": "Custom Formats",
       "search_placeholder": "Search formats...",
