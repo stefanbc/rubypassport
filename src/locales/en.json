@@ -216,7 +216,13 @@
       "close_aria": "Close settings dialog",
       "tabs_aria_label": "Settings tabs",
       "general_tab": "General",
-      "experimental_tab": "Experimental"
+      "experimental_tab": "Experimental",
+      "general_settings_header": "General Settings",
+      "language_label": "Language",
+      "theme_label": "Theme",
+      "theme_light": "Light",
+      "theme_dark": "Dark",
+      "theme_system": "System"
     },
     "formatDialog": {
       "title": "Format Settings",

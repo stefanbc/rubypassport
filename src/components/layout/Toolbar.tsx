@@ -2,31 +2,19 @@ import {
     Images,
     Info,
     Keyboard,
-    Languages,
     Maximize,
-    Menu,
     Minimize,
-    Moon,
     Settings,
     SlidersHorizontal,
-    Sun,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui";
-import { useTheme } from "@/contexts/ThemeProvider";
 import { useStore } from "@/store";
 
 type ToolbarButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -91,26 +79,7 @@ export function Toolbar({
             captureQueue: state.captureQueue,
         })),
     );
-    const { theme, toggleTheme } = useTheme();
-    const { t, i18n } = useTranslation();
-    const languages = [
-        {
-            label: t("common.german"),
-            value: "de",
-        },
-        {
-            label: t("common.english"),
-            value: "en",
-        },
-        {
-            label: t("common.romanian"),
-            value: "ro",
-        },
-        {
-            label: t("common.spanish"),
-            value: "es",
-        },
-    ];
+    const { t } = useTranslation();
 
     const hasQueue = captureQueue.length > 0;
 
@@ -187,52 +156,12 @@ export function Toolbar({
                             <Info size={20} />
                         </ToolbarButton>
                         <ToolbarButton
-                            onClick={toggleTheme}
-                            title={
-                                theme === "light"
-                                    ? t("tooltips.switchToDark")
-                                    : t("tooltips.switchToLight")
-                            }
+                            onClick={() => setActiveDialog("settings")}
+                            title={t("tooltips.showSettings")}
                             defaultStyle
                         >
-                            {theme === "light" ? (
-                                <Moon size={20} />
-                            ) : (
-                                <Sun size={20} />
-                            )}
+                            <Settings size={20} />
                         </ToolbarButton>
-                        <DropdownMenu>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <DropdownMenuTrigger asChild>
-                                        <ToolbarButton
-                                            title={t("tooltips.changeLanguage")}
-                                            defaultStyle
-                                        >
-                                            <Languages size={20} />
-                                        </ToolbarButton>
-                                    </DropdownMenuTrigger>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>{t("tooltips.changeLanguage")}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                            <DropdownMenuContent align="end">
-                                {languages.map((language) => (
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            i18n.changeLanguage(language.value)
-                                        }
-                                        disabled={
-                                            i18n.language === language.value
-                                        }
-                                        key={language.value}
-                                    >
-                                        {language.label}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                         <ToolbarButton
                             onClick={onToggleFullscreen}
                             title={
@@ -248,12 +177,24 @@ export function Toolbar({
                                 <Maximize size={20} />
                             )}
                         </ToolbarButton>
+
                         <ToolbarButton
                             onClick={() => setActiveDialog("shortcuts")}
                             title={t("tooltips.showShortcuts")}
                             defaultStyle
                         >
                             <Keyboard size={20} />
+                        </ToolbarButton>
+                    </>
+                )}
+                {isMobile && (
+                    <>
+                        <ToolbarButton
+                            onClick={() => setActiveDialog("info")}
+                            title={t("tooltips.showInfo")}
+                            defaultStyle
+                        >
+                            <Info size={20} />
                         </ToolbarButton>
                         <ToolbarButton
                             onClick={() => setActiveDialog("settings")}
@@ -263,66 +204,6 @@ export function Toolbar({
                             <Settings size={20} />
                         </ToolbarButton>
                     </>
-                )}
-                {isMobile && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <ToolbarButton
-                                title={t("tooltips.moreOptions")}
-                                defaultStyle
-                            >
-                                <Menu size={20} />
-                            </ToolbarButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={toggleTheme}
-                                className="text-base py-2 px-3"
-                            >
-                                {theme === "light" ? (
-                                    <Moon size={18} className="mr-3" />
-                                ) : (
-                                    <Sun size={18} className="mr-3" />
-                                )}
-                                <span>
-                                    {theme === "light"
-                                        ? t("tooltips.switchToDark")
-                                        : t("tooltips.switchToLight")}
-                                </span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSub>
-                                <DropdownMenuSubTrigger className="text-base py-2 px-3">
-                                    <Languages size={18} className="mr-3" />
-                                    <span>{t("tooltips.changeLanguage")}</span>
-                                </DropdownMenuSubTrigger>
-                                <DropdownMenuSubContent>
-                                    {languages.map((language) => (
-                                        <DropdownMenuItem
-                                            key={language.value}
-                                            onClick={() =>
-                                                i18n.changeLanguage(
-                                                    language.value,
-                                                )
-                                            }
-                                            disabled={
-                                                i18n.language === language.value
-                                            }
-                                            className="text-base py-2 px-3"
-                                        >
-                                            {language.label}
-                                        </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuSubContent>
-                            </DropdownMenuSub>
-                            <DropdownMenuItem
-                                onClick={() => setActiveDialog("info")}
-                                className="text-base py-2 px-3"
-                            >
-                                <Info size={18} className="mr-3" />
-                                {t("tooltips.showInfo")}
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                 )}
             </div>
         </TooltipProvider>
