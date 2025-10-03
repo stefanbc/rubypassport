@@ -10,7 +10,14 @@ import {
 import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/shallow";
-import { CollapsibleSection, Dialog, Tab, Tabs } from "@/components/ui";
+import {
+    CollapsibleSection,
+    Dialog,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS, Format, NewFormatState } from "@/types";
 
@@ -143,27 +150,33 @@ export function FormatDialog({
             closeAriaLabel={t("dialogs.formatDialog.close_aria")}
         >
             <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
-                <Tabs ariaLabel={t("dialogs.formatDialog.tabs_aria_label")}>
-                    <Tab
-                        icon={List}
-                        label={t("dialogs.formatDialog.select_format_tab")}
-                        isActive={activeTab === "select"}
-                        onClick={() => {
-                            setActiveTab("select");
-                            setSearchQuery("");
-                        }}
-                        disabled={isEditing}
-                    />
-                    <Tab
-                        icon={Wrench}
-                        label={t("dialogs.formatDialog.manage_custom_tab")}
-                        isActive={activeTab === "manage"}
-                        onClick={() => setActiveTab("manage")}
-                    />
-                </Tabs>
-
-                <div className="flex-grow flex flex-col overflow-hidden">
-                    {activeTab === "select" && (
+                <Tabs
+                    value={activeTab}
+                    onValueChange={(value) =>
+                        setActiveTab(value as "select" | "manage")
+                    }
+                    className="flex-grow flex flex-col overflow-hidden"
+                >
+                    <TabsList
+                        aria-label={t("dialogs.formatDialog.tabs_aria_label")}
+                    >
+                        <TabsTrigger value="select" disabled={isEditing}>
+                            <List size={16} />
+                            <span>
+                                {t("dialogs.formatDialog.select_format_tab")}
+                            </span>
+                        </TabsTrigger>
+                        <TabsTrigger value="manage">
+                            <Wrench size={16} />
+                            <span>
+                                {t("dialogs.formatDialog.manage_custom_tab")}
+                            </span>
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent
+                        value="select"
+                        className="flex-grow flex flex-col overflow-hidden"
+                    >
                         <div
                             className="flex flex-col overflow-hidden p-4 sm:p-6"
                             role="tabpanel"
@@ -221,9 +234,11 @@ export function FormatDialog({
                                 )}
                             </div>
                         </div>
-                    )}
-
-                    {activeTab === "manage" && (
+                    </TabsContent>
+                    <TabsContent
+                        value="manage"
+                        className="flex-grow overflow-y-auto"
+                    >
                         <div className="flex-grow overflow-y-auto p-4 sm:p-6">
                             <div className="space-y-6" role="tabpanel">
                                 {/* Add/Edit Form */}
@@ -475,8 +490,8 @@ export function FormatDialog({
                                 )}
                             </div>
                         </div>
-                    )}
-                </div>
+                    </TabsContent>
+                </Tabs>
             </div>
         </Dialog>
     );

@@ -1,11 +1,13 @@
 import {
+    Construction,
     FlaskConical,
     Moon,
+    RotateCcw,
     Settings,
     SlidersHorizontal,
     Sun,
 } from "lucide-react";
-import { useId, useState } from "react";
+import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import {
     Dialog,
@@ -14,10 +16,14 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-    Tab,
     Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+    ToggleSwitch,
 } from "@/components/ui";
 import { useTheme } from "@/contexts/ThemeProvider";
+import { useStore } from "@/store";
 
 type SettingsDialogProps = {
     isOpen: boolean;
@@ -27,11 +33,15 @@ type SettingsDialogProps = {
 export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
     const { t, i18n } = useTranslation();
     const { theme, toggleTheme } = useTheme();
-    const [activeTab, setActiveTab] = useState<"general" | "experimental">(
-        "general",
-    );
+    const {
+        watermarkEnabled,
+        setWatermarkEnabled,
+        watermarkText,
+        setWatermarkText,
+    } = useStore();
     const languageId = useId();
     const themeId = useId();
+    const watermarkEnabledId = useId();
 
     const languages = [
         {
@@ -78,29 +88,31 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
             closeAriaLabel={t("dialogs.settingsDialog.close_aria")}
         >
             <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
-                <Tabs ariaLabel={t("dialogs.settingsDialog.tabs_aria_label")}>
-                    <Tab
-                        icon={SlidersHorizontal}
-                        label={t("dialogs.settingsDialog.general_tab")}
-                        isActive={activeTab === "general"}
-                        onClick={() => setActiveTab("general")}
-                    />
-                    <Tab
-                        icon={FlaskConical}
-                        label={t("dialogs.settingsDialog.experimental_tab")}
-                        isActive={activeTab === "experimental"}
-                        onClick={() => setActiveTab("experimental")}
-                    />
-                </Tabs>
-
-                <div className="flex-grow flex flex-col overflow-hidden p-4 sm:p-6">
-                    {activeTab === "general" && (
-                        <div role="tabpanel">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                                {t(
-                                    "dialogs.settingsDialog.general_settings_header",
-                                )}
-                            </h3>
+                <Tabs
+                    defaultValue="general"
+                    className="flex-grow flex flex-col overflow-hidden"
+                >
+                    <TabsList
+                        aria-label={t("dialogs.settingsDialog.tabs_aria_label")}
+                    >
+                        <TabsTrigger value="general">
+                            <SlidersHorizontal size={16} />
+                            <span>
+                                {t("dialogs.settingsDialog.general_tab")}
+                            </span>
+                        </TabsTrigger>
+                        <TabsTrigger value="experimental">
+                            <FlaskConical size={16} />
+                            <span>
+                                {t("dialogs.settingsDialog.experimental_tab")}
+                            </span>
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent
+                        value="general"
+                        className="flex-grow overflow-y-auto p-4 sm:p-6"
+                    >
+                        <div role="tabpanel" className="h-full">
                             <div className="space-y-4">
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                                     <label
@@ -121,9 +133,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             id={languageId}
                                             className="w-full sm:flex-1"
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <SelectValue placeholder="Select language" />
-                                            </div>
+                                            <SelectValue placeholder="Select language" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {languages.map((lang) => (
@@ -181,20 +191,68 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         </SelectContent>
                                     </Select>
                                 </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                    <label
+                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
+                                        htmlFor={watermarkEnabledId}
+                                    >
+                                        {t(
+                                            "components.panels.result.enable_watermark_label",
+                                        )}
+                                    </label>
+                                    <ToggleSwitch
+                                        checked={watermarkEnabled}
+                                        onCheckedChange={setWatermarkEnabled}
+                                        aria-label={t(
+                                            "components.panels.result.enable_watermark_label",
+                                        )}
+                                        id={watermarkEnabledId}
+                                    />
+                                    <div className="relative w-full sm:flex-1">
+                                        <input
+                                            type="text"
+                                            value={watermarkText}
+                                            onChange={(e) =>
+                                                setWatermarkText(e.target.value)
+                                            }
+                                            placeholder={t(
+                                                "components.panels.result.watermark_text_placeholder",
+                                            )}
+                                            disabled={!watermarkEnabled}
+                                            className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed pr-8"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setWatermarkText(
+                                                    "💎 RUBY PASSPORT",
+                                                )
+                                            }
+                                            disabled={!watermarkEnabled}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 disabled:opacity-0 transition-opacity"
+                                            title={t(
+                                                "components.panels.result.reset_watermark_tooltip",
+                                            )}
+                                        >
+                                            <RotateCcw size={14} />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    )}
-                    {activeTab === "experimental" && (
-                        <div role="tabpanel">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                                Experimental Settings
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                    </TabsContent>
+                    <TabsContent
+                        value="experimental"
+                        className="flex-grow overflow-y-auto p-4 sm:p-6"
+                    >
+                        <div role="tabpanel" className="h-full">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center gap-2">
+                                <Construction size={32} />
                                 Experimental settings and features will go here.
                             </p>
                         </div>
-                    )}
-                </div>
+                    </TabsContent>
+                </Tabs>
             </div>
         </Dialog>
     );

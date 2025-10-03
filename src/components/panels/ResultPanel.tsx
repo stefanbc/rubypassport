@@ -4,7 +4,6 @@ import {
     Loader2,
     Pencil,
     Printer,
-    RotateCcw,
     Trash2,
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
@@ -29,10 +28,6 @@ export function ResultPanel({
         capturedImage,
         personName,
         setPersonName,
-        watermarkEnabled,
-        setWatermarkEnabled,
-        watermarkText,
-        setWatermarkText,
         isMobile,
         selectedFormatId,
         customFormats,
@@ -47,7 +42,6 @@ export function ResultPanel({
     const popoverRef = useRef<HTMLDivElement>(null);
     const detailsButtonRef = useRef<HTMLButtonElement>(null);
     const personNameId = useId();
-    const watermarkEnabledId = useId();
 
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
@@ -164,57 +158,6 @@ export function ResultPanel({
                                     )}
                                     className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40"
                                 />
-                            </div>
-                            <hr className="border-gray-200 dark:border-zinc-700" />
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <label
-                                        htmlFor={watermarkEnabledId}
-                                        className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none cursor-pointer flex-grow"
-                                    >
-                                        {t(
-                                            "components.panels.result.enable_watermark_label",
-                                        )}
-                                    </label>
-                                    <input
-                                        id={watermarkEnabledId}
-                                        type="checkbox"
-                                        checked={watermarkEnabled}
-                                        onChange={(e) =>
-                                            setWatermarkEnabled(
-                                                e.target.checked,
-                                            )
-                                        }
-                                        className="h-4 w-4 accent-red-600 text-red-600 bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
-                                    />
-                                </div>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        value={watermarkText}
-                                        onChange={(e) =>
-                                            setWatermarkText(e.target.value)
-                                        }
-                                        placeholder={t(
-                                            "components.panels.result.watermark_text_placeholder",
-                                        )}
-                                        disabled={!watermarkEnabled}
-                                        className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setWatermarkText("💎 RUBY PASSPORT")
-                                        }
-                                        disabled={!watermarkEnabled}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 disabled:opacity-0"
-                                        title={t(
-                                            "components.panels.result.reset_watermark_tooltip",
-                                        )}
-                                    >
-                                        <RotateCcw size={14} />
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     )}
