@@ -11,6 +11,7 @@ import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import {
     Dialog,
+    Flag,
     Input,
     Label,
     Select,
@@ -49,22 +50,22 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         {
             label: t("languages.german"),
             value: "de",
-            flag: "🇩🇪",
+            flagCode: "DE",
         },
         {
             label: t("languages.english"),
             value: "en",
-            flag: "🇬🇧",
+            flagCode: "GB",
         },
         {
             label: t("languages.romanian"),
             value: "ro",
-            flag: "🇷🇴",
+            flagCode: "RO",
         },
         {
             label: t("languages.spanish"),
             value: "es",
-            flag: "🇪🇸",
+            flagCode: "ES",
         },
     ];
 
@@ -144,7 +145,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                                     value={lang.value}
                                                 >
                                                     <div className="flex items-center gap-2">
-                                                        <span>{lang.flag}</span>
+                                                        <span>
+                                                            <Flag
+                                                                code={
+                                                                    lang.flagCode
+                                                                }
+                                                            />
+                                                        </span>
                                                         <span>
                                                             {lang.label}
                                                         </span>

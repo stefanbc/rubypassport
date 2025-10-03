@@ -5,12 +5,14 @@ type HeaderProps = {
     onToggleFullscreen: () => void;
     onManageFormatsClick: () => void;
     selectedFormatLabel: string;
+    selectedFormatFlag?: string;
 };
 
 export function Header({
     onToggleFullscreen,
     onManageFormatsClick,
     selectedFormatLabel,
+    selectedFormatFlag,
 }: HeaderProps) {
     const { t } = useTranslation();
 
@@ -37,6 +39,7 @@ export function Header({
                 onToggleFullscreen={onToggleFullscreen}
                 onManageFormatsClick={onManageFormatsClick}
                 selectedFormatLabel={selectedFormatLabel}
+                selectedFormatFlag={selectedFormatFlag}
             />
         </header>
     );

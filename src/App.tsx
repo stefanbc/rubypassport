@@ -1119,6 +1119,7 @@ function AppContent() {
                     onToggleFullscreen={toggleFullscreen}
                     onManageFormatsClick={() => setActiveDialog("customFormat")}
                     selectedFormatLabel={selectedFormat.label}
+                    selectedFormatFlag={selectedFormat.flagCode}
                 />
 
                 {isMobile ? (

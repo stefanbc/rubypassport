@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Input, Label } from "@/components/ui";
+import { Flag, Input, Label } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS } from "@/types";
 
@@ -37,7 +37,7 @@ export function ResultPanel({
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat =
         allFormats.find((f) => f.id === selectedFormatId) || FORMATS[0];
-    const { widthPx, heightPx, printWidthMm, printHeightMm, label } =
+    const { widthPx, heightPx, printWidthMm, printHeightMm, label, flagCode } =
         selectedFormat;
     const [isDetailsPopoverOpen, setIsDetailsPopoverOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
@@ -209,15 +209,18 @@ export function ResultPanel({
                         </p>
                     </div>
                 )}
-                <div className="absolute bottom-2 left-2 bg-black/40 text-white text-xs px-2 py-1 rounded select-none">
-                    {t("components.panels.result.format_overlay", {
-                        label,
-                        printWidthMm,
-                        printHeightMm,
-                        widthPx,
-                        heightPx,
-                        interpolation: { escapeValue: false },
-                    })}
+                <div className="absolute bottom-2 left-2 bg-black/40 text-white text-xs px-2 py-1 rounded select-none flex items-center gap-2">
+                    <span>{flagCode && <Flag code={flagCode} />}</span>
+                    <span>
+                        {t("components.panels.result.format_overlay", {
+                            label,
+                            printWidthMm,
+                            printHeightMm,
+                            widthPx,
+                            heightPx,
+                            interpolation: { escapeValue: false },
+                        })}
+                    </span>
                 </div>
             </div>
 

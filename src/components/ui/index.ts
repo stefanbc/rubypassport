@@ -3,6 +3,7 @@ export * from "./Button";
 export * from "./ConfirmationDialog";
 export * from "./Dialog";
 export * from "./DropdownMenu";
+export * from "./Flag";
 export * from "./Input";
 export * from "./Label";
 export * from "./Select";

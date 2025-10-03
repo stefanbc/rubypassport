@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 import {
+    Flag,
     Tooltip,
     TooltipContent,
     TooltipProvider,
@@ -51,12 +52,14 @@ type HeaderProps = {
     onToggleFullscreen: () => void;
     onManageFormatsClick: () => void;
     selectedFormatLabel: string;
+    selectedFormatFlag?: string;
 };
 
 export function Toolbar({
     onToggleFullscreen,
     onManageFormatsClick,
     selectedFormatLabel,
+    selectedFormatFlag,
 }: HeaderProps) {
     const {
         isFullscreen,
@@ -111,6 +114,7 @@ export function Toolbar({
                     className={`flex gap-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-zinc-800 ${isMobile ? "p-2" : "px-3 py-1.5"}`}
                     defaultStyle
                 >
+                    {selectedFormatFlag && <Flag code={selectedFormatFlag} />}
                     {!isMobile && (
                         <span
                             className={

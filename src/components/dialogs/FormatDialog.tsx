@@ -13,6 +13,7 @@ import { useShallow } from "zustand/shallow";
 import {
     Accordion,
     Dialog,
+    Flag,
     Input,
     Label,
     Tabs,
@@ -578,9 +579,12 @@ const FormatItem = ({
                     : "bg-gray-100 dark:bg-zinc-800 border-transparent hover:border-red-300 dark:hover:border-red-700"
             }`}
         >
-            <p className="font-semibold text-gray-800 dark:text-gray-100">
-                {format.label}
-            </p>
+            <div className="flex items-center gap-2 font-semibold text-gray-800 dark:text-gray-100">
+                <span>
+                    {format.flagCode && <Flag code={format.flagCode} />}
+                </span>
+                <span>{format.label}</span>
+            </div>
             <p className="text-xs text-gray-500 dark:text-gray-400">
                 {t("dialogs.formatDialog.format_dimensions_display", {
                     printWidth: format.printWidthMm,
