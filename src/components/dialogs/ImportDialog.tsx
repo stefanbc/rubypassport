@@ -12,7 +12,7 @@ import {
     useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog } from "@/components/ui";
+import { Dialog, Slider } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS } from "@/types";
 
@@ -340,9 +340,9 @@ export function ImportDialog({
                 accept="image/*"
                 className="hidden"
             />
-            <div className="p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
+            <div className="flex-grow flex flex-col min-h-0 p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
                 {imageSrc ? (
-                    <div>
+                    <div className="flex flex-col flex-grow min-h-0">
                         <div
                             ref={cropContainerRef}
                             className="relative bg-gray-200 dark:bg-black rounded-md overflow-hidden cursor-grab active:cursor-grabbing"
@@ -420,16 +420,15 @@ export function ImportDialog({
                                     handleZoomChange(Math.max(1, zoom - 0.1))
                                 }
                             />
-                            <input
-                                type="range"
-                                min="1"
-                                max="3"
-                                step="0.05"
-                                value={zoom}
-                                onChange={(e) =>
-                                    handleZoomChange(parseFloat(e.target.value))
+                            <Slider
+                                min={1}
+                                max={3}
+                                step={0.05}
+                                value={[zoom]}
+                                onValueChange={(value) =>
+                                    handleZoomChange(value[0])
                                 }
-                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-zinc-700 accent-red-600"
+                                className="w-full"
                             />
                             <ZoomIn
                                 size={20}
@@ -439,7 +438,7 @@ export function ImportDialog({
                                 }
                             />
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                        <div className="flex flex-col sm:flex-row gap-3 mt-4 flex-shrink-0">
                             <button
                                 type="button"
                                 onClick={handleReset}

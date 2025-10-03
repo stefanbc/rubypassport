@@ -14,8 +14,8 @@ import { Header } from "@/components/layout/Header";
 import { CameraView } from "@/components/panels/CameraView";
 import { Guidelines } from "@/components/panels/Guidelines";
 import { ResultPanel } from "@/components/panels/ResultPanel";
-import { ToastContainer } from "@/components/ToastContainer";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeProvider";
+import { ToastContainer } from "@/contexts/ToastContainer";
 import { useStore } from "@/store";
 import { FacingMode, FORMATS, Format, NewFormatState } from "@/types";
 
