@@ -182,8 +182,12 @@
           "a": "The live guides on the camera view help you align your face correctly according to the selected format's requirements, ensuring your photo is compliant."
         },
         {
+          "q": "How can I change the app's language or theme?",
+          "a": "You can customize your experience in the Settings dialog, accessible from the header menu or by pressing 'S'. There you can change the display language and switch between light and dark themes."
+        },
+        {
           "q": "Can I add a watermark to my photos?",
-          "a": "Yes. On the Result screen, click the pencil icon to open the details settings. From there, you can enable or disable the watermark and customize the text that appears on your photo."
+          "a": "Yes. You can enable, disable, and customize the watermark text in the Settings dialog (press 'S'). The watermark settings are located under the \"General\" tab."
         },
         {
           "q": "What is Photo Booth mode?",
@@ -222,7 +226,8 @@
       "theme_label": "Theme",
       "theme_light": "Light",
       "theme_dark": "Dark",
-      "theme_system": "System"
+      "theme_system": "System",
+      "experimental_body": "Experimental settings and features will go here."
     },
     "formatDialog": {
       "title": "Format Settings",
@@ -250,7 +255,9 @@
       "cancel_button": "Cancel",
       "your_custom_formats_header": "Your Custom Formats",
       "edit_format_tooltip": "Edit format",
-      "delete_format_tooltip": "Delete format"
+      "delete_format_tooltip": "Delete format",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)"
     },
     "photoQueue": {
       "title": "Photo Booth Queue ({{count}})",

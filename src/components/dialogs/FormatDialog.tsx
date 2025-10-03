@@ -11,8 +11,10 @@ import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/shallow";
 import {
-    CollapsibleSection,
+    Accordion,
     Dialog,
+    Input,
+    Label,
     Tabs,
     TabsContent,
     TabsList,
@@ -186,7 +188,7 @@ export function FormatDialog({
                                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
                                     size={18}
                                 />
-                                <input
+                                <Input
                                     type="text"
                                     placeholder={t(
                                         "dialogs.formatDialog.search_placeholder",
@@ -195,12 +197,12 @@ export function FormatDialog({
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 pl-10 pr-4 rounded-md border border-red-200 dark:border-red-900/40 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    className="pl-10"
                                 />
                             </div>
 
                             <div className="flex-grow overflow-y-auto space-y-4 -mr-2 pr-2">
-                                <CollapsibleSection
+                                <Accordion
                                     title={t(
                                         "dialogs.formatDialog.standard_formats_group",
                                     )}
@@ -213,9 +215,9 @@ export function FormatDialog({
                                         selectedFormatId={selectedFormatId}
                                         onSelect={setSelectedFormatId}
                                     />
-                                </CollapsibleSection>
+                                </Accordion>
                                 {filteredCustom.length > 0 && (
-                                    <CollapsibleSection
+                                    <Accordion
                                         title={t(
                                             "dialogs.formatDialog.custom_formats_group",
                                         )}
@@ -230,7 +232,7 @@ export function FormatDialog({
                                             selectedFormatId={selectedFormatId}
                                             onSelect={setSelectedFormatId}
                                         />
-                                    </CollapsibleSection>
+                                    </Accordion>
                                 )}
                             </div>
                         </div>
@@ -259,7 +261,7 @@ export function FormatDialog({
                                             )}
                                             id={formatLabelId}
                                         >
-                                            <input
+                                            <Input
                                                 id={formatLabelId}
                                                 value={newFormat.label}
                                                 onChange={(e) =>
@@ -271,7 +273,7 @@ export function FormatDialog({
                                                 placeholder={t(
                                                     "dialogs.formatDialog.label_placeholder",
                                                 )}
-                                                className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                                                className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
                                             />
                                         </FormatInputRow>
@@ -281,7 +283,7 @@ export function FormatDialog({
                                             )}
                                             id={widthPxId}
                                         >
-                                            <input
+                                            <Input
                                                 id={widthPxId}
                                                 type="number"
                                                 value={newFormat.widthPx}
@@ -294,7 +296,7 @@ export function FormatDialog({
                                                 placeholder={t(
                                                     "dialogs.formatDialog.width_px_placeholder",
                                                 )}
-                                                className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                                                className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
                                                 min="1"
                                                 max="10000"
@@ -306,7 +308,7 @@ export function FormatDialog({
                                             )}
                                             id={heightPxId}
                                         >
-                                            <input
+                                            <Input
                                                 id={heightPxId}
                                                 type="number"
                                                 value={newFormat.heightPx}
@@ -320,7 +322,7 @@ export function FormatDialog({
                                                 placeholder={t(
                                                     "dialogs.formatDialog.height_px_placeholder",
                                                 )}
-                                                className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                                                className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
                                                 min="1"
                                                 max="10000"
@@ -332,7 +334,7 @@ export function FormatDialog({
                                             )}
                                             id={printWidthMmId}
                                         >
-                                            <input
+                                            <Input
                                                 id={printWidthMmId}
                                                 type="number"
                                                 value={newFormat.printWidthMm}
@@ -346,7 +348,7 @@ export function FormatDialog({
                                                 placeholder={t(
                                                     "dialogs.formatDialog.print_w_mm_placeholder",
                                                 )}
-                                                className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                                                className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
                                                 min="1"
                                                 max="10000"
@@ -359,7 +361,7 @@ export function FormatDialog({
                                             )}
                                             id={printHeightMmId}
                                         >
-                                            <input
+                                            <Input
                                                 id={printHeightMmId}
                                                 type="number"
                                                 value={newFormat.printHeightMm}
@@ -373,7 +375,7 @@ export function FormatDialog({
                                                 placeholder={t(
                                                     "dialogs.formatDialog.print_h_mm_placeholder",
                                                 )}
-                                                className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40 invalid:border-red-500 invalid:ring-red-500"
+                                                className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
                                                 min="1"
                                                 max="10000"
@@ -420,7 +422,7 @@ export function FormatDialog({
                                 </div>
                                 {/* Custom Formats List */}
                                 {customFormatsList.length > 0 && !isEditing && (
-                                    <CollapsibleSection
+                                    <Accordion
                                         title={t(
                                             "dialogs.formatDialog.your_custom_formats_header",
                                         )}
@@ -435,13 +437,14 @@ export function FormatDialog({
                                                             className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 bg-red-50/50 dark:bg-zinc-800/50 p-2 rounded-md hover:bg-red-100/50 dark:hover:bg-zinc-700/50 transition-colors"
                                                         >
                                                             <span>
-                                                                {format.label} (
-                                                                {format.widthPx}
-                                                                x
-                                                                {
-                                                                    format.heightPx
-                                                                }
-                                                                px)
+                                                                {t(
+                                                                    "dialogs.formatDialog.custom_format_display",
+                                                                    {
+                                                                        label: format.label,
+                                                                        width: format.widthPx,
+                                                                        height: format.heightPx,
+                                                                    },
+                                                                )}
                                                             </span>
                                                             <div className="flex items-center gap-2">
                                                                 <button
@@ -486,7 +489,7 @@ export function FormatDialog({
                                                 )}
                                             </ul>
                                         </div>
-                                    </CollapsibleSection>
+                                    </Accordion>
                                 )}
                             </div>
                         </div>
@@ -528,6 +531,8 @@ const FormatItem = ({
     onSelect: (id: string) => void;
 }) => {
     const isSelected = format.id === selectedFormatId;
+    const { t } = useTranslation();
+
     return (
         <button
             type="button"
@@ -544,7 +549,12 @@ const FormatItem = ({
                 {format.label}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-                ~{format.widthPx}x{format.heightPx}px
+                {t("dialogs.formatDialog.format_dimensions_display", {
+                    printWidth: format.printWidthMm,
+                    printHeight: format.printHeightMm,
+                    width: format.widthPx,
+                    height: format.heightPx,
+                })}
             </p>
         </button>
     );
@@ -560,12 +570,12 @@ const FormatInputRow = ({
     children: React.ReactNode;
 }) => (
     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-        <label
+        <Label
             className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none self-start sm:self-center"
             htmlFor={id}
         >
             {label}
-        </label>
+        </Label>
         {children}
     </div>
 );

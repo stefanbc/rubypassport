@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Input, Label } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS } from "@/types";
 
@@ -37,7 +38,8 @@ export function ResultPanel({
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat =
         allFormats.find((f) => f.id === selectedFormatId) || FORMATS[0];
-    const { widthPx, heightPx, label } = selectedFormat;
+    const { widthPx, heightPx, printWidthMm, printHeightMm, label } =
+        selectedFormat;
     const [isDetailsPopoverOpen, setIsDetailsPopoverOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
     const detailsButtonRef = useRef<HTMLButtonElement>(null);
@@ -138,15 +140,15 @@ export function ResultPanel({
                             className="absolute top-full right-0 mt-2 z-10 w-72 bg-white dark:bg-zinc-800 rounded-lg shadow-2xl border border-gray-200 dark:border-zinc-700 p-4 space-y-4 animate-in fade-in-5 slide-in-from-top-2 duration-200"
                         >
                             <div className="space-y-2">
-                                <label
+                                <Label
                                     htmlFor={personNameId}
                                     className="text-gray-800 dark:text-gray-100 text-sm font-medium select-none"
                                 >
                                     {t(
                                         "components.panels.result.person_name_label",
                                     )}
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     id={personNameId}
                                     type="text"
                                     value={personName}
@@ -156,7 +158,6 @@ export function ResultPanel({
                                     placeholder={t(
                                         "components.panels.result.optional_placeholder",
                                     )}
-                                    className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40"
                                 />
                             </div>
                         </div>
@@ -206,7 +207,14 @@ export function ResultPanel({
                     </div>
                 )}
                 <div className="absolute bottom-2 left-2 bg-black/40 text-white text-xs px-2 py-1 rounded select-none">
-                    {label} ({widthPx}x{heightPx}px)
+                    {t("components.panels.result.format_overlay", {
+                        label,
+                        printWidthMm,
+                        printHeightMm,
+                        widthPx,
+                        heightPx,
+                        interpolation: { escapeValue: false },
+                    })}
                 </div>
             </div>
 

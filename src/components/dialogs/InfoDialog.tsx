@@ -1,6 +1,6 @@
 import { HelpCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { CollapsibleSection, Dialog } from "@/components/ui";
+import { Accordion, Dialog } from "@/components/ui";
 
 type InfoDialogProps = {
     isOpen: boolean;
@@ -25,7 +25,7 @@ export function InfoDialog({ isOpen, onClose }: InfoDialogProps) {
             <div className="flex-grow overflow-y-auto p-4 sm:p-6 bg-white dark:bg-zinc-800/50">
                 <div className="space-y-2">
                     {faqs.map((faq, index) => (
-                        <CollapsibleSection
+                        <Accordion
                             key={faq.q}
                             title={faq.q}
                             isInitiallyCollapsed={index !== 0}
@@ -35,7 +35,7 @@ export function InfoDialog({ isOpen, onClose }: InfoDialogProps) {
                             <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed pb-2 pr-6">
                                 {faq.a}
                             </p>
-                        </CollapsibleSection>
+                        </Accordion>
                     ))}
                 </div>
             </div>

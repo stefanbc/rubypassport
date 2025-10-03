@@ -1,7 +1,7 @@
 import { Printer } from "lucide-react";
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog } from "@/components/ui";
+import { Dialog, Label } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS, PHOTO_COUNTS, PhotoCount } from "@/types";
 
@@ -41,12 +41,12 @@ export function PrintOptionsDialog({
             <div className="p-6 sm:p-8 bg-white dark:bg-zinc-800/50">
                 <div className="space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <label
+                        <Label
                             className="text-gray-600 dark:text-gray-300 text-sm sm:w-40 select-none"
                             htmlFor={photosPerPageId}
                         >
                             {t("dialogs.print.photos_per_page_label")}
-                        </label>
+                        </Label>
                         <select
                             id={photosPerPageId}
                             value={photosPerPage}

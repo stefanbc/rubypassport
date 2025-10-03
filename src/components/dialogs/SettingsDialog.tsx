@@ -11,6 +11,8 @@ import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import {
     Dialog,
+    Input,
+    Label,
     Select,
     SelectContent,
     SelectItem,
@@ -115,14 +117,14 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                         <div role="tabpanel" className="h-full">
                             <div className="space-y-4">
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                                    <label
+                                    <Label
                                         className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={languageId}
                                     >
                                         {t(
                                             "dialogs.settingsDialog.language_label",
                                         )}
-                                    </label>
+                                    </Label>
                                     <Select
                                         value={i18n.language}
                                         onValueChange={(value) =>
@@ -153,14 +155,14 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                     </Select>
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                                    <label
+                                    <Label
                                         className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={themeId}
                                     >
                                         {t(
                                             "dialogs.settingsDialog.theme_label",
                                         )}
-                                    </label>
+                                    </Label>
                                     <Select
                                         value={theme}
                                         onValueChange={toggleTheme}
@@ -192,14 +194,14 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                     </Select>
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                                    <label
+                                    <Label
                                         className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={watermarkEnabledId}
                                     >
                                         {t(
                                             "components.panels.result.enable_watermark_label",
                                         )}
-                                    </label>
+                                    </Label>
                                     <ToggleSwitch
                                         checked={watermarkEnabled}
                                         onCheckedChange={setWatermarkEnabled}
@@ -209,7 +211,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         id={watermarkEnabledId}
                                     />
                                     <div className="relative w-full sm:flex-1">
-                                        <input
+                                        <Input
                                             type="text"
                                             value={watermarkText}
                                             onChange={(e) =>
@@ -219,7 +221,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                                 "components.panels.result.watermark_text_placeholder",
                                             )}
                                             disabled={!watermarkEnabled}
-                                            className="w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm py-2 px-3 rounded border border-red-200 dark:border-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed pr-8"
+                                            className="pr-8"
                                         />
                                         <button
                                             type="button"
@@ -245,10 +247,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                         value="experimental"
                         className="flex-grow overflow-y-auto p-4 sm:p-6"
                     >
-                        <div role="tabpanel" className="h-full">
+                        <div
+                            role="tabpanel"
+                            className="h-full flex flex-col items-center justify-center text-center"
+                        >
                             <p className="text-sm text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center gap-2">
                                 <Construction size={32} />
-                                Experimental settings and features will go here.
+                                {t("dialogs.settingsDialog.experimental_body")}
                             </p>
                         </div>
                     </TabsContent>

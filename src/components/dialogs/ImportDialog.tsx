@@ -12,7 +12,7 @@ import {
     useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, Slider } from "@/components/ui";
+import { Dialog, Input, Slider } from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS } from "@/types";
 
@@ -333,7 +333,7 @@ export function ImportDialog({
             icon={UploadCloud}
             closeAriaLabel={t("dialogs.import.close_aria")}
         >
-            <input
+            <Input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelected}

@@ -1,267 +1,295 @@
 {
-    "common": {
-        "english": "English",
-        "german": "Deutsch",
-        "spanish": "Español",
-        "japanese": "日本語",
-        "romanian": "Română",
-        "github": "GitHub",
-        "continue": "Continuar"
+  "common": {
+    "english": "English",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română",
+    "github": "GitHub",
+    "continue": "Continuar"
+  },
+  "components": {
+    "header": {
+      "title": "Ruby Passport",
+      "subtitle": "Generador de Fotos para Pasaporte"
     },
-    "components": {
-        "header": {
-            "title": "Ruby Passport",
-            "subtitle": "Generador de Fotos para Pasaporte"
-        },
-        "app": {
-            "wizard": {
-                "guidelines": "Pautas",
-                "camera": "Cámara",
-                "result": "Resultado"
-            },
-            "printPreviewTitle": "Vista Previa de Impresión",
-            "printPreviewTitleWithName": "{{name}} - Vista Previa de Impresión",
-            "passportPortraitAlt": "Retrato para pasaporte"
-        },
-        "panels": {
-            "guidelines": {
-                "title": "Pautas",
-                "subtitle": "Sigue estas pautas para la mayoría de los estándares de países.",
-                "do_title": "Qué hacer",
-                "do_item_1": "• Mantén la cabeza centrada y recta",
-                "do_item_2": "• Mira directamente a la cámara",
-                "do_item_3": "• Mantén una expresión neutra (boca cerrada)",
-                "do_item_4": "• Quítate las gafas y el sombrero (a menos que sea por motivos religiosos)",
-                "do_item_5": "• Asegúrate de que los ojos sean claramente visibles",
-                "do_item_6": "• Alinea la cara en el óvalo, los ojos en la línea",
-                "dont_title": "Qué no hacer",
-                "dont_item_1": "• No sonrías, inclines la cabeza ni entrecierres los ojos",
-                "dont_item_2": "• No uses maquillaje pesado ni filtros",
-                "dont_item_3": "• Evita sombreros, audífonos o accesorios",
-                "dont_item_4": "• Evita sombras fuertes o contraluz",
-                "lighting_title": "Iluminación y Fondo",
-                "lighting_item_1": "• Usa una iluminación brillante y uniforme desde el frente",
-                "lighting_item_2": "• Párate a ~0.5 m de un fondo liso y claro",
-                "lighting_item_3": "• Evita sombras fuertes debajo del mentón o la nariz",
-                "lighting_item_4": "• Prefiere ropa de tono medio (no blanca)",
-                "privacy_title": "Tu Privacidad Importa",
-                "privacy_body": "Esta aplicación está diseñada pensando en tu privacidad. Todo sucede directamente en tu navegador, nunca subimos, almacenamos ni guardamos tus imágenes en ningún lugar. Una vez que terminas, se eliminan."
-            },
-            "camera": {
-                "back": "Atrás",
-                "back_aria": "Volver a las pautas",
-                "preview": "Vista previa",
-                "switch_camera_tooltip": "Cambiar cámara",
-                "switch_camera_button": "Cambiar cámara",
-                "guide_align_face": "Alinea tu cara con la guía ovalada",
-                "guide_eyes_on_line": "Ojos en la línea horizontal",
-                "starting_camera": "Iniciando cámara…",
-                "camera_not_started": "Cámara no iniciada",
-                "starting_button": "Iniciando…",
-                "start_camera_button": "Iniciar Cámara",
-                "import_image_button": "Importar Imagen",
-                "capture_photo_button": "Capturar Foto",
-                "stop_button": "Detener"
-            },
-            "result": {
-                "title": "Resultado",
-                "edit_details_tooltip": "Editar detalles (nombre y marca de agua)",
-                "details_button": "Detalles",
-                "retake_button": "Volver a tomar",
-                "person_name_label": "Nombre de la persona",
-                "optional_placeholder": "Opcional",
-                "enable_watermark_label": "Habilitar Marca de Agua",
-                "watermark_text_placeholder": "Texto de Marca de Agua",
-                "reset_watermark_tooltip": "Restablecer a predeterminado",
-                "captured_alt": "Pasaporte capturado",
-                "processing": "Procesando foto...",
-                "placeholder": "Captura o importa una foto",
-                "download_button": "Descargar",
-                "print_button": "Imprimir",
-                "before_unload_prompt": "¿Estás seguro de que quieres irte? Tu foto generada se perderá."
-            }
-        },
-        "footer": {
-            "copyright": "© {{year}} Ruby Passport. Todos los derechos reservados.",
-            "copyright_mobile": "© {{year}} Ruby Passport.",
-            "madeWith": "Hecho con ❤️ por"
-        }
+    "app": {
+      "wizard": {
+        "guidelines": "Pautas",
+        "camera": "Cámara",
+        "result": "Resultado"
+      },
+      "printPreviewTitle": "Vista Previa de Impresión",
+      "printPreviewTitleWithName": "{{name}} - Vista Previa de Impresión",
+      "passportPortraitAlt": "Retrato para pasaporte"
     },
-    "tooltips": {
-        "formatSettings": "Configuración de formato (F)",
-        "changeFormat": "Cambiar formato o gestionar formatos personalizados (F)",
-        "viewPhotoQueue": "Ver cola de fotos ({{count}})",
-        "photoBoothEnabled": "Cabina de fotos habilitada (B)",
-        "enablePhotoBooth": "Habilitar Cabina de fotos (B)",
-        "changeLanguage": "Cambiar idioma",
-        "showInfo": "Mostrar diálogo de información (I)",
-        "switchToDark": "Cambiar a tema oscuro (T)",
-        "switchToLight": "Cambiar a tema claro (T)",
-        "exitFullscreen": "Salir de pantalla completa",
-        "enterFullscreen": "Entrar a pantalla completa",
-        "showShortcuts": "Mostrar atajos de teclado (?)",
-        "showGuidelines": "Mostrar Pautas",
-        "hideGuidelines": "Ocultar Pautas"
+    "panels": {
+      "guidelines": {
+        "title": "Pautas",
+        "subtitle": "Sigue estas pautas para la mayoría de los estándares de países.",
+        "do_title": "Qué hacer",
+        "do_item_1": "• Mantén la cabeza centrada y recta",
+        "do_item_2": "• Mira directamente a la cámara",
+        "do_item_3": "• Mantén una expresión neutra (boca cerrada)",
+        "do_item_4": "• Quítate las gafas y el sombrero (a menos que sea por motivos religiosos)",
+        "do_item_5": "• Asegúrate de que los ojos sean claramente visibles",
+        "do_item_6": "• Alinea la cara en el óvalo, los ojos en la línea",
+        "dont_title": "Qué no hacer",
+        "dont_item_1": "• No sonrías, inclines la cabeza ni entrecierres los ojos",
+        "dont_item_2": "• No uses maquillaje pesado ni filtros",
+        "dont_item_3": "• Evita sombreros, audífonos o accesorios",
+        "dont_item_4": "• Evita sombras fuertes o contraluz",
+        "lighting_title": "Iluminación y Fondo",
+        "lighting_item_1": "• Usa una iluminación brillante y uniforme desde el frente",
+        "lighting_item_2": "• Párate a ~0.5 m de un fondo liso y claro",
+        "lighting_item_3": "• Evita sombras fuertes debajo del mentón o la nariz",
+        "lighting_item_4": "• Prefiere ropa de tono medio (no blanca)",
+        "privacy_title": "Tu Privacidad Importa",
+        "privacy_body": "Esta aplicación está diseñada pensando en tu privacidad. Todo sucede directamente en tu navegador, nunca subimos, almacenamos ni guardamos tus imágenes en ningún lugar. Una vez que terminas, se eliminan."
+      },
+      "camera": {
+        "back": "Atrás",
+        "back_aria": "Volver a las pautas",
+        "preview": "Vista previa",
+        "switch_camera_tooltip": "Cambiar cámara",
+        "switch_camera_button": "Cambiar cámara",
+        "guide_align_face": "Alinea tu cara con la guía ovalada",
+        "guide_eyes_on_line": "Ojos en la línea horizontal",
+        "starting_camera": "Iniciando cámara…",
+        "camera_not_started": "Cámara no iniciada",
+        "starting_button": "Iniciando…",
+        "start_camera_button": "Iniciar Cámara",
+        "import_image_button": "Importar Imagen",
+        "capture_photo_button": "Capturar Foto",
+        "stop_button": "Detener"
+      },
+      "result": {
+        "title": "Resultado",
+        "edit_details_tooltip": "Editar detalles (nombre y marca de agua)",
+        "details_button": "Detalles",
+        "retake_button": "Volver a tomar",
+        "person_name_label": "Nombre de la persona",
+        "optional_placeholder": "Opcional",
+        "enable_watermark_label": "Habilitar Marca de Agua",
+        "watermark_text_placeholder": "Texto de Marca de Agua",
+        "reset_watermark_tooltip": "Restablecer a predeterminado",
+        "captured_alt": "Pasaporte capturado",
+        "processing": "Procesando foto...",
+        "placeholder": "Captura o importa una foto",
+        "download_button": "Descargar",
+        "print_button": "Imprimir",
+        "before_unload_prompt": "¿Estás seguro de que quieres irte? Tu foto generada se perderá."
+      }
     },
-    "toasts": {
-        "photoBoothEnabled": "Modo de Cabina de fotos habilitado: las fotos se pondrán en cola para impresión por lotes",
-        "photoBoothDisabled": "Modo de Cabina de fotos deshabilitado: modo de foto única",
-        "backOnline": "¡Estás de vuelta en línea!",
-        "offline": "Estás sin conexión. Algunas funciones pueden no estar disponibles.",
-        "startingCamera": "Iniciando cámara...",
-        "maxCameraResolution": "Resolución máxima de la cámara: {{width}}x{{height}}",
-        "cameraStream": "Transmisión de la cámara: {{width}}x{{height}}",
-        "highResAvailable": "La captura de alta resolución está disponible.",
-        "highResNotSupported": "La captura de alta resolución no es compatible. Usando transmisión de video.",
-        "cameraError": "Error de la cámara: {{message}}",
-        "capturingHighRes": "Capturando foto de alta resolución...",
-        "photoCaptured": "¡Foto capturada con éxito!",
-        "photoCaptureFailed": "No se pudo procesar la foto capturada.",
-        "highResCaptureFailed": "La captura de alta resolución falló: {{message}}. Se usará el fotograma del video.",
-        "photoFromStream": "Foto capturada desde la transmisión de video.",
-        "processedDownloaded": "¡Imagen procesada descargada!",
-        "originalDownloaded": "¡Imagen original descargada!",
-        "fullscreenError": "Error al intentar habilitar el modo de pantalla completa: {{message}}",
-        "addedToQueue": "Añadido a la cola ({{count}})",
-        "imageLoadFailed": "No se pudo cargar la imagen para su procesamiento.",
-        "cameraPermission": "Esperando permisos de la cámara...",
-        "videoPlaybackError": "No se pudo iniciar la reproducción del video.",
-        "videoPlaybackErrorMessage": "No se pudo iniciar la reproducción del video: {{message}}",
-        "imageImportSuccess": "¡Imagen importada y recortada con éxito!",
-        "printPreview": "Preparando vista previa de impresión...",
-        "printWindowError": "No se pudo abrir la ventana de impresión. Por favor, deshabilita tus bloqueadores de ventanas emergentes."
-    },
-    "dialogs": {
-        "format": {
-            "errorAllFields": "Por favor, rellena todos los campos de formato personalizado.",
-            "errorInvalidNumber": "Valores numéricos no válidos para el formato. Todas las dimensiones deben ser positivas."
-        },
-        "download": {
-            "title": "Opciones de Descarga",
-            "close_aria": "Cerrar diálogo de opciones de descarga",
-            "description": "Elige qué versión de la foto te gustaría descargar.",
-            "processed_button": "Descargar Foto Procesada",
-            "original_button": "Descargar Original (Alta Resolución)",
-            "original_tooltip_unavailable": "El original de alta resolución no está disponible para esta foto.",
-            "original_tooltip_available": "Descargar la foto original, sin recortar.",
-            "original_unavailable_note": "Un original de alta resolución solo está disponible para fotos tomadas con la opción de cámara de alta resolución o desde un archivo importado."
-        },
-        "info": {
-            "title": "Preguntas Frecuentes",
-            "close_aria": "Cerrar diálogo de preguntas frecuentes",
-            "faqs": [
-                {
-                    "q": "¿Qué es Ruby Passport?",
-                    "a": "Ruby Passport es una aplicación web moderna para capturar y generar fotos de pasaporte/ID que cumplen con los requisitos directamente en tu navegador. Te ayuda a crear fotos que cumplen con los requisitos específicos de tamaño y alineación para varios países."
-                },
-                {
-                    "q": "¿Están mis datos seguros?",
-                    "a": "Sí. Todo el procesamiento de fotos ocurre localmente en tu navegador. Tus fotos nunca se suben a un servidor, lo que garantiza tu privacidad y seguridad."
-                },
-                {
-                    "q": "¿Qué tan precisa es la impresión?",
-                    "a": "La función de Vista Previa de Impresión genera una página con fotos distribuidas en mosaico con dimensiones físicas exactas. Para obtener mejores resultados, asegúrate de que la configuración de tu impresora esté al 100% de escala y que la opción 'ajustar a la página' esté deshabilitada."
-                },
-                {
-                    "q": "¿Puedo crear formatos de foto personalizados?",
-                    "a": "Absolutamente. Puedes agregar, editar y eliminar tus propios formatos de fotos con dimensiones de píxeles y de impresión física precisas usando el diálogo 'Configuración de formato' (F)."
-                },
-                {
-                    "q": "¿Puedo usar una foto existente en lugar de la cámara?",
-                    "a": "¡Sí! Puedes importar una imagen desde tu computadora haciendo clic en el botón 'Importar' o arrastrando y soltando un archivo. Si tu imagen es más grande que el formato seleccionado, podrás arrastrarla para reposicionarla y obtener el recorte perfecto antes de que sea procesada."
-                },
-                {
-                    "q": "¿Para qué sirven las guías de alineación?",
-                    "a": "Las guías en vivo en la vista de la cámara te ayudan a alinear tu cara correctamente según los requisitos del formato seleccionado, asegurando que tu foto cumpla con las normas."
-                },
-                {
-                    "q": "¿Puedo agregar una marca de agua a mis fotos?",
-                    "a": "Sí. En la pantalla de Resultado, haz clic en el ícono del lápiz para abrir la configuración de detalles. Desde allí, puedes habilitar o deshabilitar la marca de agua y personalizar el texto que aparece en tu foto."
-                },
-                {
-                    "q": "¿Qué es el modo Cabina de fotos?",
-                    "a": "El modo Cabina de fotos te permite capturar varias fotos que se ponen en cola para impresión por lotes en el mismo papel. Habilítalo con el ícono de Cabina de fotos (múltiples imágenes) en el encabezado o presionando 'B'. Cuando las fotos están en la cola, este botón muestra el recuento y abre el diálogo de la cola. Dentro del diálogo, puedes reorganizar las fotos arrastrándolas o eliminar fotos individuales pasando el cursor sobre ellas. Luego puedes imprimir todas las fotos en cola juntas."
-                }
-            ]
-        },
-        "shortcuts": {
-            "title": "Atajos de Teclado",
-            "close_aria": "Cerrar diálogo de atajos",
-            "items": {
-                "show_help": "Mostrar este diálogo de ayuda",
-                "toggle_camera": "Iniciar / Detener cámara",
-                "capture": "Capturar foto",
-                "import": "Importar imagen",
-                "download": "Descargar resultado",
-                "retake": "Volver a tomar foto",
-                "toggle_watermark": "Alternar marca de agua",
-                "print": "Abrir opciones de impresión",
-                "format_settings": "Abrir configuración de formato",
-                "toggle_photobooth": "Alternar modo Cabina de fotos",
-                "toggle_theme": "Alternar tema",
-                "toggle_fullscreen": "Alternar pantalla completa",
-                "show_info": "Mostrar diálogo de información"
-            }
-        },
-        "formatDialog": {
-            "title": "Configuración de Formato",
-            "close_aria": "Cerrar diálogo de configuración de formato",
-            "tabs_aria_label": "Configuración de formato Tabs",
-            "select_format_tab": "Seleccionar Formato",
-            "manage_custom_tab": "Gestionar Formatos Personalizados",
-            "standard_formats_group": "Formatos Estándar",
-            "custom_formats_group": "Formatos Personalizados",
-            "search_placeholder": "Buscar formatos...",
-            "edit_format_header": "Editar Formato",
-            "add_format_header": "Añadir Nuevo Formato",
-            "label_label": "Etiqueta",
-            "label_placeholder": "ej. Personalizado 4x6",
-            "width_px_label": "Ancho (px)",
-            "width_px_placeholder": "ej. 600",
-            "height_px_label": "Altura (px)",
-            "height_px_placeholder": "ej. 900",
-            "print_w_mm_label": "Ancho de impresión (mm)",
-            "print_w_mm_placeholder": "ej. 101.6",
-            "print_h_mm_label": "Altura de impresión (mm)",
-            "print_h_mm_placeholder": "ej. 152.4",
-            "update_button": "Actualizar Formato",
-            "add_button": "Añadir Formato",
-            "cancel_button": "Cancelar",
-            "your_custom_formats_header": "Tus Formatos Personalizados",
-            "edit_format_tooltip": "Editar formato",
-            "delete_format_tooltip": "Eliminar formato"
-        },
-        "photoQueue": {
-            "title": "Cola de Cabina de Fotos ({{count}})",
-            "clear_all_button": "Borrar Todo",
-            "clear_queue_aria": "Borrar cola de fotos",
-            "close_aria": "Cerrar diálogo de cola de fotos",
-            "queued_photo_alt": "Foto en cola {{index}}",
-            "remove_photo_aria": "Eliminar foto {{index}}",
-            "empty_title": "La cola está vacía",
-            "empty_description": "Habilita el modo Cabina de fotos y captura algunas fotos para verlas aquí."
-        },
-        "print": {
-            "title": "Opciones de Impresión",
-            "close_aria": "Cerrar diálogo de opciones de impresión",
-            "photos_per_page_label": "Fotos por página",
-            "description": "Imprime en una hoja estándar. El tamaño de tu foto es {{width}}×{{height}} pulgadas.",
-            "cancel_button": "Cancelar",
-            "print_now_button": "Imprimir Ahora"
-        },
-        "import": {
-            "title_reposition": "Reposicionar Imagen",
-            "title_import": "Importar Imagen",
-            "close_aria": "Cerrar diálogo",
-            "guide_align": "Alinea la cara con la guía ovalada",
-            "guide_drag": "Arrastra para reposicionar",
-            "change_image_button": "Cambiar Imagen",
-            "confirm_crop_button": "Confirmar y Recortar",
-            "drag_drop_text": "Arrastra y suelta",
-            "drag_drop_subtext": "una imagen aquí",
-            "or": "o",
-            "choose_from_phone_button": "Elegir desde el teléfono",
-            "choose_from_computer_button": "Elegir desde la computadora"
-        }
+    "footer": {
+      "copyright": "© {{year}} Ruby Passport. Todos los derechos reservados.",
+      "copyright_mobile": "© {{year}} Ruby Passport.",
+      "madeWith": "Hecho con ❤️ por"
     }
+  },
+  "tooltips": {
+    "formatSettings": "Configuración de formato (F)",
+    "changeFormat": "Cambiar formato o gestionar formatos personalizados (F)",
+    "viewPhotoQueue": "Ver cola de fotos ({{count}})",
+    "photoBoothEnabled": "Cabina de fotos habilitada (B)",
+    "enablePhotoBooth": "Habilitar Cabina de fotos (B)",
+    "changeLanguage": "Cambiar idioma",
+    "showInfo": "Mostrar diálogo de información (I)",
+    "switchToDark": "Cambiar a tema oscuro (T)",
+    "switchToLight": "Cambiar a tema claro (T)",
+    "exitFullscreen": "Salir de pantalla completa",
+    "enterFullscreen": "Entrar a pantalla completa",
+    "showShortcuts": "Mostrar atajos de teclado (?)",
+    "showGuidelines": "Mostrar Pautas",
+    "hideGuidelines": "Ocultar Pautas",
+    "showSettings": "Mostrar diálogo de configuración (S)",
+    "toggleTheme": "Alternar tema",
+    "menu": "Menú",
+    "moreOptions": "Más opciones"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Modo de Cabina de fotos habilitado: las fotos se pondrán en cola para impresión por lotes",
+    "photoBoothDisabled": "Modo de Cabina de fotos deshabilitado: modo de foto única",
+    "backOnline": "¡Estás de vuelta en línea!",
+    "offline": "Estás sin conexión. Algunas funciones pueden no estar disponibles.",
+    "customFormatLimit": "Solo puedes tener hasta 4 formatos personalizados.",
+    "invalidFormatDimensions": "Las dimensiones deben estar entre 1 y 10000.",
+    "formatExists": "Ya existe un formato con estas especificaciones: {{label}}",
+    "startingCamera": "Iniciando cámara...",
+    "maxCameraResolution": "Resolución máxima de la cámara: {{width}}x{{height}}",
+    "cameraStream": "Transmisión de la cámara: {{width}}x{{height}}",
+    "highResAvailable": "La captura de alta resolución está disponible.",
+    "highResNotSupported": "La captura de alta resolución no es compatible. Usando transmisión de video.",
+    "cameraError": "Error de la cámara: {{message}}",
+    "capturingHighRes": "Capturando foto de alta resolución...",
+    "photoCaptured": "¡Foto capturada con éxito!",
+    "photoCaptureFailed": "No se pudo procesar la foto capturada.",
+    "highResCaptureFailed": "La captura de alta resolución falló: {{message}}. Se usará el fotograma del video.",
+    "photoFromStream": "Foto capturada desde la transmisión de video.",
+    "processedDownloaded": "¡Imagen procesada descargada!",
+    "originalDownloaded": "¡Imagen original descargada!",
+    "fullscreenError": "Error al intentar habilitar el modo de pantalla completa: {{message}}",
+    "addedToQueue": "Añadido a la cola ({{count}})",
+    "imageLoadFailed": "No se pudo cargar la imagen para su procesamiento.",
+    "cameraPermission": "Esperando permisos de la cámara...",
+    "videoPlaybackError": "No se pudo iniciar la reproducción del video.",
+    "videoPlaybackErrorMessage": "No se pudo iniciar la reproducción del video: {{message}}",
+    "imageImportSuccess": "¡Imagen importada y recortada con éxito!",
+    "printPreview": "Preparando vista previa de impresión...",
+    "printWindowError": "No se pudo abrir la ventana de impresión. Por favor, deshabilita tus bloqueadores de ventanas emergentes."
+  },
+  "dialogs": {
+    "format": {
+      "errorAllFields": "Por favor, rellena todos los campos de formato personalizado.",
+      "errorInvalidNumber": "Valores numéricos no válidos para el formato. Todas las dimensiones deben ser positivas."
+    },
+    "download": {
+      "title": "Opciones de Descarga",
+      "close_aria": "Cerrar diálogo de opciones de descarga",
+      "description": "Elige qué versión de la foto te gustaría descargar.",
+      "processed_button": "Descargar Foto Procesada",
+      "original_button": "Descargar Original (Alta Resolución)",
+      "original_tooltip_unavailable": "El original de alta resolución no está disponible para esta foto.",
+      "original_tooltip_available": "Descargar la foto original, sin recortar.",
+      "original_unavailable_note": "Un original de alta resolución solo está disponible para fotos tomadas con la opción de cámara de alta resolución o desde un archivo importado."
+    },
+    "info": {
+      "title": "Preguntas Frecuentes",
+      "close_aria": "Cerrar diálogo de preguntas frecuentes",
+      "faqs": [
+        {
+          "q": "¿Qué es Ruby Passport?",
+          "a": "Ruby Passport es una aplicación web moderna para capturar y generar fotos de pasaporte/ID que cumplen con los requisitos directamente en tu navegador. Te ayuda a crear fotos que cumplen con los requisitos específicos de tamaño y alineación para varios países."
+        },
+        {
+          "q": "¿Están mis datos seguros?",
+          "a": "Sí. Todo el procesamiento de fotos ocurre localmente en tu navegador. Tus fotos nunca se suben a un servidor, lo que garantiza tu privacidad y seguridad."
+        },
+        {
+          "q": "¿Qué tan precisa es la impresión?",
+          "a": "La función de Vista Previa de Impresión genera una página con fotos distribuidas en mosaico con dimensiones físicas exactas. Para obtener mejores resultados, asegúrate de que la configuración de tu impresora esté al 100% de escala y que la opción 'ajustar a la página' esté deshabilitada."
+        },
+        {
+          "q": "¿Puedo crear formatos de foto personalizados?",
+          "a": "Absolutamente. Puedes agregar, editar y eliminar tus propios formatos de fotos con dimensiones de píxeles y de impresión física precisas usando el diálogo 'Configuración de formato' (F)."
+        },
+        {
+          "q": "¿Puedo usar una foto existente en lugar de la cámara?",
+          "a": "¡Sí! Puedes importar una imagen desde tu computadora haciendo clic en el botón 'Importar' o arrastrando y soltando un archivo. Si tu imagen es más grande que el formato seleccionado, podrás arrastrarla para reposicionarla y obtener el recorte perfecto antes de que sea procesada."
+        },
+        {
+          "q": "¿Para qué sirven las guías de alineación?",
+          "a": "Las guías en vivo en la vista de la cámara te ayudan a alinear tu cara correctamente según los requisitos del formato seleccionado, asegurando que tu foto cumpla con las normas."
+        },
+        {
+          "q": "¿Cómo puedo cambiar el idioma o el tema de la aplicación?",
+          "a": "Puedes personalizar tu experiencia en el diálogo de Configuración, accesible desde el menú del encabezado o presionando 'S'. Allí puedes cambiar el idioma de visualización y alternar entre los temas claro y oscuro."
+        },
+        {
+          "q": "¿Puedo agregar una marca de agua a mis fotos?",
+          "a": "Sí. Puedes habilitar, deshabilitar y personalizar el texto de la marca de agua en el diálogo de Configuración (presiona 'S'). Los ajustes de la marca de agua se encuentran en la pestaña \"General\"."
+        },
+        {
+          "q": "¿Qué es el modo Cabina de fotos?",
+          "a": "El modo Cabina de fotos te permite capturar varias fotos que se ponen en cola para impresión por lotes en el mismo papel. Habilítalo con el ícono de Cabina de fotos (múltiples imágenes) en el encabezado o presionando 'B'. Cuando las fotos están en la cola, este botón muestra el recuento y abre el diálogo de la cola. Dentro del diálogo, puedes reorganizar las fotos arrastrándolas o eliminar fotos individuales pasando el cursor sobre ellas. Luego puedes imprimir todas las fotos en cola juntas."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Atajos de Teclado",
+      "close_aria": "Cerrar diálogo de atajos",
+      "items": {
+        "show_help": "Mostrar este diálogo de ayuda",
+        "toggle_camera": "Iniciar / Detener la cámara",
+        "capture": "Capturar foto",
+        "import": "Importar imagen",
+        "download": "Descargar resultado",
+        "retake": "Volver a tomar la foto",
+        "toggle_watermark": "Alternar marca de agua",
+        "print": "Abrir opciones de impresión",
+        "format_settings": "Abrir configuración de formato",
+        "toggle_photobooth": "Alternar modo de cabina de fotos",
+        "toggle_theme": "Alternar tema",
+        "toggle_fullscreen": "Alternar pantalla completa",
+        "show_info": "Mostrar diálogo de información",
+        "show_settings": "Mostrar diálogo de configuración"
+      }
+    },
+    "settingsDialog": {
+      "title": "Configuración",
+      "close_aria": "Cerrar diálogo de configuración",
+      "tabs_aria_label": "Pestañas de configuración",
+      "general_tab": "General",
+      "experimental_tab": "Experimental",
+      "general_settings_header": "Configuración General",
+      "language_label": "Idioma",
+      "theme_label": "Tema",
+      "theme_light": "Claro",
+      "theme_dark": "Oscuro",
+      "theme_system": "Sistema",
+      "experimental_body": "La configuración y las características experimentales irán aquí."
+    },
+    "formatDialog": {
+      "title": "Configuración de Formato",
+      "close_aria": "Cerrar diálogo de configuración de formato",
+      "tabs_aria_label": "Configuración de formato Tabs",
+      "select_format_tab": "Seleccionar Formato",
+      "manage_custom_tab": "Gestionar Formatos Personalizados",
+      "standard_formats_group": "Formatos Estándar",
+      "custom_formats_group": "Formatos Personalizados",
+      "search_placeholder": "Buscar formatos...",
+      "edit_format_header": "Editar Formato",
+      "add_format_header": "Añadir Nuevo Formato",
+      "label_label": "Etiqueta",
+      "label_placeholder": "ej. Personalizado 4x6",
+      "width_px_label": "Ancho (px)",
+      "width_px_placeholder": "ej. 600",
+      "height_px_label": "Altura (px)",
+      "height_px_placeholder": "ej. 900",
+      "print_w_mm_label": "Ancho de impresión (mm)",
+      "print_w_mm_placeholder": "ej. 101.6",
+      "print_h_mm_label": "Altura de impresión (mm)",
+      "print_h_mm_placeholder": "ej. 152.4",
+      "update_button": "Actualizar Formato",
+      "add_button": "Añadir Formato",
+      "cancel_button": "Cancelar",
+      "your_custom_formats_header": "Tus Formatos Personalizados",
+      "edit_format_tooltip": "Editar formato",
+      "delete_format_tooltip": "Eliminar formato",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)"
+    },
+    "photoQueue": {
+      "title": "Cola de Cabina de Fotos ({{count}})",
+      "clear_all_button": "Borrar Todo",
+      "clear_queue_aria": "Borrar cola de fotos",
+      "close_aria": "Cerrar diálogo de cola de fotos",
+      "queued_photo_alt": "Foto en cola {{index}}",
+      "remove_photo_aria": "Eliminar foto {{index}}",
+      "empty_title": "La cola está vacía",
+      "empty_description": "Habilita el modo Cabina de fotos y captura algunas fotos para verlas aquí."
+    },
+    "print": {
+      "title": "Opciones de Impresión",
+      "close_aria": "Cerrar diálogo de opciones de impresión",
+      "photos_per_page_label": "Fotos por página",
+      "description": "Imprime en una hoja estándar. El tamaño de tu foto es {{width}}×{{height}} pulgadas.",
+      "cancel_button": "Cancelar",
+      "print_now_button": "Imprimir Ahora"
+    },
+    "import": {
+      "title_reposition": "Reposicionar Imagen",
+      "title_import": "Importar Imagen",
+      "close_aria": "Cerrar diálogo",
+      "guide_align": "Alinea la cara con la guía ovalada",
+      "guide_drag": "Arrastra para reposicionar",
+      "change_image_button": "Cambiar Imagen",
+      "confirm_crop_button": "Confirmar y Recortar",
+      "drag_drop_text": "Arrastra y suelta",
+      "drag_drop_subtext": "una imagen aquí",
+      "or": "o",
+      "choose_from_phone_button": "Elegir desde el teléfono",
+      "choose_from_computer_button": "Elegir desde la computadora"
+    }
+  }
 }

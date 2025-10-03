@@ -39,7 +39,7 @@ export type FacingMode = "user" | "environment";
 export const FORMATS: readonly Format[] = [
     {
         id: "au_35x45",
-        label: "Australia (35×45 mm)",
+        label: "🇦🇺 Australia",
         widthPx: 413,
         heightPx: 531,
         printWidthMm: 35,
@@ -47,7 +47,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "br_50x70",
-        label: "Brazil (50×70 mm)",
+        label: "🇧🇷 Brazil",
         widthPx: 591,
         heightPx: 827,
         printWidthMm: 50,
@@ -55,7 +55,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "ca_50x70",
-        label: "Canada (50×70 mm)",
+        label: "🇨🇦 Canada",
         widthPx: 591,
         heightPx: 827,
         printWidthMm: 50,
@@ -63,7 +63,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "cn_33x48",
-        label: "China (33×48 mm)",
+        label: "🇨🇳 China",
         widthPx: 390,
         heightPx: 567,
         printWidthMm: 33,
@@ -71,7 +71,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "eu_35x45",
-        label: "EU/Schengen/UK (35×45 mm)",
+        label: "🇪🇺 EU / Schengen / UK",
         widthPx: 413,
         heightPx: 531,
         printWidthMm: 35,
@@ -79,7 +79,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "in_51x51",
-        label: "India (51×51 mm)",
+        label: "🇮🇳 India",
         widthPx: 602,
         heightPx: 602,
         printWidthMm: 51,
@@ -87,7 +87,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "jp_35x45",
-        label: "Japan (35×45 mm)",
+        label: "🇯🇵 Japan",
         widthPx: 413,
         heightPx: 531,
         printWidthMm: 35,
@@ -95,7 +95,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "my_35x50",
-        label: "Malaysia (35×50 mm)",
+        label: "🇲🇾 Malaysia",
         widthPx: 413,
         heightPx: 591,
         printWidthMm: 35,
@@ -103,7 +103,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "mx_25x30",
-        label: "Mexico (25×30 mm)",
+        label: "🇲🇽 Mexico",
         widthPx: 295,
         heightPx: 354,
         printWidthMm: 25,
@@ -111,7 +111,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "ru_35x45",
-        label: "Russia (35×45 mm)",
+        label: "🇷🇺 Russia",
         widthPx: 413,
         heightPx: 531,
         printWidthMm: 35,
@@ -119,7 +119,7 @@ export const FORMATS: readonly Format[] = [
     },
     {
         id: "us_2x2",
-        label: "US (2×2 in)",
+        label: "🇺🇸 US",
         widthPx: 600,
         heightPx: 600,
         printWidthMm: 50.8,

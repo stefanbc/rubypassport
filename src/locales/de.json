@@ -101,13 +101,20 @@
     "enterFullscreen": "Vollbild aktivieren",
     "showShortcuts": "Tastenkürzel anzeigen (?)",
     "showGuidelines": "Richtlinien anzeigen",
-    "hideGuidelines": "Richtlinien ausblenden"
+    "hideGuidelines": "Richtlinien ausblenden",
+    "showSettings": "Einstellungen anzeigen (S)",
+    "toggleTheme": "Design umschalten",
+    "menu": "Menü",
+    "moreOptions": "Weitere Optionen"
   },
   "toasts": {
     "photoBoothEnabled": "Foto-Booth-Modus aktiviert - Fotos werden für den Stapeldruck in die Warteschlange gestellt",
     "photoBoothDisabled": "Foto-Booth-Modus deaktiviert - Einzelbildmodus",
     "backOnline": "Sie sind wieder online!",
     "offline": "Sie sind offline. Einige Funktionen sind möglicherweise nicht verfügbar.",
+    "customFormatLimit": "Sie können nur bis zu 4 benutzerdefinierte Formate haben.",
+    "invalidFormatDimensions": "Die Abmessungen müssen zwischen 1 und 10000 liegen.",
+    "formatExists": "Ein Format mit diesen Spezifikationen existiert bereits: {{label}}",
     "startingCamera": "Kamera wird gestartet...",
     "maxCameraResolution": "Maximale Kameraauflösung: {{width}}x{{height}}",
     "cameraStream": "Kamera-Stream: {{width}}x{{height}}",
@@ -175,8 +182,12 @@
           "a": "Die Live-Hilfslinien in der Kameraansicht helfen Ihnen, Ihr Gesicht gemäß den Anforderungen des ausgewählten Formats korrekt auszurichten und so sicherzustellen, dass Ihr Foto konform ist."
         },
         {
+          "q": "Wie kann ich die Sprache oder das Design der App ändern?",
+          "a": "Sie können Ihre Erfahrung im Einstellungsdialog anpassen, der über das Header-Menü oder durch Drücken von 'S' zugänglich ist. Dort können Sie die Anzeigesprache ändern und zwischen hellem und dunklem Design wechseln."
+        },
+        {
           "q": "Kann ich meinen Fotos ein Wasserzeichen hinzufügen?",
-          "a": "Ja. Klicken Sie auf dem Ergebnisbildschirm auf das Stiftsymbol, um die Detaileinstellungen zu öffnen. Dort können Sie das Wasserzeichen aktivieren oder deaktivieren und den Text anpassen, der auf Ihrem Foto erscheint."
+          "a": "Ja. Sie können das Wasserzeichen im Einstellungsdialog (drücken Sie 'S') aktivieren, deaktivieren und anpassen. Die Wasserzeicheneinstellungen befinden sich unter dem Reiter „Allgemein“."
         },
         {
           "q": "Was ist der Foto-Booth-Modus?",
@@ -192,16 +203,31 @@
         "toggle_camera": "Kamera starten / stoppen",
         "capture": "Foto aufnehmen",
         "import": "Bild importieren",
-        "download": "Ergebnis herunterladen",
-        "retake": "Foto neu aufnehmen",
-        "toggle_watermark": "Wasserzeichen umschalten",
-        "print": "Druckoptionen öffnen",
-        "format_settings": "Formateinstellungen öffnen",
-        "toggle_photobooth": "Foto-Booth-Modus umschalten",
-        "toggle_theme": "Design umschalten",
-        "toggle_fullscreen": "Vollbild umschalten",
-        "show_info": "Infodialog anzeigen"
-      }
+        "download": "Ergebnis herunterladen"
+      },
+      "retake": "Foto neu aufnehmen",
+      "toggle_watermark": "Wasserzeichen umschalten",
+      "print": "Druckoptionen öffnen",
+      "format_settings": "Formateinstellungen öffnen",
+      "toggle_photobooth": "Foto-Booth-Modus umschalten",
+      "toggle_theme": "Design umschalten",
+      "toggle_fullscreen": "Vollbild umschalten",
+      "show_info": "Infodialog anzeigen",
+      "show_settings": "Einstellungen anzeigen"
+    },
+    "settingsDialog": {
+      "title": "Einstellungen",
+      "close_aria": "Einstellungsdialog schließen",
+      "tabs_aria_label": "Einstellungen-Tabs",
+      "general_tab": "Allgemein",
+      "experimental_tab": "Experimentell",
+      "general_settings_header": "Allgemeine Einstellungen",
+      "language_label": "Sprache",
+      "theme_label": "Design",
+      "theme_light": "Hell",
+      "theme_dark": "Dunkel",
+      "theme_system": "System",
+      "experimental_body": "Experimentelle Einstellungen und Funktionen werden hier angezeigt."
     },
     "formatDialog": {
       "title": "Formateinstellungen",
@@ -229,7 +255,9 @@
       "cancel_button": "Abbrechen",
       "your_custom_formats_header": "Ihre benutzerdefinierten Formate",
       "edit_format_tooltip": "Format bearbeiten",
-      "delete_format_tooltip": "Format löschen"
+      "delete_format_tooltip": "Format löschen",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)"
     },
     "photoQueue": {
       "title": "Foto-Booth-Warteschlange ({{count}})",

@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-type CollapsibleSectionProps = {
+type AccordionProps = {
     title: string;
     children: React.ReactNode;
     isInitiallyCollapsed: boolean;
@@ -10,14 +10,14 @@ type CollapsibleSectionProps = {
     className?: string;
 };
 
-export function CollapsibleSection({
+export function Accordion({
     title,
     children,
     isInitiallyCollapsed,
     titlePrefix,
     titleClassName = "text-lg font-semibold text-gray-700 dark:text-gray-200",
     className = "border-t border-gray-200 dark:border-zinc-700/50 pt-2",
-}: CollapsibleSectionProps) {
+}: AccordionProps) {
     const [isCollapsed, setIsCollapsed] = useState(isInitiallyCollapsed);
 
     return (
