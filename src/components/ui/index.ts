@@ -1,4 +1,6 @@
 export * from "./Accordion";
+export * from "./Button";
+export * from "./ConfirmationDialog";
 export * from "./Dialog";
 export * from "./DropdownMenu";
 export * from "./Input";

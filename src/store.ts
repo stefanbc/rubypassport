@@ -59,6 +59,7 @@ interface AppState {
         | "import"
         | "photoQueue"
         | "settings"
+        | "confirmRetake"
         | null;
 
     wizardStep: WizardStep;

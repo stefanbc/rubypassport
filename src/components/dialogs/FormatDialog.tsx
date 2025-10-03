@@ -70,6 +70,8 @@ export function FormatDialog({
     const printWidthMmId = useId();
     const printHeightMmId = useId();
 
+    const isCustomFormatLimitReached = customFormats.length >= 4;
+
     useEffect(() => {
         if (editingFormat) {
             setActiveTab("manage");
@@ -87,7 +89,7 @@ export function FormatDialog({
     };
 
     const handleAdd = () => {
-        if (customFormats.length >= 4) {
+        if (isCustomFormatLimitReached) {
             addToast(t("toasts.customFormatLimit"), "warning");
             return;
         }
@@ -254,6 +256,13 @@ export function FormatDialog({
                                                   "dialogs.formatDialog.add_format_header",
                                               )}
                                     </h3>
+                                    {isCustomFormatLimitReached && (
+                                        <p className="text-xs text-red-500 dark:text-red-400 mb-2">
+                                            {t(
+                                                "dialogs.formatDialog.custom_format_limit_reached",
+                                            )}
+                                        </p>
+                                    )}
                                     <div className="space-y-3">
                                         <FormatInputRow
                                             label={t(
@@ -275,6 +284,12 @@ export function FormatDialog({
                                                 )}
                                                 className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
+                                                maxLength={20}
+                                                minLength={1}
                                             />
                                         </FormatInputRow>
                                         <FormatInputRow
@@ -298,6 +313,10 @@ export function FormatDialog({
                                                 )}
                                                 className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
                                                 min="1"
                                                 max="10000"
                                             />
@@ -324,6 +343,10 @@ export function FormatDialog({
                                                 )}
                                                 className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
                                                 min="1"
                                                 max="10000"
                                             />
@@ -350,6 +373,10 @@ export function FormatDialog({
                                                 )}
                                                 className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
                                                 min="1"
                                                 max="10000"
                                                 step="0.1"
@@ -377,6 +404,10 @@ export function FormatDialog({
                                                 )}
                                                 className="sm:flex-1 invalid:border-red-500 invalid:ring-red-500"
                                                 required
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
                                                 min="1"
                                                 max="10000"
                                                 step="0.1"
@@ -390,7 +421,11 @@ export function FormatDialog({
                                                         ? onUpdate
                                                         : handleAdd
                                                 }
-                                                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer"
+                                                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={
+                                                    !isEditing &&
+                                                    isCustomFormatLimitReached
+                                                }
                                             >
                                                 <Plus
                                                     size={18}
@@ -412,9 +447,7 @@ export function FormatDialog({
                                                     }
                                                     className="flex-1 flex items-center justify-center gap-2 bg-gray-500 dark:bg-zinc-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-zinc-500 transition-colors cursor-pointer"
                                                 >
-                                                    {t(
-                                                        "dialogs.formatDialog.cancel_button",
-                                                    )}
+                                                    {t("common.cancel")}
                                                 </button>
                                             )}
                                         </div>

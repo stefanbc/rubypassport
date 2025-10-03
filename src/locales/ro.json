@@ -1,12 +1,14 @@
 {
   "common": {
+    "continue": "Continuă",
+    "cancel": "Anulează"
+  },
+  "languages": {
     "english": "English",
-    "spanish": "Español",
     "german": "Deutsch",
+    "spanish": "Español",
     "japanese": "日本語",
-    "romanian": "Română",
-    "github": "GitHub",
-    "continue": "Continuă"
+    "romanian": "Română"
   },
   "components": {
     "header": {
@@ -26,26 +28,26 @@
     "panels": {
       "guidelines": {
         "title": "Instrucțiuni",
-        "subtitle": "Respectă aceste reguli pentru majoritatea standardelor internaționale.",
+        "subtitle": "Pentru majoritatea standardelor internaționale.",
         "do_title": "De făcut",
-        "do_item_1": "• Ține capul drept și centrat",
-        "do_item_2": "• Privește direct către cameră",
-        "do_item_3": "• Păstrează o expresie neutră (gura închisă)",
-        "do_item_4": "• Îndepărtează ochelarii și acoperitoarea capului (cu excepția celor religioase)",
-        "do_item_5": "• Ochii trebuie să fie clar vizibili",
+        "do_item_1": "• Capul drept și centrat",
+        "do_item_2": "• Privește direct la cameră",
+        "do_item_3": "• Expresie neutră (gura închisă)",
+        "do_item_4": "• Fără ochelari sau acoperământ (excepție religioasă)",
+        "do_item_5": "• Ochii trebuie să fie vizibili",
         "do_item_6": "• Aliniază fața în oval, ochii pe linie",
         "dont_title": "De evitat",
-        "dont_item_1": "• Fără zâmbet, înclinare sau mijeală",
+        "dont_item_1": "• Fără zâmbet, înclinare sau ochi mijiți",
         "dont_item_2": "• Fără machiaj intens sau filtre",
         "dont_item_3": "• Evită pălării, căști sau accesorii",
         "dont_item_4": "• Evită umbre puternice sau lumină din spate",
         "lighting_title": "Lumină & Fundal",
-        "lighting_item_1": "• Folosește lumină puternică și uniformă din față",
-        "lighting_item_2": "• Stai la ~0.5 m de un fundal simplu și deschis",
-        "lighting_item_3": "• Evită umbrele pronunțate sub bărbie sau nas",
-        "lighting_item_4": "• Poartă haine în tonuri medii (nu albe)",
+        "lighting_item_1": "• Lumină puternică și uniformă din față",
+        "lighting_item_2": "• Stai la ~0.5m de un fundal simplu, deschis",
+        "lighting_item_3": "• Evită umbrele sub bărbie sau nas",
+        "lighting_item_4": "• Haine în tonuri medii (nu albe)",
         "privacy_title": "Confidențialitatea ta contează",
-        "privacy_body": "Această aplicație este gândită pentru a-ți proteja intimitatea. Totul se procesează direct în browser — nu încărcăm, stocăm sau salvăm imaginile tale nicăieri. După ce ai terminat, acestea dispar."
+        "privacy_body": "Această aplicație îți respectă confidențialitatea. Totul se întâmplă local în browser. Imaginile tale nu sunt niciodată încărcate sau salvate."
       },
       "camera": {
         "back": "Înapoi",
@@ -55,7 +57,7 @@
         "switch_camera_button": "Schimbă camera",
         "guide_align_face": "Aliniază fața cu ghidul oval",
         "guide_eyes_on_line": "Ochii pe linia orizontală",
-        "starting_camera": "Pornire cameră…",
+        "starting_camera": "Pornire cameră...",
         "camera_not_started": "Camera nu a pornit",
         "starting_button": "Pornire…",
         "start_camera_button": "Pornește camera",
@@ -70,14 +72,12 @@
         "retake_button": "Reia fotografia",
         "person_name_label": "Numele persoanei",
         "optional_placeholder": "Opțional",
-        "enable_watermark_label": "Activează watermark",
-        "watermark_text_placeholder": "Text watermark",
-        "reset_watermark_tooltip": "Resetează la implicit",
         "captured_alt": "Fotografie pașaport capturată",
         "processing": "Procesare fotografie...",
         "placeholder": "Fă sau importă o fotografie",
         "download_button": "Descarcă",
         "print_button": "Tipărește",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
         "before_unload_prompt": "Sigur vrei să părăsești pagina? Fotografia generată va fi pierdută."
       }
     },
@@ -112,7 +112,7 @@
     "photoBoothDisabled": "Modul cabină foto dezactivat - mod fotografie unică",
     "backOnline": "Ești din nou online!",
     "offline": "Ești offline. Unele funcționalități pot fi indisponibile.",
-    "customFormatLimit": "Poți avea doar până la 4 formate personalizate.",
+    "customFormatLimit": "Limită de 4 formate personalizate atinsă.",
     "invalidFormatDimensions": "Dimensiunile trebuie să fie între 1 și 10000.",
     "formatExists": "Există deja un format cu aceste specificații: {{label}}",
     "startingCamera": "Se pornește camera...",
@@ -133,12 +133,17 @@
     "imageLoadFailed": "Eroare la încărcarea imaginii pentru procesare.",
     "cameraPermission": "Se așteaptă permisiunea pentru cameră...",
     "videoPlaybackError": "Nu s-a putut porni redarea video.",
-    "videoPlaybackErrorMessage": "Nu s-a putut porni redarea video: {{message}}",
+    "videoPlaybackErrorMessage": "Redare video eșuată: {{message}}",
     "imageImportSuccess": "Imagine importată și decupată cu succes!",
     "printPreview": "Se pregătește previzualizarea pentru tipărire...",
     "printWindowError": "Nu s-a putut deschide fereastra de tipărire. Te rugăm să dezactivezi blocarea pop-up-urilor."
   },
   "dialogs": {
+    "confirmation": {
+      "close_aria": "Închide dialogul de confirmare",
+      "retake_title": "Ești sigur?",
+      "retake_description": "Aceasta va elimina fotografia curentă și te va întoarce la cameră. Această acțiune nu poate fi anulată."
+    },
     "format": {
       "errorAllFields": "Te rog completează toate câmpurile pentru formatul personalizat.",
       "errorInvalidNumber": "Valori invalide pentru format. Toate dimensiunile trebuie să fie pozitive."
@@ -159,23 +164,23 @@
       "faqs": [
         {
           "q": "Ce este Ruby Passport?",
-          "a": "Ruby Passport este o aplicație web modernă pentru capturarea și generarea de fotografii pentru pașaport/ID direct în browser. Te ajută să creezi fotografii care respectă dimensiuni și aliniamente specifice pentru diverse țări."
+          "a": "Ruby Passport este o aplicație web pentru a crea fotografii de pașaport/ID direct în browser. Te ajută să creezi fotografii care respectă cerințele de mărime și aliniere pentru diverse țări."
         },
         {
           "q": "Datele mele sunt în siguranță?",
-          "a": "Da. Toată procesarea fotografiilor se face local în browser. Fotografiile tale nu sunt niciodată încărcate pe server, asigurând confidențialitatea și securitatea."
+          "a": "Da. Toată procesarea se face local în browser. Fotografiile tale nu sunt niciodată încărcate pe un server, asigurându-ți confidențialitatea."
         },
         {
           "q": "Cât de precisă este tipărirea?",
-          "a": "Funcția Previzualizare Tipărire generează o pagină cu fotografii aranjate la dimensiuni fizice exacte. Pentru cele mai bune rezultate, asigură-te că setările imprimantei sunt la 100% și că opțiunea 'fit to page' este dezactivată."
+          "a": "Previzualizarea pentru tipărire generează o pagină cu fotografii la dimensiuni fizice exacte. Pentru rezultate optime, setează imprimanta la scară 100% și dezactivează 'fit to page'."
         },
         {
           "q": "Pot crea formate foto personalizate?",
-          "a": "Absolut. Poți adăuga, edita și șterge propriile formate foto cu dimensiuni precise în pixeli și pentru print folosind dialogul 'Setări format' (F)."
+          "a": "Da. Poți adăuga, edita și șterge propriile formate cu dimensiuni precise folosind dialogul 'Setări format' (F)."
         },
         {
           "q": "Pot folosi o fotografie existentă în locul camerei?",
-          "a": "Da! Poți importa o imagine de pe computer prin butonul 'Import' sau prin drag & drop. Dacă imaginea este mai mare decât formatul selectat, vei putea să o muți pentru a o poziționa corect înainte de procesare."
+          "a": "Da! Poți importa o imagine de pe computer cu butonul 'Import' sau prin drag & drop. Dacă imaginea este mai mare decât formatul, o poți repoziționa înainte de procesare."
         },
         {
           "q": "La ce folosesc ghidajele de aliniere?",
@@ -183,7 +188,7 @@
         },
         {
           "q": "Cum pot schimba limba sau tema aplicației?",
-          "a": "Poți personaliza experiența în dialogul de Setări, accesibil din meniul antetului sau apăsând 'S'. Acolo poți schimba limba de afișare și comuta între temele deschisă și întunecată."
+          "a": "Poți personaliza experiența în dialogul de Setări (din meniu sau tasta 'S'). Acolo poți schimba limba și comuta între temele deschisă și întunecată."
         },
         {
           "q": "Pot adăuga un filigran pe fotografiile mele?",
@@ -191,7 +196,7 @@
         },
         {
           "q": "Ce este modul Cabină Foto?",
-          "a": "Modul Cabină Foto permite capturarea mai multor fotografii care sunt puse în coadă pentru tipărire multiplă pe aceeași foaie. Activează-l cu pictograma Cabină Foto (mai multe imagini) din header sau apăsând 'B'. Când fotografiile sunt în coadă, butonul arată numărul lor și deschide dialogul cozii. În dialog poți rearanja fotografiile prin drag & drop sau șterge individual prin hover. Apoi poți printa toate fotografiile din coadă împreună."
+          "a": "Modul Cabină Foto permite capturarea mai multor fotografii pentru a le tipări împreună pe aceeași foaie. Activează-l din meniu sau apăsând 'B'. Când există fotografii în coadă, butonul afișează numărul lor și deschide dialogul cozii. Acolo poți rearanja sau șterge fotografii. Apoi le poți tipări pe toate odată."
         }
       ]
     },
@@ -227,6 +232,9 @@
       "theme_light": "Luminos",
       "theme_dark": "Întunecat",
       "theme_system": "Sistem",
+      "enable_watermark_label": "Activează watermark",
+      "watermark_text_placeholder": "Text watermark",
+      "reset_watermark_tooltip": "Resetează la implicit",
       "experimental_body": "Setările și funcționalitățile experimentale vor apărea aici."
     },
     "formatDialog": {
@@ -252,12 +260,12 @@
       "print_h_mm_placeholder": "ex. 152.4",
       "update_button": "Actualizează formatul",
       "add_button": "Adaugă format",
-      "cancel_button": "Anulează",
       "your_custom_formats_header": "Formatele tale personalizate",
       "edit_format_tooltip": "Editează format",
       "delete_format_tooltip": "Șterge format",
       "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
-      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)"
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)",
+      "custom_format_limit_reached": "Ai atins limita de 4 formate personalizate."
     },
     "photoQueue": {
       "title": "Coada Cabinei Foto ({{count}})",
@@ -274,7 +282,6 @@
       "close_aria": "Închide dialogul opțiuni tipărire",
       "photos_per_page_label": "Fotografii per pagină",
       "description": "Se tipărește pe o foaie standard. Dimensiunea fotografiei tale este {{width}}×{{height}} in.",
-      "cancel_button": "Anulează",
       "print_now_button": "Tipărește acum"
     },
     "import": {

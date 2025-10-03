@@ -29,6 +29,7 @@ export type DialogType =
     | "import"
     | "photoQueue"
     | "settings"
+    | "confirmRetake"
     | null;
 
 export type WizardStep = "guidelines" | "camera" | "result";

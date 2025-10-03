@@ -47,22 +47,22 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
 
     const languages = [
         {
-            label: t("common.german"),
+            label: t("languages.german"),
             value: "de",
             flag: "🇩🇪",
         },
         {
-            label: t("common.english"),
+            label: t("languages.english"),
             value: "en",
             flag: "🇬🇧",
         },
         {
-            label: t("common.romanian"),
+            label: t("languages.romanian"),
             value: "ro",
             flag: "🇷🇴",
         },
         {
-            label: t("common.spanish"),
+            label: t("languages.spanish"),
             value: "es",
             flag: "🇪🇸",
         },
@@ -199,14 +199,14 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         htmlFor={watermarkEnabledId}
                                     >
                                         {t(
-                                            "components.panels.result.enable_watermark_label",
+                                            "dialogs.settingsDialog.enable_watermark_label",
                                         )}
                                     </Label>
                                     <ToggleSwitch
                                         checked={watermarkEnabled}
                                         onCheckedChange={setWatermarkEnabled}
                                         aria-label={t(
-                                            "components.panels.result.enable_watermark_label",
+                                            "dialogs.settingsDialog.enable_watermark_label",
                                         )}
                                         id={watermarkEnabledId}
                                     />
@@ -218,7 +218,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                                 setWatermarkText(e.target.value)
                                             }
                                             placeholder={t(
-                                                "components.panels.result.watermark_text_placeholder",
+                                                "dialogs.settingsDialog.watermark_text_placeholder",
                                             )}
                                             disabled={!watermarkEnabled}
                                             className="pr-8"
@@ -233,7 +233,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             disabled={!watermarkEnabled}
                                             className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 disabled:opacity-0 transition-opacity"
                                             title={t(
-                                                "components.panels.result.reset_watermark_tooltip",
+                                                "dialogs.settingsDialog.reset_watermark_tooltip",
                                             )}
                                         >
                                             <RotateCcw size={14} />

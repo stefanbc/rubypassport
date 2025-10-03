@@ -20,7 +20,6 @@ type ResultPanelProps = {
 
 export function ResultPanel({
     onDownload,
-    onRetake,
     onOpenPrintDialog,
 }: ResultPanelProps) {
     const { t } = useTranslation();
@@ -120,7 +119,11 @@ export function ResultPanel({
                             </button>
                             <button
                                 type="button"
-                                onClick={onRetake}
+                                onClick={() =>
+                                    useStore
+                                        .getState()
+                                        .setActiveDialog("confirmRetake")
+                                }
                                 className={`flex items-center gap-1.5 text-sm text-red-500/80 hover:text-red-600 dark:text-red-300/80 dark:hover:text-red-300 transition-colors transition-transform duration-150 hover:-translate-y-0.5 rounded-md bg-red-100/50 hover:bg-red-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 cursor-pointer ${isMobile ? "p-2.5" : "py-2 px-3"}`}
                             >
                                 <Trash2 size={isMobile ? 18 : 16} />

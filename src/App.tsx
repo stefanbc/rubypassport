@@ -14,6 +14,7 @@ import { Header } from "@/components/layout/Header";
 import { CameraView } from "@/components/panels/CameraView";
 import { Guidelines } from "@/components/panels/Guidelines";
 import { ResultPanel } from "@/components/panels/ResultPanel";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeProvider";
 import { ToastContainer } from "@/contexts/ToastContainer";
 import { useStore } from "@/store";
@@ -1327,6 +1328,16 @@ function AppContent() {
             <InfoDialog
                 isOpen={activeDialog === "info"}
                 onClose={() => setActiveDialog(null)}
+            />
+
+            <ConfirmationDialog
+                isOpen={activeDialog === "confirmRetake"}
+                onClose={() => setActiveDialog(null)}
+                onConfirm={retakePhoto}
+                title={t("dialogs.confirmation.retake_title")}
+                description={t("dialogs.confirmation.retake_description")}
+                confirmText={t("components.panels.result.retake_button")}
+                cancelText={t("common.cancel")}
             />
 
             <SettingsDialog

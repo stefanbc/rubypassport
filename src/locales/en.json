@@ -1,12 +1,14 @@
 {
   "common": {
+    "continue": "Continue",
+    "cancel": "Cancel"
+  },
+  "languages": {
     "english": "English",
     "german": "Deutsch",
     "spanish": "Español",
     "japanese": "日本語",
-    "romanian": "Română",
-    "github": "GitHub",
-    "continue": "Continue"
+    "romanian": "Română"
   },
   "components": {
     "header": {
@@ -70,14 +72,12 @@
         "retake_button": "Retake",
         "person_name_label": "Person's Name",
         "optional_placeholder": "Optional",
-        "enable_watermark_label": "Enable Watermark",
-        "watermark_text_placeholder": "Watermark Text",
-        "reset_watermark_tooltip": "Reset to default",
         "captured_alt": "Captured passport",
         "processing": "Processing photo...",
         "placeholder": "Capture or import a photo",
         "download_button": "Download",
         "print_button": "Print",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
         "before_unload_prompt": "Are you sure you want to leave? Your generated photo will be lost."
       }
     },
@@ -139,6 +139,11 @@
     "printWindowError": "Could not open print window. Please disable your pop-up blockers."
   },
   "dialogs": {
+    "confirmation": {
+      "close_aria": "Close confirmation dialog",
+      "retake_title": "Are you sure?",
+      "retake_description": "This will discard the current photo and return you to the camera. This action cannot be undone."
+    },
     "format": {
       "errorAllFields": "Please fill all custom format fields.",
       "errorInvalidNumber": "Invalid number values for format. All dimensions must be positive."
@@ -227,6 +232,9 @@
       "theme_light": "Light",
       "theme_dark": "Dark",
       "theme_system": "System",
+      "enable_watermark_label": "Enable Watermark",
+      "watermark_text_placeholder": "Watermark Text",
+      "reset_watermark_tooltip": "Reset to default",
       "experimental_body": "Experimental settings and features will go here."
     },
     "formatDialog": {
@@ -252,12 +260,12 @@
       "print_h_mm_placeholder": "e.g. 152.4",
       "update_button": "Update Format",
       "add_button": "Add Format",
-      "cancel_button": "Cancel",
       "your_custom_formats_header": "Your Custom Formats",
       "edit_format_tooltip": "Edit format",
       "delete_format_tooltip": "Delete format",
       "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
-      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)"
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)",
+      "custom_format_limit_reached": "You have reached the limit of 4 custom formats."
     },
     "photoQueue": {
       "title": "Photo Booth Queue ({{count}})",
@@ -274,7 +282,6 @@
       "close_aria": "Close print options dialog",
       "photos_per_page_label": "Photos per page",
       "description": "Prints on a standard sheet. Your photo size is {{width}}×{{height}} in.",
-      "cancel_button": "Cancel",
       "print_now_button": "Print Now"
     },
     "import": {

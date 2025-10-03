@@ -1,7 +1,15 @@
 import { Printer } from "lucide-react";
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, Label } from "@/components/ui";
+import {
+    Dialog,
+    Label,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui";
 import { useStore } from "@/store";
 import { FORMATS, PHOTO_COUNTS, PhotoCount } from "@/types";
 
@@ -47,22 +55,26 @@ export function PrintOptionsDialog({
                         >
                             {t("dialogs.print.photos_per_page_label")}
                         </Label>
-                        <select
-                            id={photosPerPageId}
-                            value={photosPerPage}
-                            onChange={(e) =>
-                                setPhotosPerPage(
-                                    Number(e.target.value) as PhotoCount,
-                                )
+                        <Select
+                            value={String(photosPerPage)}
+                            onValueChange={(value) =>
+                                setPhotosPerPage(Number(value) as PhotoCount)
                             }
-                            className="w-full sm:flex-1 bg-gray-100 dark:bg-black text-gray-800 dark:text-white text-sm px-3 py-2 rounded border border-red-200 dark:border-red-900/40"
                         >
-                            {PHOTO_COUNTS.map((c) => (
-                                <option key={c} value={c}>
-                                    {c}
-                                </option>
-                            ))}
-                        </select>
+                            <SelectTrigger
+                                id={photosPerPageId}
+                                className="w-full sm:flex-1"
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {PHOTO_COUNTS.map((c) => (
+                                    <SelectItem key={c} value={String(c)}>
+                                        {c}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
                         {t("dialogs.print.description", {
@@ -82,7 +94,7 @@ export function PrintOptionsDialog({
                         onClick={onClose}
                         className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-2 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                     >
-                        {t("dialogs.print.cancel_button")}
+                        {t("common.cancel")}
                     </button>
                     <button
                         type="button"
