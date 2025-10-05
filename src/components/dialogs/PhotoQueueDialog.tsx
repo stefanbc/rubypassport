@@ -62,7 +62,10 @@ function SortablePhoto({
             />
             <button
                 type="button"
-                onClick={() => onRemove(index)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onRemove(index);
+                }}
                 className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
                 aria-label={t("dialogs.photoQueue.remove_photo_aria", {
                     index: index + 1,
@@ -113,9 +116,10 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (active.id !== over?.id) {
-            const oldIndex = captureQueue.indexOf(active.id as string);
-            const newIndex = captureQueue.indexOf(over?.id as string);
-            reorderQueue(oldIndex, newIndex);
+            const oldIndex = captureQueue.findIndex((p) => p.id === active.id);
+            const newIndex = captureQueue.findIndex((p) => p.id === over?.id);
+            if (oldIndex !== -1 && newIndex !== -1)
+                reorderQueue(oldIndex, newIndex);
         }
     };
 
@@ -154,15 +158,15 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                             onDragEnd={handleDragEnd}
                         >
                             <SortableContext
-                                items={captureQueue}
+                                items={captureQueue.map((p) => p.id)}
                                 strategy={rectSortingStrategy}
                             >
                                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
-                                    {captureQueue.map((imgSrc, index) => (
+                                    {captureQueue.map((photo, index) => (
                                         <SortablePhoto
-                                            key={imgSrc}
-                                            id={imgSrc}
-                                            imgSrc={imgSrc}
+                                            key={photo.id}
+                                            id={photo.id}
+                                            imgSrc={photo.imgSrc}
                                             index={index}
                                             onRemove={handleRemovePhoto}
                                         />

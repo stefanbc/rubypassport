@@ -17,7 +17,7 @@ import { ResultPanel } from "@/components/panels/ResultPanel";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeProvider";
 import { ToastContainer } from "@/contexts/ToastContainer";
-import { useStore } from "@/store";
+import { PHOTO_QUEUE_LIMIT, useStore } from "@/store";
 import { FacingMode, FORMATS, Format, NewFormatState } from "@/types";
 
 // A type declaration for the ImageCapture API, which might not be in all TypeScript lib versions.
@@ -77,7 +77,6 @@ function AppContent() {
         multiCaptureEnabled,
         enqueueToQueue,
         setMultiCaptureEnabled,
-        captureQueue,
     } = useStore();
     const { toggleTheme } = useTheme();
 
@@ -733,15 +732,16 @@ function AppContent() {
                 multiCaptureEnabled &&
                 baseImage !== lastQueuedBaseImageRef.current
             ) {
-                enqueueToQueue(finalDataUrl);
-                lastQueuedBaseImageRef.current = baseImage; // Avoid re-queuing on re-render
-                addToast(
-                    t("toasts.addedToQueue", {
-                        count: captureQueue.length + 1,
-                    }),
-                    "success",
-                    1000,
-                );
+                const wasEnqueued = enqueueToQueue(finalDataUrl);
+                if (wasEnqueued) {
+                    lastQueuedBaseImageRef.current = baseImage; // Avoid re-queuing on re-render
+                    addToast(t("toasts.addedToQueue"), "success", 1000);
+                } else {
+                    addToast(
+                        t("toasts.photoQueueFull", { max: PHOTO_QUEUE_LIMIT }),
+                        "error",
+                    );
+                }
             }
             setIsProcessingImage(false);
         };
@@ -761,7 +761,6 @@ function AppContent() {
         setIsProcessingImage,
         setCapturedImage,
         t,
-        captureQueue.length,
     ]);
 
     useEffect(() => {
@@ -945,7 +944,7 @@ function AppContent() {
         sheet.className = "sheet";
         const imagesSource =
             captureQueue.length > 0
-                ? captureQueue
+                ? captureQueue.map((p) => p.imgSrc)
                 : capturedImage
                   ? [capturedImage]
                   : [];

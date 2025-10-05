@@ -7,11 +7,14 @@ import {
     Format,
     FormatId,
     PhotoCount,
+    QueuedPhoto,
     Theme,
     Toast,
     ToastType,
     WizardStep,
 } from "@/types";
+
+export const PHOTO_QUEUE_LIMIT = 10;
 
 const getInitialTheme = (): Theme => {
     if (typeof window === "undefined") {
@@ -74,7 +77,7 @@ interface AppState {
     toasts: (Toast & { duration: number })[];
     // Multi-capture queue
     multiCaptureEnabled: boolean;
-    captureQueue: string[];
+    captureQueue: QueuedPhoto[];
 }
 
 interface AppActions {
@@ -95,7 +98,7 @@ interface AppActions {
     setHasVisited: (hasVisited: boolean) => void;
     // Multi-capture Actions
     setMultiCaptureEnabled: (enabled: boolean) => void;
-    enqueueToQueue: (imageDataUrl: string) => void;
+    enqueueToQueue: (imageDataUrl: string) => boolean;
     clearQueue: () => void;
     removeFromQueue: (index: number) => void;
     reorderQueue: (fromIndex: number, toIndex: number) => void;
@@ -213,10 +216,19 @@ export const useStore = create<AppState & AppActions>()(
             // Multi-capture Actions
             setMultiCaptureEnabled: (enabled) =>
                 set({ multiCaptureEnabled: enabled }),
-            enqueueToQueue: (imageDataUrl) =>
+            enqueueToQueue: (imageDataUrl) => {
+                if (get().captureQueue.length >= PHOTO_QUEUE_LIMIT) {
+                    return false; // Indicate failure
+                }
+                const newPhoto: QueuedPhoto = {
+                    id: `photo_${Date.now()}_${Math.random()}`,
+                    imgSrc: imageDataUrl,
+                };
                 set((state) => ({
-                    captureQueue: [...state.captureQueue, imageDataUrl],
-                })),
+                    captureQueue: [...state.captureQueue, newPhoto],
+                }));
+                return true; // Indicate success
+            },
             clearQueue: () => set({ captureQueue: [] }),
             removeFromQueue: (index) =>
                 set((state) => ({

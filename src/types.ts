@@ -19,6 +19,11 @@ export type Format = {
 export const PHOTO_COUNTS = [1, 2, 4, 6, 8, 10, 12] as const;
 export type PhotoCount = (typeof PHOTO_COUNTS)[number];
 
+export type QueuedPhoto = {
+    id: string;
+    imgSrc: string;
+};
+
 export type Theme = "light" | "dark";
 
 export type DialogType =
