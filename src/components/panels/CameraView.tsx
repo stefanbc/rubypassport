@@ -40,6 +40,7 @@ export function CameraView({
         facingMode,
         isMobile,
         isTablet,
+        showAlignGuides,
     } = useStore();
     const allFormats = [...FORMATS, ...customFormats];
     const selectedFormat =
@@ -113,58 +114,62 @@ export function CameraView({
                             muted
                             className={`absolute inset-0 w-full h-full object-cover ${facingMode === "user" ? "transform -scale-x-100" : ""}`}
                         />
-                        {/* Guide overlay (responsive to selected format) */}
-                        <div className="absolute inset-0 pointer-events-none">
-                            {/* Face bounding oval */}
-                            <div
-                                className="absolute border-2 border-white border-dashed rounded-full opacity-70"
-                                style={{
-                                    width: `${guideOvalWidthPct}%`,
-                                    height: `${guideOvalHeightPct}%`,
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            />
-                            {/* Head positioning inner oval */}
-                            <div
-                                className="absolute border border-white border-dashed rounded-full opacity-50"
-                                style={{
-                                    width: `${innerOvalWidthPct}%`,
-                                    height: `${innerOvalHeightPct}%`,
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            />
-                            {/* Eye level guide */}
-                            <div
-                                className="absolute left-[4%] right-[4%] h-0.5 bg-white opacity-40"
-                                style={{ top: `${eyeLineTopPct}%` }}
-                            />
-                            {/* Center line */}
-                            <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white opacity-30 transform -translate-x-0.5" />
-                        </div>
-                        {/* Corner guides for framing */}
-                        <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-white opacity-60"></div>
-                        <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-white opacity-60"></div>
-                        <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
-                        <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
-                        <div className="absolute bottom-4 left-4 right-4">
-                            <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
-                                <span>
-                                    {t(
-                                        "components.panels.camera.guide_align_face",
-                                    )}
-                                </span>
-                                <br />
-                                <span>
-                                    {t(
-                                        "components.panels.camera.guide_eyes_on_line",
-                                    )}
-                                </span>
-                            </p>
-                        </div>
+                        {showAlignGuides && (
+                            <>
+                                {/* Guide overlay (responsive to selected format) */}
+                                <div className="absolute inset-0 pointer-events-none">
+                                    {/* Face bounding oval */}
+                                    <div
+                                        className="absolute border-2 border-white border-dashed rounded-full opacity-70"
+                                        style={{
+                                            width: `${guideOvalWidthPct}%`,
+                                            height: `${guideOvalHeightPct}%`,
+                                            left: "50%",
+                                            top: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                        }}
+                                    />
+                                    {/* Head positioning inner oval */}
+                                    <div
+                                        className="absolute border border-white border-dashed rounded-full opacity-50"
+                                        style={{
+                                            width: `${innerOvalWidthPct}%`,
+                                            height: `${innerOvalHeightPct}%`,
+                                            left: "50%",
+                                            top: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                        }}
+                                    />
+                                    {/* Eye level guide */}
+                                    <div
+                                        className="absolute left-[4%] right-[4%] h-0.5 bg-white opacity-40"
+                                        style={{ top: `${eyeLineTopPct}%` }}
+                                    />
+                                    {/* Center line */}
+                                    <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white opacity-30 transform -translate-x-0.5" />
+                                </div>
+                                {/* Corner guides for framing */}
+                                <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-white opacity-60"></div>
+                                <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-white opacity-60"></div>
+                                <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-white opacity-60"></div>
+                                <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-white opacity-60"></div>
+                                <div className="absolute bottom-4 left-4 right-4">
+                                    <p className="text-white text-xs bg-black/40 rounded px-2 py-1 text-center select-none">
+                                        <span>
+                                            {t(
+                                                "components.panels.camera.guide_align_face",
+                                            )}
+                                        </span>
+                                        <br />
+                                        <span>
+                                            {t(
+                                                "components.panels.camera.guide_eyes_on_line",
+                                            )}
+                                        </span>
+                                    </p>
+                                </div>
+                            </>
+                        )}
                     </>
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-gray-600 dark:text-gray-300">

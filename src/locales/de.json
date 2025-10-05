@@ -187,6 +187,10 @@
           "a": "Die Live-Hilfslinien in der Kameraansicht helfen Ihnen, Ihr Gesicht gemäß den Anforderungen des ausgewählten Formats korrekt auszurichten und so sicherzustellen, dass Ihr Foto konform ist."
         },
         {
+          "q": "Wie schalte ich die Ausrichtungshilfen aus?",
+          "a": "Sie können die Sichtbarkeit der Ausrichtungshilfen (das Oval, die Linien und die Eckmarkierungen) in der Kameravorschau und im Importdialog umschalten. Öffnen Sie den Einstellungsdialog, indem Sie auf das Zahnrad-Symbol in der Kopfzeile klicken oder 'S' drücken, und verwenden Sie dann den Schalter 'Hilfslinien anzeigen' im Tab 'Allgemein'."
+        },
+        {
           "q": "Wie kann ich die Sprache oder das Design der App ändern?",
           "a": "Sie können Ihre Erfahrung im Einstellungsdialog anpassen, der über das Header-Menü oder durch Drücken von 'S' zugänglich ist. Dort können Sie die Anzeigesprache ändern und zwischen hellem und dunklem Design wechseln."
         },
@@ -232,6 +236,7 @@
       "theme_light": "Hell",
       "theme_dark": "Dunkel",
       "theme_system": "System",
+      "show_align_guides_label": "Hilfslinien anzeigen",
       "enable_watermark_label": "Wasserzeichen aktivieren",
       "watermark_text_placeholder": "Wasserzeichen-Text",
       "reset_watermark_tooltip": "Auf Standard zurücksetzen",

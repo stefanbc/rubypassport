@@ -5,6 +5,7 @@
   },
   "languages": {
     "english": "English",
+    "french": "Français",
     "german": "Deutsch",
     "spanish": "Español",
     "japanese": "日本語",
@@ -187,6 +188,10 @@
           "a": "Las guías en vivo en la vista de la cámara te ayudan a alinear tu cara correctamente según los requisitos del formato seleccionado, asegurando que tu foto cumpla con las normas."
         },
         {
+          "q": "¿Cómo desactivo las guías de alineación?",
+          "a": "Puedes activar o desactivar la visibilidad de las guías de alineación (el óvalo, las líneas y los marcadores de esquina) en la vista previa de la cámara y en el diálogo de importación. Abre el diálogo de Configuración haciendo clic en el ícono de engranaje en el encabezado o presionando 'S', y luego usa el interruptor 'Mostrar guías de alineación' en la pestaña General."
+        },
+        {
           "q": "¿Cómo puedo cambiar el idioma o el tema de la aplicación?",
           "a": "Puedes personalizar tu experiencia en el diálogo de Configuración (menú o tecla 'S'). Allí puedes cambiar el idioma y alternar entre los temas claro y oscuro."
         },
@@ -232,6 +237,7 @@
       "theme_light": "Claro",
       "theme_dark": "Oscuro",
       "theme_system": "Sistema",
+      "show_align_guides_label": "Mostrar guías de alineación",
       "enable_watermark_label": "Habilitar Marca de Agua",
       "watermark_text_placeholder": "Texto de Marca de Agua",
       "reset_watermark_tooltip": "Restablecer a predeterminado",

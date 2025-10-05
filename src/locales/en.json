@@ -5,6 +5,7 @@
   },
   "languages": {
     "english": "English",
+    "french": "Français",
     "german": "Deutsch",
     "spanish": "Español",
     "japanese": "日本語",
@@ -187,6 +188,10 @@
           "a": "The live guides on the camera view help you align your face correctly according to the selected format's requirements, ensuring your photo is compliant."
         },
         {
+          "q": "How do I turn off the alignment guides?",
+          "a": "You can toggle the visibility of the alignment guides (the oval, lines, and corner markers) in the camera preview and import dialog. Open the Settings dialog by clicking the gear icon in the header or by pressing 'S', then use the 'Show Align Guides' toggle on the General tab."
+        },
+        {
           "q": "How can I change the app's language or theme?",
           "a": "You can customize your experience in the Settings dialog, accessible from the header menu or by pressing 'S'. There you can change the display language and switch between light and dark themes."
         },
@@ -232,6 +237,7 @@
       "theme_light": "Light",
       "theme_dark": "Dark",
       "theme_system": "System",
+      "show_align_guides_label": "Show Align Guides",
       "enable_watermark_label": "Enable Watermark",
       "watermark_text_placeholder": "Watermark Text",
       "reset_watermark_tooltip": "Reset to default",

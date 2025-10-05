@@ -41,10 +41,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         setWatermarkEnabled,
         watermarkText,
         setWatermarkText,
+        showAlignGuides,
+        setShowAlignGuides,
     } = useStore();
     const languageId = useId();
     const themeId = useId();
     const watermarkEnabledId = useId();
+    const showAlignGuidesId = useId();
 
     const languages = [
         {
@@ -56,6 +59,11 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
             label: t("languages.english"),
             value: "en",
             flagCode: "GB",
+        },
+        {
+            label: t("languages.french"),
+            value: "fr",
+            flagCode: "FR",
         },
         {
             label: t("languages.romanian"),
@@ -199,6 +207,24 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                    <Label
+                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
+                                        htmlFor={showAlignGuidesId}
+                                    >
+                                        {t(
+                                            "dialogs.settingsDialog.show_align_guides_label",
+                                        )}
+                                    </Label>
+                                    <ToggleSwitch
+                                        checked={showAlignGuides}
+                                        onCheckedChange={setShowAlignGuides}
+                                        aria-label={t(
+                                            "dialogs.settingsDialog.show_align_guides_label",
+                                        )}
+                                        id={showAlignGuidesId}
+                                    />
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                                     <Label

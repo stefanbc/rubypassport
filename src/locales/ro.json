@@ -5,6 +5,7 @@
   },
   "languages": {
     "english": "English",
+    "french": "Français",
     "german": "Deutsch",
     "spanish": "Español",
     "japanese": "日本語",
@@ -187,6 +188,10 @@
           "a": "Ghidajele live din vizualizarea camerei te ajută să aliniezi corect fața conform cerințelor formatului selectat, asigurând conformitatea fotografiei."
         },
         {
+          "q": "Cum pot dezactiva ghidajele de aliniere?",
+          "a": "Poți comuta vizibilitatea ghidajelor de aliniere (ovalul, liniile și marcajele de colț) în previzualizarea camerei și în dialogul de import. Deschide dialogul de Setări făcând clic pe pictograma roată dințată din antet sau apăsând 'S', apoi folosește comutatorul 'Afișează ghidajele de aliniere' din fila 'General'."
+        },
+        {
           "q": "Cum pot schimba limba sau tema aplicației?",
           "a": "Poți personaliza experiența în dialogul de Setări (din meniu sau tasta 'S'). Acolo poți schimba limba și comuta între temele deschisă și întunecată."
         },
@@ -232,6 +237,7 @@
       "theme_light": "Luminos",
       "theme_dark": "Întunecat",
       "theme_system": "Sistem",
+      "show_align_guides_label": "Afișează ghidajele de aliniere",
       "enable_watermark_label": "Activează watermark",
       "watermark_text_placeholder": "Text watermark",
       "reset_watermark_tooltip": "Resetează la implicit",
