@@ -136,7 +136,9 @@
     "videoPlaybackErrorMessage": "Videowiedergabe fehlgeschlagen: {{message}}",
     "imageImportSuccess": "Bild erfolgreich importiert und zugeschnitten!",
     "printPreview": "Druckvorschau wird vorbereitet...",
-    "printWindowError": "Druckfenster konnte nicht geöffnet werden. Bitte deaktivieren Sie Ihre Pop-up-Blocker."
+    "printWindowError": "Druckfenster konnte nicht geöffnet werden. Bitte deaktivieren Sie Ihre Pop-up-Blocker.",
+    "photoQueueCleared": "Fotowarteschlange geleert",
+    "photoRemovedFromQueue": "Foto aus der Warteschlange entfernt"
   },
   "dialogs": {
     "confirmation": {

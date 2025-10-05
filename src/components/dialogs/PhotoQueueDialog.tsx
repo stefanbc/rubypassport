@@ -1,5 +1,20 @@
+import {
+    closestCenter,
+    DndContext,
+    DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
+import {
+    rectSortingStrategy,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Frown, Images, Trash2, X } from "lucide-react";
-import { DragEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 import { Dialog } from "@/components/ui";
@@ -9,6 +24,55 @@ type PhotoQueueDialogProps = {
     isOpen: boolean;
     onClose: () => void;
 };
+
+function SortablePhoto({
+    id,
+    imgSrc,
+    index,
+    onRemove,
+}: {
+    id: string;
+    imgSrc: string;
+    index: number;
+    onRemove: (index: number) => void;
+}) {
+    const { t } = useTranslation();
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+            className="relative group aspect-square bg-gray-200 dark:bg-zinc-700 rounded-lg overflow-hidden border border-gray-300 dark:border-zinc-700 shadow-sm cursor-grab active:cursor-grabbing"
+        >
+            <img
+                src={imgSrc}
+                alt={t("dialogs.photoQueue.queued_photo_alt", {
+                    index: index + 1,
+                })}
+                className="w-full h-full object-cover group-hover:brightness-75 transition-all duration-200"
+            />
+            <button
+                type="button"
+                onClick={() => onRemove(index)}
+                className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
+                aria-label={t("dialogs.photoQueue.remove_photo_aria", {
+                    index: index + 1,
+                })}
+            >
+                <X size={14} />
+            </button>
+        </div>
+    );
+}
 
 export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
     const { t } = useTranslation();
@@ -28,49 +92,31 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
         })),
     );
 
-    const dragItem = useRef<number | null>(null);
-    const dragOverItem = useRef<number | null>(null);
-    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
+    );
 
     const handleClearQueue = () => {
         clearQueue();
-        addToast(
-            t("toasts.photoQueueCleared", "Photo queue cleared"),
-            "success",
-        );
+        addToast(t("toasts.photoQueueCleared"), "success");
         onClose();
     };
 
     const handleRemovePhoto = (index: number) => {
         removeFromQueue(index);
-        addToast(
-            t("toasts.photoRemovedFromQueue", "Photo removed from queue"),
-            "success",
-            2000,
-        );
+        addToast(t("toasts.photoRemovedFromQueue"), "success", 2000);
     };
 
-    const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
-        dragItem.current = index;
-        setDraggedIndex(index);
-        e.dataTransfer.effectAllowed = "move";
-    };
-
-    const handleDragEnter = (index: number) => {
-        dragOverItem.current = index;
-    };
-
-    const handleDragEnd = () => {
-        if (
-            dragItem.current !== null &&
-            dragOverItem.current !== null &&
-            dragItem.current !== dragOverItem.current
-        ) {
-            reorderQueue(dragItem.current, dragOverItem.current);
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (active.id !== over?.id) {
+            const oldIndex = captureQueue.indexOf(active.id as string);
+            const newIndex = captureQueue.indexOf(over?.id as string);
+            reorderQueue(oldIndex, newIndex);
         }
-        dragItem.current = null;
-        dragOverItem.current = null;
-        setDraggedIndex(null);
     };
 
     return (
@@ -102,41 +148,28 @@ export function PhotoQueueDialog({ isOpen, onClose }: PhotoQueueDialogProps) {
                 )}
                 <div className="flex-grow overflow-y-auto p-4 sm:p-6">
                     {captureQueue.length > 0 ? (
-                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
-                            {captureQueue.map((imgSrc, index) => (
-                                <div
-                                    key={imgSrc}
-                                    className={`relative group aspect-square bg-gray-200 dark:bg-zinc-700 rounded-lg overflow-hidden border border-gray-300 dark:border-zinc-700 shadow-sm cursor-grab active:cursor-grabbing transition-opacity duration-200 ${draggedIndex === index ? "opacity-30 scale-95" : "hover:scale-105 hover:shadow-lg"} transition-transform`}
-                                    draggable
-                                    onDragStart={(e) =>
-                                        handleDragStart(e, index)
-                                    }
-                                    onDragEnter={() => handleDragEnter(index)}
-                                    onDragEnd={handleDragEnd}
-                                    onDragOver={(e) => e.preventDefault()}
-                                >
-                                    <img
-                                        src={imgSrc}
-                                        alt={t(
-                                            "dialogs.photoQueue.queued_photo_alt",
-                                            { index: index + 1 },
-                                        )}
-                                        className="w-full h-full object-cover group-hover:brightness-75 transition-all duration-200"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemovePhoto(index)}
-                                        className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
-                                        aria-label={t(
-                                            "dialogs.photoQueue.remove_photo_aria",
-                                            { index: index + 1 },
-                                        )}
-                                    >
-                                        <X size={14} />
-                                    </button>
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext
+                                items={captureQueue}
+                                strategy={rectSortingStrategy}
+                            >
+                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+                                    {captureQueue.map((imgSrc, index) => (
+                                        <SortablePhoto
+                                            key={imgSrc}
+                                            id={imgSrc}
+                                            imgSrc={imgSrc}
+                                            index={index}
+                                            onRemove={handleRemovePhoto}
+                                        />
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
+                            </SortableContext>
+                        </DndContext>
                     ) : (
                         <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400">
                             <Frown size={48} className="mb-4 opacity-50" />

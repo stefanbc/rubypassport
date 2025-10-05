@@ -140,7 +140,6 @@ export function Toolbar({
                     }
                     aria-pressed={multiCaptureEnabled || hasQueue}
                     className={`relative ${multiCaptureEnabled || hasQueue ? "bg-red-600 text-white hover:bg-red-700" : "text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-800"}`}
-                    defaultStyle
                 >
                     <Images size={20} />
                     {hasQueue && (

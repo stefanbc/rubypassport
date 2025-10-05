@@ -137,7 +137,9 @@
     "videoPlaybackErrorMessage": "Redare video eșuată: {{message}}",
     "imageImportSuccess": "Imagine importată și decupată cu succes!",
     "printPreview": "Se pregătește previzualizarea pentru tipărire...",
-    "printWindowError": "Nu s-a putut deschide fereastra de tipărire. Te rugăm să dezactivezi blocarea pop-up-urilor."
+    "printWindowError": "Nu s-a putut deschide fereastra de tipărire. Te rugăm să dezactivezi blocarea pop-up-urilor.",
+    "photoQueueCleared": "Coada de fotografii a fost golită",
+    "photoRemovedFromQueue": "Fotografia a fost eliminată din coadă"
   },
   "dialogs": {
     "confirmation": {

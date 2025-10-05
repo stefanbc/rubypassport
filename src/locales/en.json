@@ -137,7 +137,9 @@
     "videoPlaybackErrorMessage": "Could not start video playback: {{message}}",
     "imageImportSuccess": "Image imported and cropped successfully!",
     "printPreview": "Preparing print preview...",
-    "printWindowError": "Could not open print window. Please disable your pop-up blockers."
+    "printWindowError": "Could not open print window. Please disable your pop-up blockers.",
+    "photoQueueCleared": "Photo queue cleared",
+    "photoRemovedFromQueue": "Photo removed from queue"
   },
   "dialogs": {
     "confirmation": {
