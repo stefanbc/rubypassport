@@ -1109,7 +1109,7 @@ function AppContent() {
 
     return (
         <div
-            className={`h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-red-950 flex flex-col ${!isMobile ? "justify-center items-center" : ""}`}
+            className={`h-screen bg-gradient-to-br from-gray-50 via-red-100 to-red-200 dark:from-black dark:via-black dark:to-red-950 flex flex-col ${!isMobile ? "justify-center items-center" : ""}`}
         >
             <div
                 className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 min-h-0 ${isMobile ? "flex-grow" : ""} ${activeDialog ? "blur-sm backdrop-blur-sm" : ""} transition-all duration-300`}

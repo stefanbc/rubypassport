@@ -100,7 +100,7 @@ export function CameraView({
             </div>
 
             <div
-                className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
+                className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40 transition-[aspect-ratio] duration-300 ease-in-out"
                 style={{
                     aspectRatio: `${selectedFormat.widthPx} / ${selectedFormat.heightPx}`,
                 }}
@@ -206,67 +206,128 @@ export function CameraView({
 
             <div className="flex-grow" />
 
-            <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3">
+            {isMobile || isTablet ? (
+                <div className="flex items-center justify-around py-2">
                     {!isCameraOn ? (
                         <>
+                            <div className="w-20" />
                             <button
                                 type="button"
                                 onClick={onStartCamera}
-                                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                                className="w-20 h-20 flex items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform active:scale-95 disabled:opacity-60"
                                 disabled={isCameraLoading}
+                                aria-label={t(
+                                    "components.panels.camera.start_camera_button",
+                                )}
                             >
                                 {isCameraLoading ? (
                                     <Loader2
-                                        size={18}
+                                        size={32}
                                         className="animate-spin"
                                     />
                                 ) : (
-                                    <Camera size={20} />
+                                    <Camera size={32} />
                                 )}
-                                {isCameraLoading
-                                    ? t(
-                                          "components.panels.camera.starting_button",
-                                      )
-                                    : t(
-                                          "components.panels.camera.start_camera_button",
-                                      )}
                             </button>
                             <button
                                 type="button"
                                 onClick={onImportClick}
-                                className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                className="w-16 h-16 flex items-center justify-center rounded-full bg-black/20 dark:bg-white/10 text-white disabled:opacity-60"
                                 disabled={isCameraLoading}
-                            >
-                                <Computer size={20} />
-                                {t(
+                                aria-label={t(
                                     "components.panels.camera.import_image_button",
                                 )}
+                            >
+                                <Computer size={28} />
                             </button>
                         </>
                     ) : (
                         <>
                             <button
                                 type="button"
-                                onClick={onCapturePhoto}
-                                className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
-                            >
-                                <CheckCircle size={20} />
-                                {t(
-                                    "components.panels.camera.capture_photo_button",
+                                onClick={onStopCamera}
+                                className="w-16 h-16 flex items-center justify-center rounded-full bg-black/20 dark:bg-white/10 text-white"
+                                aria-label={t(
+                                    "components.panels.camera.stop_button",
                                 )}
+                            >
+                                <CameraOff size={28} />
                             </button>
                             <button
                                 type="button"
-                                onClick={onStopCamera}
-                                className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
-                            >
-                                {t("components.panels.camera.stop_button")}
-                            </button>
+                                onClick={onCapturePhoto}
+                                className="w-20 h-20 flex items-center justify-center rounded-full bg-white ring-4 ring-red-600 shadow-lg transition-transform active:scale-95"
+                                aria-label={t(
+                                    "components.panels.camera.capture_photo_button",
+                                )}
+                            />
+                            <div className="w-20" />
                         </>
                     )}
                 </div>
-            </div>
+            ) : (
+                <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        {!isCameraOn ? (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={onStartCamera}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                                    disabled={isCameraLoading}
+                                >
+                                    {isCameraLoading ? (
+                                        <Loader2
+                                            size={18}
+                                            className="animate-spin"
+                                        />
+                                    ) : (
+                                        <Camera size={20} />
+                                    )}
+                                    {isCameraLoading
+                                        ? t(
+                                              "components.panels.camera.starting_button",
+                                          )
+                                        : t(
+                                              "components.panels.camera.start_camera_button",
+                                          )}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={onImportClick}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-gray-600 dark:bg-zinc-700 text-white py-3 px-4 rounded hover:bg-gray-700 dark:hover:bg-zinc-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                    disabled={isCameraLoading}
+                                >
+                                    <Computer size={20} />
+                                    {t(
+                                        "components.panels.camera.import_image_button",
+                                    )}
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={onCapturePhoto}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                >
+                                    <CheckCircle size={20} />
+                                    {t(
+                                        "components.panels.camera.capture_photo_button",
+                                    )}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={onStopCamera}
+                                    className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                >
+                                    {t("components.panels.camera.stop_button")}
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

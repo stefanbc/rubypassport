@@ -169,7 +169,7 @@ export function ResultPanel({
             </div>
 
             <div
-                className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40"
+                className="relative bg-gray-200 dark:bg-black rounded overflow-hidden mb-4 ring-1 ring-red-200 dark:ring-red-900/40 transition-[aspect-ratio] duration-300 ease-in-out"
                 style={{
                     aspectRatio: `${widthPx} / ${heightPx}`,
                     contain: "strict",
