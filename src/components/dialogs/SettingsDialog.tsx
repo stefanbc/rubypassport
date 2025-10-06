@@ -7,7 +7,7 @@ import {
     SlidersHorizontal,
     Sun,
 } from "lucide-react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     Dialog,
@@ -48,6 +48,10 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
     const themeId = useId();
     const watermarkEnabledId = useId();
     const showAlignGuidesId = useId();
+
+    const [activeTab, setActiveTab] = useState<"general" | "experimental">(
+        "general",
+    );
 
     const languages = [
         {
@@ -100,7 +104,10 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         >
             <div className="flex-grow flex flex-col overflow-y-auto bg-white dark:bg-zinc-800/50">
                 <Tabs
-                    defaultValue="general"
+                    value={activeTab}
+                    onValueChange={(value) =>
+                        setActiveTab(value as "general" | "experimental")
+                    }
                     className="flex-grow flex flex-col overflow-hidden"
                 >
                     <TabsList

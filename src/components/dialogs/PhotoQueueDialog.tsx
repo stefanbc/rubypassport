@@ -62,9 +62,10 @@ function SortablePhoto({
             />
             <button
                 type="button"
-                onClick={(e) => {
+                onPointerDown={(e) => {
+                    // Prevent dnd-kit from capturing the event and starting a drag
                     e.stopPropagation();
-                    onRemove(index);
+                    onRemove(index); // This is sufficient
                 }}
                 className="absolute top-1.5 right-1.5 z-10 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-600/80 transition-all focus:opacity-100"
                 aria-label={t("dialogs.photoQueue.remove_photo_aria", {
