@@ -32,12 +32,17 @@ i18n.use(LanguageDetector) // Detects user language
     .init({
         resources,
         fallbackLng: "en", // Use 'en' if detected language is not available
+        load: "languageOnly",
         interpolation: {
             escapeValue: false, // React already safes from xss
         },
         detection: {
             order: ["localStorage", "navigator"],
             caches: ["localStorage"],
+            convertDetectedLanguage: (lng) => {
+                // Normalize language codes to base language (en-US -> en, de-DE -> de, etc.)
+                return lng.split('-')[0];
+            },
         },
     });
 
