@@ -1,0 +1,84 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "includes": [
+            "**/package.json",
+            "src/**/*.js",
+            "src/**/*.ts",
+            "src/**/*.tsx",
+            "src/**/*.scss",
+            "test/**/*.ts"
+        ],
+        "ignoreUnknown": false
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "a11y": {
+                "useFocusableInteractive": "off",
+                "useKeyWithClickEvents": "off",
+                "useSemanticElements": "off",
+                "noSvgWithoutTitle": "off",
+                "useAltText": "off",
+                "noStaticElementInteractions": "off",
+                "useKeyWithMouseEvents": "off"
+            },
+            "suspicious": {
+                "noArrayIndexKey": "warn",
+                "noThenProperty": "warn",
+                "noImplicitAnyLet": "warn",
+                "noAssignInExpressions": "warn"
+            },
+            "performance": {
+                "noAccumulatingSpread": "warn"
+            },
+            "complexity": {
+                "noForEach": "off",
+                "noStaticOnlyClass": "off"
+            },
+            "correctness": {
+                "useExhaustiveDependencies": "warn",
+                "noUnusedVariables": "info"
+            },
+            "style": {
+                "noNonNullAssertion": "warn",
+                "noParameterAssign": "warn",
+                "useImportType": "off"
+            }
+        }
+    },
+    "javascript": {
+        "globals": ["React"],
+        "parser": {
+            "unsafeParameterDecoratorsEnabled": true
+        },
+        "formatter": {
+            "quoteStyle": "double"
+        }
+    },
+    "json": {
+        "formatter": {
+            "enabled": true,
+            "indentStyle": "space",
+            "indentWidth": 4
+        }
+    }
+}

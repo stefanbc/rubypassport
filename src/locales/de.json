@@ -1,0 +1,363 @@
+{
+  "common": {
+    "continue": "Weiter",
+    "cancel": "Abbrechen"
+  },
+  "languages": {
+    "english": "English",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română"
+  },
+  "components": {
+    "header": {
+      "title": "Ruby Passport",
+      "subtitle": "Passfoto-Generator"
+    },
+    "app": {
+      "wizard": {
+        "guidelines": "Richtlinien",
+        "camera": "Kamera",
+        "result": "Ergebnis"
+      },
+      "printPreviewTitle": "Druckvorschau",
+      "printPreviewTitleWithName": "{{name}} - Druckvorschau",
+      "passportPortraitAlt": "Passfoto-Porträt"
+    },
+    "panels": {
+      "guidelines": {
+        "title": "Richtlinien",
+        "subtitle": "Für die meisten Länderstandards.",
+        "do_title": "Gebote",
+        "do_item_1": "• Kopf mittig und gerade halten",
+        "do_item_2": "• Direkt in die Kamera schauen",
+        "do_item_3": "• Neutraler Gesichtsausdruck (Mund geschlossen)",
+        "do_item_4": "• Brille & Kopfbedeckung abnehmen (außer religiös)",
+        "do_item_5": "• Augen müssen klar sichtbar sein",
+        "do_item_6": "• Gesicht im Oval ausrichten, Augen auf der Linie",
+        "dont_title": "Verboten",
+        "dont_item_1": "• Kein Lächeln, Neigen oder Schielen",
+        "dont_item_2": "• Kein starkes Make-up oder Filter",
+        "dont_item_3": "• Keine Hüte, Kopfhörer oder Accessoires",
+        "dont_item_4": "• Keine harten Schatten oder Gegenlicht",
+        "lighting_title": "Beleuchtung & Hintergrund",
+        "lighting_item_1": "• Helle, gleichmäßige Beleuchtung von vorne",
+        "lighting_item_2": "• ~0,5 m Abstand zu hellem, einfarbigem Hintergrund",
+        "lighting_item_3": "• Keine starken Schatten unter Kinn oder Nase",
+        "lighting_item_4": "• Mittelhelle Kleidung bevorzugen (nicht weiß)",
+        "country_requirements_title": "Länderspezifische Anforderungen",
+        "country_requirements_description": "Sehen Sie sich detaillierte Anforderungen für alle unterstützten Länder mit Suche und offiziellen Links an.",
+        "view_country_requirements": "Länderanforderungen anzeigen",
+        "privacy_title": "Ihre Privatsphäre ist wichtig",
+        "privacy_body": "Diese App respektiert Ihre Privatsphäre. Alles geschieht lokal in Ihrem Browser. Ihre Bilder werden niemals hochgeladen oder gespeichert."
+      },
+      "camera": {
+        "back": "Zurück",
+        "back_aria": "Zurück zu den Richtlinien",
+        "preview": "Vorschau",
+        "switch_camera_tooltip": "Kamera wechseln",
+        "switch_camera_button": "Kamera wechseln",
+        "guide_align_face": "Gesicht an ovaler Führungslinie ausrichten",
+        "guide_eyes_on_line": "Augen auf die horizontale Linie",
+        "starting_camera": "Starte Kamera…",
+        "camera_not_started": "Kamera nicht gestartet",
+        "starting_button": "Wird gestartet…",
+        "start_camera_button": "Kamera starten",
+        "import_image_button": "Bild importieren",
+        "capture_photo_button": "Foto aufnehmen",
+        "stop_button": "Stopp"
+      },
+      "result": {
+        "title": "Ergebnis",
+        "edit_details_tooltip": "Details bearbeiten (Name & Wasserzeichen)",
+        "details_button": "Details",
+        "retake_button": "Neu aufnehmen",
+        "person_name_label": "Name der Person",
+        "optional_placeholder": "Optional",
+        "captured_alt": "Aufgenommenes Passfoto",
+        "processing": "Foto wird verarbeitet...",
+        "placeholder": "Foto aufnehmen oder importieren",
+        "download_button": "Herunterladen",
+        "print_button": "Drucken",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
+        "before_unload_prompt": "Sind Sie sicher, dass Sie die Seite verlassen möchten? Ihr generiertes Foto geht verloren."
+      }
+    },
+    "footer": {
+      "copyright": "© {{year}} Ruby Passport. Alle Rechte vorbehalten.",
+      "copyright_mobile": "© {{year}} Ruby Passport.",
+      "madeWith": "Mit ❤️ erstellt von"
+    }
+  },
+  "tooltips": {
+    "formatSettings": "Formateinstellungen (F)",
+    "changeFormat": "Format ändern oder benutzerdefinierte Formate verwalten (F)",
+    "viewPhotoQueue": "Foto-Warteschlange anzeigen ({{count}})",
+    "photoBoothEnabled": "Foto-Booth aktiviert (B)",
+    "enablePhotoBooth": "Foto-Booth aktivieren (B)",
+    "changeLanguage": "Sprache ändern",
+    "showInfo": "Infodialog anzeigen (I)",
+    "switchToDark": "Zum dunklen Design wechseln (T)",
+    "switchToLight": "Zum hellen Design wechseln (T)",
+    "exitFullscreen": "Vollbild verlassen",
+    "enterFullscreen": "Vollbild aktivieren",
+    "showShortcuts": "Tastenkürzel anzeigen (?)",
+    "showGuidelines": "Richtlinien anzeigen",
+    "hideGuidelines": "Richtlinien ausblenden",
+    "showSettings": "Einstellungen anzeigen (S)",
+    "toggleTheme": "Design umschalten",
+    "menu": "Menü",
+    "moreOptions": "Weitere Optionen"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Foto-Booth-Modus aktiviert - Fotos werden für den Stapeldruck in die Warteschlange gestellt",
+    "photoBoothDisabled": "Foto-Booth-Modus deaktiviert - Einzelbildmodus",
+    "backOnline": "Sie sind wieder online!",
+    "offline": "Sie sind offline. Einige Funktionen sind möglicherweise nicht verfügbar.",
+    "customFormatLimit": "Limit von 4 benutzerdefinierten Formaten erreicht.",
+    "invalidFormatDimensions": "Die Abmessungen müssen zwischen 1 und 10000 liegen.",
+    "formatExists": "Ein Format mit diesen Spezifikationen existiert bereits: {{label}}",
+    "startingCamera": "Kamera wird gestartet...",
+    "maxCameraResolution": "Maximale Kameraauflösung: {{width}}x{{height}}",
+    "cameraStream": "Kamera-Stream: {{width}}x{{height}}",
+    "highResAvailable": "Hochauflösende Aufnahme ist verfügbar.",
+    "highResNotSupported": "Hochauflösende Aufnahme wird nicht unterstützt. Video-Stream wird verwendet.",
+    "cameraError": "Kamerafehler: {{message}}",
+    "capturingHighRes": "Hochauflösendes Foto wird aufgenommen...",
+    "photoCaptured": "Foto erfolgreich aufgenommen!",
+    "photoCaptureFailed": "Fehler bei der Verarbeitung des aufgenommenen Fotos.",
+    "highResCaptureFailed": "Hochauflösende Aufnahme fehlgeschlagen: {{message}}. Es wird auf Videoframe zurückgegriffen.",
+    "photoFromStream": "Foto aus Videostream aufgenommen.",
+    "processedDownloaded": "Verarbeitetes Bild heruntergeladen!",
+    "originalDownloaded": "Originalbild heruntergeladen!",
+    "fullscreenError": "Fehler beim Versuch, den Vollbildmodus zu aktivieren: {{message}}",
+    "addedToQueue": "Zur Warteschlange hinzugefügt",
+    "imageLoadFailed": "Fehler beim Laden des Bildes zur Verarbeitung.",
+    "cameraPermission": "Warte auf Kamera-Berechtigungen...",
+    "videoPlaybackError": "Videowiedergabe konnte nicht gestartet werden.",
+    "videoPlaybackErrorMessage": "Videowiedergabe fehlgeschlagen: {{message}}",
+    "imageImportSuccess": "Bild erfolgreich importiert und zugeschnitten!",
+    "photoQueueFull": "Die Fotowarteschlange ist voll (max. {{max}}).",
+    "printPreview": "Druckvorschau wird vorbereitet...",
+    "printWindowError": "Druckfenster konnte nicht geöffnet werden. Bitte deaktivieren Sie Ihre Pop-up-Blocker.",
+    "photoQueueCleared": "Fotowarteschlange geleert",
+    "photoRemovedFromQueue": "Foto aus der Warteschlange entfernt",
+    "checkCountryRequirements": "Gute Wahl! Überprüfen Sie unbedingt die spezifischen Anforderungen für dieses Format."
+  },
+  "dialogs": {
+    "confirmation": {
+      "close_aria": "Bestätigungsdialog schließen",
+      "retake_title": "Sind Sie sicher?",
+      "retake_description": "Dadurch wird das aktuelle Foto verworfen und Sie kehren zur Kamera zurück. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "format": {
+      "errorAllFields": "Bitte füllen Sie alle benutzerdefinierten Formatfelder aus.",
+      "errorInvalidNumber": "Ungültige Zahlenwerte für das Format. Alle Abmessungen müssen positiv sein."
+    },
+    "download": {
+      "title": "Download-Optionen",
+      "close_aria": "Download-Optionen-Dialog schließen",
+      "description": "Wählen Sie, welche Version des Fotos Sie herunterladen möchten.",
+      "processed_button": "Verarbeitetes Foto herunterladen",
+      "original_button": "Original herunterladen (hochauflösend)",
+      "original_tooltip_unavailable": "Hochauflösendes Original ist für dieses Foto nicht verfügbar.",
+      "original_tooltip_available": "Das Original, unbeschnittenes Foto herunterladen.",
+      "original_unavailable_note": "Ein hochauflösendes Original ist nur für Fotos verfügbar, die mit der hochauflösenden Kameraoption aufgenommen oder aus einer importierten Datei stammen."
+    },
+    "info": {
+      "title": "Häufig gestellte Fragen",
+      "close_aria": "FAQ-Dialog schließen",
+      "faqs": [
+        {
+          "q": "Was ist Ruby Passport?",
+          "a": "Ruby Passport ist eine moderne Web-App zur Erstellung von Pass-/ID-Fotos direkt im Browser. Sie hilft Ihnen, Fotos zu erstellen, die den spezifischen Anforderungen verschiedener Länder entsprechen."
+        },
+        {
+          "q": "Sind meine Daten sicher?",
+          "a": "Ja. Die gesamte Fotoverarbeitung findet lokal in Ihrem Browser statt. Ihre Fotos werden niemals auf einen Server hochgeladen, was Ihre Privatsphäre und Sicherheit gewährleistet."
+        },
+        {
+          "q": "Wie genau ist der Druck?",
+          "a": "Die Funktion „Druckvorschau“ erstellt eine Seite mit Fotos, die in exakten physischen Abmessungen gekachelt sind. Für beste Ergebnisse stellen Sie sicher, dass Ihre Druckereinstellungen 100% Skalierung betragen und \"an Seite anpassen\" deaktiviert ist."
+        },
+        {
+          "q": "Kann ich eigene Fotoformate erstellen?",
+          "a": "Absolut. Sie können Ihre eigenen Fotoformate mit präzisen Pixel- und physischen Druckmaßen über den Dialog „Formateinstellungen“ (F) hinzufügen, bearbeiten und löschen."
+        },
+        {
+          "q": "Kann ich ein vorhandenes Foto verwenden?",
+          "a": "Ja! Sie können ein Bild von Ihrem Computer importieren, indem Sie auf 'Importieren' klicken oder eine Datei per Drag & Drop ziehen. Wenn Ihr Bild größer als das ausgewählte Format ist, können Sie es für den perfekten Zuschnitt neu positionieren."
+        },
+        {
+          "q": "Wozu dienen die Ausrichtungshilfen?",
+          "a": "Die Live-Hilfslinien in der Kameraansicht helfen Ihnen, Ihr Gesicht gemäß den Anforderungen des ausgewählten Formats korrekt auszurichten und so sicherzustellen, dass Ihr Foto konform ist."
+        },
+        {
+          "q": "Wie schalte ich die Ausrichtungshilfen aus?",
+          "a": "Sie können die Sichtbarkeit der Ausrichtungshilfen (das Oval, die Linien und die Eckmarkierungen) in der Kameravorschau und im Importdialog umschalten. Öffnen Sie den Einstellungsdialog, indem Sie auf das Zahnrad-Symbol in der Kopfzeile klicken oder 'S' drücken, und verwenden Sie dann den Schalter 'Hilfslinien anzeigen' im Tab 'Allgemein'."
+        },
+        {
+          "q": "Wie kann ich die Sprache oder das Design der App ändern?",
+          "a": "Sie können Ihre Erfahrung im Einstellungsdialog anpassen, der über das Header-Menü oder durch Drücken von 'S' zugänglich ist. Dort können Sie die Anzeigesprache ändern und zwischen hellem und dunklem Design wechseln."
+        },
+        {
+          "q": "Kann ich ein Wasserzeichen hinzufügen?",
+          "a": "Ja. Sie können das Wasserzeichen im Einstellungsdialog (drücken Sie 'S') aktivieren, deaktivieren und anpassen. Die Wasserzeicheneinstellungen befinden sich unter dem Reiter „Allgemein“."
+        },
+        {
+          "q": "Was ist der Fotokabinen-Modus?",
+          "a": "Der Foto-Booth-Modus ermöglicht es Ihnen, mehrere Fotos aufzunehmen, die für den Stapeldruck auf demselben Papier in die Warteschlange gestellt werden. Aktivieren Sie ihn mit dem Foto-Booth-Symbol (mehrere Bilder) im Header oder durch Drücken von „B“. Wenn sich Fotos in der Warteschlange befinden, zeigt diese Schaltfläche die Anzahl an und öffnet den Warteschlangendialog. Im Dialog können Sie Fotos durch Ziehen neu anordnen oder einzelne Fotos durch darüber schweben löschen. Sie können dann alle in der Warteschlange befindlichen Fotos zusammen drucken."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Tastenkürzel",
+      "close_aria": "Tastenkürzel-Dialog schließen",
+      "items": {
+        "show_help": "Diesen Hilfe-Dialog anzeigen",
+        "toggle_camera": "Kamera starten / stoppen",
+        "capture": "Foto aufnehmen",
+        "import": "Bild importieren",
+        "download": "Ergebnis herunterladen"
+      },
+      "retake": "Foto neu aufnehmen",
+      "toggle_watermark": "Wasserzeichen umschalten",
+      "print": "Druckoptionen öffnen",
+      "format_settings": "Formateinstellungen öffnen",
+      "toggle_photobooth": "Foto-Booth-Modus umschalten",
+      "toggle_theme": "Design umschalten",
+      "toggle_fullscreen": "Vollbild umschalten",
+      "show_info": "Infodialog anzeigen",
+      "show_settings": "Einstellungen anzeigen"
+    },
+    "settingsDialog": {
+      "title": "Einstellungen",
+      "close_aria": "Einstellungsdialog schließen",
+      "tabs_aria_label": "Einstellungen-Tabs",
+      "general_tab": "Allgemein",
+      "experimental_tab": "Experimentell",
+      "general_settings_header": "Allgemeine Einstellungen",
+      "language_label": "Sprache",
+      "theme_label": "Design",
+      "theme_light": "Hell",
+      "theme_dark": "Dunkel",
+      "theme_system": "System",
+      "show_align_guides_label": "Hilfslinien anzeigen",
+      "show_align_guides_description": "Zeigen oder verbergen Sie die Ausrichtungshilfen (Oval, Linien) auf der Kamera.",
+      "enable_watermark_label": "Wasserzeichen aktivieren",
+      "enable_watermark_description": "Fügen Sie Ihrem endgültigen Foto ein stilvolles Wasserzeichen hinzu.",
+      "watermark_text_placeholder": "Wasserzeichen-Text",
+      "reset_watermark_tooltip": "Auf Standard zurücksetzen",
+      "experimental_body": "Experimentelle Einstellungen und Funktionen werden hier angezeigt.",
+      "language_description": "Wählen Sie die Anzeigesprache für die Anwendung.",
+      "theme_description": "Wählen Sie Ihr bevorzugtes Oberflächen-Design."
+    },
+    "formatDialog": {
+      "title": "Formateinstellungen",
+      "close_aria": "Formateinstellungen-Dialog schließen",
+      "tabs_aria_label": "Formateinstellungen Tabs",
+      "select_format_tab": "Format auswählen",
+      "manage_custom_tab": "Benutzerdefinierte Formate verwalten",
+      "standard_formats_group": "Standardformate",
+      "no_results": "Keine Formate gefunden, die Ihrer Suche entsprechen.",
+      "custom_formats_group": "Benutzerdefinierte Formate",
+      "search_placeholder": "Format suchen...",
+      "edit_format_header": "Format bearbeiten",
+      "add_format_header": "Neues Format hinzufügen",
+      "label_label": "Etikett",
+      "label_placeholder": "z.B. Benutzerdefiniert 4x6",
+      "width_px_label": "Breite (px)",
+      "width_px_placeholder": "z.B. 600",
+      "height_px_label": "Höhe (px)",
+      "height_px_placeholder": "z.B. 900",
+      "print_w_mm_label": "Druck B (mm)",
+      "print_w_mm_placeholder": "z.B. 101.6",
+      "print_h_mm_label": "Druck H (mm)",
+      "print_h_mm_placeholder": "z.B. 152.4",
+      "update_button": "Format aktualisieren",
+      "add_button": "Format hinzufügen",
+      "your_custom_formats_header": "Ihre benutzerdefinierten Formate",
+      "edit_format_tooltip": "Format bearbeiten",
+      "delete_format_tooltip": "Format löschen",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (ca. {{width}}x{{height}}px)",
+      "custom_format_limit_reached": "Sie haben das Limit von 4 benutzerdefinierten Formaten erreicht."
+    },
+    "photoQueue": {
+      "title": "Foto-Booth-Warteschlange ({{count}})",
+      "clear_all_button": "Alle löschen",
+      "clear_queue_aria": "Foto-Warteschlange leeren",
+      "close_aria": "Foto-Warteschlangen-Dialog schließen",
+      "queued_photo_alt": "Foto {{index}} in der Warteschlange",
+      "remove_photo_aria": "Foto {{index}} entfernen",
+      "empty_title": "Die Warteschlange ist leer",
+      "empty_description": "Aktivieren Sie den Foto-Booth-Modus und nehmen Sie einige Fotos auf, um sie hier zu sehen."
+    },
+    "print": {
+      "title": "Druckoptionen",
+      "close_aria": "Druckoptionen-Dialog schließen",
+      "photos_per_page_label": "Fotos pro Seite",
+      "description": "Druckt auf ein Standardblatt. Ihre Fotogröße beträgt {{width}}×{{height}} in.",
+      "print_now_button": "Jetzt drucken"
+    },
+    "import": {
+      "title_reposition": "Bild neu positionieren",
+      "title_import": "Bild importieren",
+      "close_aria": "Dialog schließen",
+      "guide_align": "Gesicht mit der ovalen Führungslinie ausrichten",
+      "guide_drag": "Zum Neupositionieren ziehen",
+      "change_image_button": "Bild ändern",
+      "confirm_crop_button": "Bestätigen & zuschneiden",
+      "drag_drop_text": "Ziehen & ablegen",
+      "drag_drop_subtext": "ein Bild hier",
+      "or": "oder",
+      "choose_from_phone_button": "Vom Telefon auswählen",
+      "choose_from_computer_button": "Vom Computer auswählen"
+    },
+    "countryRequirements": {
+      "title": "Länderspezifische Anforderungen",
+      "close_aria": "Länderanforderungen-Dialog schließen",
+      "search_placeholder": "Länder suchen...",
+      "no_results": "Keine Länder gefunden, die Ihrer Suche entsprechen.",
+      "view_official": "Offizielle anzeigen",
+      "background": "Hintergrund",
+      "head_size": "Kopfgröße",
+      "notes": "Hinweise",
+      "disclaimer": "Anforderungen können sich ändern. Überprüfen Sie immer mit offiziellen Regierungsquellen, bevor Sie Ihr Foto einreichen.",
+      "us_name": "Vereinigte Staaten",
+      "us_background": "Weißer Hintergrund",
+      "us_notes": "Neutraler Gesichtsausdruck oder ein natürliches Lächeln ist akzeptabel. Keine Brille.",
+      "eu_name": "EU / Schengen-Raum",
+      "eu_background": "Hellgrauer oder cremefarbener Hintergrund",
+      "eu_notes": "Neutraler Gesichtsausdruck, Mund geschlossen. Allgemeiner biometrischer Standard.",
+      "ca_name": "Kanada",
+      "ca_background": "Weißer Hintergrund",
+      "ca_notes": "Neutraler Gesichtsausdruck erforderlich. Keine Schatten im Gesicht oder Hintergrund.",
+      "au_name": "Australien",
+      "au_background": "Hellgrauer Hintergrund",
+      "au_notes": "Neutraler Gesichtsausdruck, Mund geschlossen. Gute Qualität, keine Schatten.",
+      "jp_name": "Japan",
+      "jp_background": "Weißer Hintergrund",
+      "jp_notes": "Einfacher Hintergrund (weiß oder hellblau). Strenge Positionierungsregeln.",
+      "in_name": "Indien",
+      "in_background": "Weißer Hintergrund",
+      "in_notes": "Quadratisches Format. Augen offen, neutraler Ausdruck. Vollständige Gesichtsansicht.",
+      "cn_name": "China",
+      "cn_background": "Weißer Hintergrund",
+      "cn_notes": "Keine Kopfbedeckung außer aus religiösen Gründen. Keine Schatten.",
+      "mx_name": "Mexiko",
+      "mx_background": "Weißer Hintergrund",
+      "mx_notes": "Gesicht und Schultern geradeaus. Neutraler Ausdruck, kein Lächeln.",
+      "br_name": "Brasilien",
+      "br_background": "Weißer Hintergrund",
+      "br_notes": "Aktuelles Foto (weniger als 6 Monate). Neutraler Ausdruck.",
+      "my_name": "Malaysia",
+      "my_background": "Weißer Hintergrund",
+      "my_notes": "Dunkle Kleidung, die die Schultern bedeckt. Keine Kopfbedeckung.",
+      "ru_name": "Russland",
+      "ru_background": "Weißer Hintergrund",
+      "ru_notes": "Klares, scharfes Bild. Neutraler Ausdruck. Keine Kopfbedeckung."
+    }
+  }
+}

@@ -1,0 +1,364 @@
+{
+  "common": {
+    "continue": "Continuă",
+    "cancel": "Anulează"
+  },
+  "languages": {
+    "english": "English",
+    "french": "Français",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română"
+  },
+  "components": {
+    "header": {
+      "title": "Ruby Passport",
+      "subtitle": "Generator de fotografii pentru pașaport"
+    },
+    "app": {
+      "wizard": {
+        "guidelines": "Instrucțiuni",
+        "camera": "Cameră",
+        "result": "Rezultat"
+      },
+      "printPreviewTitle": "Previzualizare tipărire",
+      "printPreviewTitleWithName": "{{name}} - Previzualizare tipărire",
+      "passportPortraitAlt": "Fotografie pașaport"
+    },
+    "panels": {
+      "guidelines": {
+        "title": "Instrucțiuni",
+        "subtitle": "Pentru majoritatea standardelor internaționale.",
+        "do_title": "De făcut",
+        "do_item_1": "• Capul drept și centrat",
+        "do_item_2": "• Privește direct la cameră",
+        "do_item_3": "• Expresie neutră (gura închisă)",
+        "do_item_4": "• Fără ochelari sau acoperământ (excepție religioasă)",
+        "do_item_5": "• Ochii trebuie să fie vizibili",
+        "do_item_6": "• Aliniază fața în oval, ochii pe linie",
+        "dont_title": "De evitat",
+        "dont_item_1": "• Fără zâmbet, înclinare sau ochi mijiți",
+        "dont_item_2": "• Fără machiaj intens sau filtre",
+        "dont_item_3": "• Evită pălării, căști sau accesorii",
+        "dont_item_4": "• Evită umbre puternice sau lumină din spate",
+        "lighting_title": "Lumină & Fundal",
+        "lighting_item_1": "• Lumină puternică și uniformă din față",
+        "lighting_item_2": "• Stai la ~0.5m de un fundal simplu, deschis",
+        "lighting_item_3": "• Evită umbrele sub bărbie sau nas",
+        "lighting_item_4": "• Haine în tonuri medii (nu albe)",
+        "country_requirements_title": "Cerințe Specifice pe Țări",
+        "country_requirements_description": "Vezi cerințele detaliate pentru toate țările suportate cu căutare și linkuri oficiale.",
+        "view_country_requirements": "Vezi Cerințele pe Țări",
+        "privacy_title": "Confidențialitatea ta contează",
+        "privacy_body": "Această aplicație îți respectă confidențialitatea. Totul se întâmplă local în browser. Imaginile tale nu sunt niciodată încărcate sau salvate."
+      },
+      "camera": {
+        "back": "Înapoi",
+        "back_aria": "Înapoi la instrucțiuni",
+        "preview": "Previzualizare",
+        "switch_camera_tooltip": "Schimbă camera",
+        "switch_camera_button": "Schimbă camera",
+        "guide_align_face": "Aliniază fața cu ghidul oval",
+        "guide_eyes_on_line": "Ochii pe linia orizontală",
+        "starting_camera": "Pornire cameră...",
+        "camera_not_started": "Camera nu a pornit",
+        "starting_button": "Pornire…",
+        "start_camera_button": "Pornește camera",
+        "import_image_button": "Importă imagine",
+        "capture_photo_button": "Fotografiază",
+        "stop_button": "Oprire"
+      },
+      "result": {
+        "title": "Rezultat",
+        "edit_details_tooltip": "Editează detalii (nume & watermark)",
+        "details_button": "Detalii",
+        "retake_button": "Reia fotografia",
+        "person_name_label": "Numele persoanei",
+        "optional_placeholder": "Opțional",
+        "captured_alt": "Fotografie pașaport capturată",
+        "processing": "Procesare fotografie...",
+        "placeholder": "Fă sau importă o fotografie",
+        "download_button": "Descarcă",
+        "print_button": "Tipărește",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
+        "before_unload_prompt": "Sigur vrei să părăsești pagina? Fotografia generată va fi pierdută."
+      }
+    },
+    "footer": {
+      "copyright": "© {{year}} Ruby Passport. Toate drepturile rezervate.",
+      "copyright_mobile": "© {{year}} Ruby Passport.",
+      "madeWith": "Creat cu ❤️ de"
+    }
+  },
+  "tooltips": {
+    "formatSettings": "Setări format (F)",
+    "changeFormat": "Schimbă formatul sau gestionează formatele personalizate (F)",
+    "viewPhotoQueue": "Vezi coada de fotografii ({{count}})",
+    "photoBoothEnabled": "Cabină foto activată (B)",
+    "enablePhotoBooth": "Activează cabina foto (B)",
+    "changeLanguage": "Schimbă limba",
+    "showInfo": "Afișează fereastra de informații (I)",
+    "switchToDark": "Treci la tema întunecată (T)",
+    "switchToLight": "Treci la tema luminoasă (T)",
+    "exitFullscreen": "Ieși din ecran complet",
+    "enterFullscreen": "Intră pe ecran complet",
+    "showShortcuts": "Afișează scurtăturile de tastatură (?)",
+    "showGuidelines": "Afișează instrucțiunile",
+    "hideGuidelines": "Ascunde instrucțiunile",
+    "showSettings": "Afișează dialogul de setări (S)",
+    "toggleTheme": "Comută tema",
+    "menu": "Meniu",
+    "moreOptions": "Mai multe opțiuni"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Modul cabină foto activat - fotografiile vor fi puse în coadă pentru tipărire multiplă",
+    "photoBoothDisabled": "Modul cabină foto dezactivat - mod fotografie unică",
+    "backOnline": "Ești din nou online!",
+    "offline": "Ești offline. Unele funcționalități pot fi indisponibile.",
+    "customFormatLimit": "Limită de 4 formate personalizate atinsă.",
+    "invalidFormatDimensions": "Dimensiunile trebuie să fie între 1 și 10000.",
+    "formatExists": "Există deja un format cu aceste specificații: {{label}}",
+    "startingCamera": "Se pornește camera...",
+    "maxCameraResolution": "Rezoluție maximă cameră: {{width}}x{{height}}",
+    "cameraStream": "Flux video cameră: {{width}}x{{height}}",
+    "highResAvailable": "Captură la rezoluție∏ înaltă disponibilă.",
+    "highResNotSupported": "Captura la rezoluție înaltă nu este suportată. Se folosește fluxul video.",
+    "cameraError": "Eroare cameră: {{message}}",
+    "capturingHighRes": "Se capturează fotografie la rezoluție înaltă...",
+    "photoCaptured": "Fotografie capturată cu succes!",
+    "photoCaptureFailed": "Eroare la procesarea fotografiei capturate.",
+    "highResCaptureFailed": "Captura high-res a eșuat: {{message}}. Se revine la cadrul video.",
+    "photoFromStream": "Fotografie capturată din fluxul video.",
+    "processedDownloaded": "Imagine procesată descărcată!",
+    "originalDownloaded": "Imagine originală descărcată!",
+    "fullscreenError": "Eroare la activarea modului ecran complet: {{message}}",
+    "addedToQueue": "Adăugată în coadă",
+    "imageLoadFailed": "Eroare la încărcarea imaginii pentru procesare.",
+    "cameraPermission": "Se așteaptă permisiunea pentru cameră...",
+    "videoPlaybackError": "Nu s-a putut porni redarea video.",
+    "videoPlaybackErrorMessage": "Redare video eșuată: {{message}}",
+    "imageImportSuccess": "Imagine importată și decupată cu succes!",
+    "photoQueueFull": "Coada de fotografii este plină (max {{max}}).",
+    "printPreview": "Se pregătește previzualizarea pentru tipărire...",
+    "printWindowError": "Nu s-a putut deschide fereastra de tipărire. Te rugăm să dezactivezi blocarea pop-up-urilor.",
+    "photoQueueCleared": "Coada de fotografii a fost golită",
+    "photoRemovedFromQueue": "Fotografia a fost eliminată din coadă",
+    "checkCountryRequirements": "Alegere bună! Asigură-te că verifici cerințele specifice pentru acest format."
+  },
+  "dialogs": {
+    "confirmation": {
+      "close_aria": "Închide dialogul de confirmare",
+      "retake_title": "Ești sigur?",
+      "retake_description": "Aceasta va elimina fotografia curentă și te va întoarce la cameră. Această acțiune nu poate fi anulată."
+    },
+    "format": {
+      "errorAllFields": "Te rog completează toate câmpurile pentru formatul personalizat.",
+      "errorInvalidNumber": "Valori invalide pentru format. Toate dimensiunile trebuie să fie pozitive."
+    },
+    "download": {
+      "title": "Opțiuni descărcare",
+      "close_aria": "Închide dialogul opțiuni descărcare",
+      "description": "Alege versiunea fotografiei pe care vrei să o descarci.",
+      "processed_button": "Descarcă fotografia procesată",
+      "original_button": "Descarcă originalul (Hi-Res)",
+      "original_tooltip_unavailable": "Originalul la rezoluție înaltă nu este disponibil pentru această fotografie.",
+      "original_tooltip_available": "Descarcă fotografia originală, ne-decupată.",
+      "original_unavailable_note": "Originalul la rezoluție înaltă este disponibil doar pentru fotografiile realizate cu opțiunea de cameră high-res sau dintr-un fișier importat."
+    },
+    "info": {
+      "title": "Întrebări frecvente",
+      "close_aria": "Închide dialogul FAQ",
+      "faqs": [
+        {
+          "q": "Ce este Ruby Passport?",
+          "a": "Ruby Passport este o aplicație web pentru a crea fotografii de pașaport/ID direct în browser. Te ajută să creezi fotografii care respectă cerințele de mărime și aliniere pentru diverse țări."
+        },
+        {
+          "q": "Datele mele sunt în siguranță?",
+          "a": "Da. Toată procesarea se face local în browser. Fotografiile tale nu sunt niciodată încărcate pe un server, asigurându-ți confidențialitatea."
+        },
+        {
+          "q": "Cât de precisă este tipărirea?",
+          "a": "Previzualizarea pentru tipărire generează o pagină cu fotografii la dimensiuni fizice exacte. Pentru rezultate optime, setează imprimanta la scară 100% și dezactivează 'fit to page'."
+        },
+        {
+          "q": "Pot crea formate foto personalizate?",
+          "a": "Da. Poți adăuga, edita și șterge propriile formate cu dimensiuni precise folosind dialogul 'Setări format' (F)."
+        },
+        {
+          "q": "Pot folosi o fotografie existentă în locul camerei?",
+          "a": "Da! Poți importa o imagine de pe computer cu butonul 'Import' sau prin drag & drop. Dacă imaginea este mai mare decât formatul, o poți repoziționa înainte de procesare."
+        },
+        {
+          "q": "La ce folosesc ghidajele de aliniere?",
+          "a": "Ghidajele live din vizualizarea camerei te ajută să aliniezi corect fața conform cerințelor formatului selectat, asigurând conformitatea fotografiei."
+        },
+        {
+          "q": "Cum pot dezactiva ghidajele de aliniere?",
+          "a": "Poți comuta vizibilitatea ghidajelor de aliniere (ovalul, liniile și marcajele de colț) în previzualizarea camerei și în dialogul de import. Deschide dialogul de Setări făcând clic pe pictograma roată dințată din antet sau apăsând 'S', apoi folosește comutatorul 'Afișează ghidajele de aliniere' din fila 'General'."
+        },
+        {
+          "q": "Cum pot schimba limba sau tema aplicației?",
+          "a": "Poți personaliza experiența în dialogul de Setări (din meniu sau tasta 'S'). Acolo poți schimba limba și comuta între temele deschisă și întunecată."
+        },
+        {
+          "q": "Pot adăuga un filigran pe fotografiile mele?",
+          "a": "Da. Poți activa, dezactiva și personaliza textul filigranului în dialogul de Setări (apasă 'S'). Setările pentru filigran se găsesc în fila „General”."
+        },
+        {
+          "q": "Ce este modul Cabină Foto?",
+          "a": "Modul Cabină Foto permite capturarea mai multor fotografii pentru a le tipări împreună pe aceeași foaie. Activează-l din meniu sau apăsând 'B'. Când există fotografii în coadă, butonul afișează numărul lor și deschide dialogul cozii. Acolo poți rearanja sau șterge fotografii. Apoi le poți tipări pe toate odată."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Scurtături tastatură",
+      "close_aria": "Închide dialogul scurtături",
+      "items": {
+        "show_help": "Afișează acest dialog de ajutor",
+        "toggle_camera": "Pornește / Oprește camera",
+        "capture": "Capturează fotografia",
+        "import": "Importă imagine",
+        "download": "Descarcă rezultatul",
+        "retake": "Reia fotografia",
+        "toggle_watermark": "Comută filigranul",
+        "print": "Deschide opțiunile de tipărire",
+        "format_settings": "Deschide setările de format",
+        "toggle_photobooth": "Comută modul Cabină Foto",
+        "toggle_theme": "Comută tema",
+        "toggle_fullscreen": "Comută ecranul complet",
+        "show_info": "Afișează dialogul de informații",
+        "show_settings": "Afișează dialogul de setări"
+      }
+    },
+    "settingsDialog": {
+      "title": "Setări",
+      "close_aria": "Închide dialogul de setări",
+      "tabs_aria_label": "File setări",
+      "general_tab": "General",
+      "experimental_tab": "Experimental",
+      "general_settings_header": "Setări Generale",
+      "language_label": "Limbă",
+      "theme_label": "Temă",
+      "theme_light": "Luminos",
+      "theme_dark": "Întunecat",
+      "theme_system": "Sistem",
+      "show_align_guides_label": "Afișează ghidajele de aliniere",
+      "show_align_guides_description": "Afișați sau ascundeți ghidajele de aliniere (oval, linii) pe cameră.",
+      "enable_watermark_label": "Activează watermark",
+      "enable_watermark_description": "Adăugați un watermark stilat fotografiei finale.",
+      "watermark_text_placeholder": "Text watermark",
+      "reset_watermark_tooltip": "Resetează la implicit",
+      "experimental_body": "Setările și funcționalitățile experimentale vor apărea aici.",
+      "language_description": "Alegeți limba de afișare pentru aplicație.",
+      "theme_description": "Selectați tema de interfață preferată."
+    },
+    "formatDialog": {
+      "title": "Setări format",
+      "close_aria": "Închide dialogul de setări format",
+      "tabs_aria_label": "Setări format Tabs",
+      "select_format_tab": "Selectează format",
+      "manage_custom_tab": "Formate personalizate",
+      "standard_formats_group": "Formate standard",
+      "no_results": "Nu s-au găsit formate care să corespundă căutării tale.",
+      "custom_formats_group": "Formate personalizate",
+      "search_placeholder": "Caută formate...",
+      "edit_format_header": "Editează format",
+      "add_format_header": "Adaugă format nou",
+      "label_label": "Etichetă",
+      "label_placeholder": "ex. Personalizat 4x6",
+      "width_px_label": "Lățime (px)",
+      "width_px_placeholder": "ex. 600",
+      "height_px_label": "Înălțime (px)",
+      "height_px_placeholder": "ex. 900",
+      "print_w_mm_label": "Lățime tipărire (mm)",
+      "print_w_mm_placeholder": "ex. 101.6",
+      "print_h_mm_label": "Înălțime tipărire (mm)",
+      "print_h_mm_placeholder": "ex. 152.4",
+      "update_button": "Actualizează formatul",
+      "add_button": "Adaugă format",
+      "your_custom_formats_header": "Formatele tale personalizate",
+      "edit_format_tooltip": "Editează format",
+      "delete_format_tooltip": "Șterge format",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)",
+      "custom_format_limit_reached": "Ai atins limita de 4 formate personalizate."
+    },
+    "photoQueue": {
+      "title": "Coada Cabinei Foto ({{count}})",
+      "clear_all_button": "Șterge tot",
+      "clear_queue_aria": "Șterge coada de fotografii",
+      "close_aria": "Închide dialogul cozii de fotografii",
+      "queued_photo_alt": "Fotografie în coadă {{index}}",
+      "remove_photo_aria": "Șterge fotografia {{index}}",
+      "empty_title": "Coada este goală",
+      "empty_description": "Activează modul Cabină Foto și capturează câteva fotografii pentru a le vedea aici."
+    },
+    "print": {
+      "title": "Opțiuni tipărire",
+      "close_aria": "Închide dialogul opțiuni tipărire",
+      "photos_per_page_label": "Fotografii per pagină",
+      "description": "Se tipărește pe o foaie standard. Dimensiunea fotografiei tale este {{width}}×{{height}} in.",
+      "print_now_button": "Tipărește acum"
+    },
+    "import": {
+      "title_reposition": "Repoziționează imaginea",
+      "title_import": "Importă imagine",
+      "close_aria": "Închide dialogul",
+      "guide_align": "Aliniază fața cu ghidul oval",
+      "guide_drag": "Trage pentru a repoziționa",
+      "change_image_button": "Schimbă imaginea",
+      "confirm_crop_button": "Confirmă & decupează",
+      "drag_drop_text": "Trage & plasează",
+      "drag_drop_subtext": "o imagine aici",
+      "or": "sau",
+      "choose_from_phone_button": "Alege de pe telefon",
+      "choose_from_computer_button": "Alege de pe computer"
+    },
+    "countryRequirements": {
+      "title": "Cerințe Specifice pe Țări",
+      "close_aria": "Închide dialogul cerințelor pe țări",
+      "search_placeholder": "Caută țări...",
+      "no_results": "Nu s-au găsit țări care să corespundă căutării tale.",
+      "view_official": "Vezi Oficial",
+      "background": "Fundal",
+      "head_size": "Dimensiunea Capului",
+      "notes": "Note",
+      "disclaimer": "Cerințele se pot schimba. Verifică întotdeauna cu sursele guvernamentale oficiale înainte de a trimite fotografia.",
+      "us_name": "Statele Unite",
+      "us_background": "Fundal alb",
+      "us_notes": "Expresie neutră sau un zâmbet natural este acceptabil. Fără ochelari.",
+      "eu_name": "UE / Spațiul Schengen",
+      "eu_background": "Fundal gri deschis sau crem",
+      "eu_notes": "Expresie neutră, gura închisă. Standard biometric comun.",
+      "ca_name": "Canada",
+      "ca_background": "Fundal alb",
+      "ca_notes": "Expresie neutră necesară. Fără umbre pe față sau fundal.",
+      "au_name": "Australia",
+      "au_background": "Fundal gri deschis",
+      "au_notes": "Expresie neutră, gura închisă. Calitate bună, fără umbre.",
+      "jp_name": "Japonia",
+      "jp_background": "Fundal alb",
+      "jp_notes": "Fundal simplu (alb sau albastru deschis). Reguli stricte de poziționare.",
+      "in_name": "India",
+      "in_background": "Fundal alb",
+      "in_notes": "Format pătrat. Ochii deschiși, expresie neutră. Vedere completă a feței.",
+      "cn_name": "China",
+      "cn_background": "Fundal alb",
+      "cn_notes": "Fără acoperământ pentru cap, cu excepția motivelor religioase. Fără umbre.",
+      "mx_name": "Mexic",
+      "mx_background": "Fundal alb",
+      "mx_notes": "Fața și umerii drept înainte. Expresie neutră, fără zâmbet.",
+      "br_name": "Brazilia",
+      "br_background": "Fundal alb",
+      "br_notes": "Fotografie recentă (mai puțin de 6 luni). Expresie neutră.",
+      "my_name": "Malaysia",
+      "my_background": "Fundal alb",
+      "my_notes": "Îmbrăcăminte de culoare închisă care acoperă umerii. Fără acoperământ pentru cap.",
+      "ru_name": "Rusia",
+      "ru_background": "Fundal alb",
+      "ru_notes": "Imagine clară, focalizată. Expresie neutră. Fără acoperământ pentru cap."
+    }
+  }
+}

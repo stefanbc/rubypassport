@@ -1,59 +1,157 @@
-export type ToastType = 'error' | 'info' | 'success';
+export type ToastType = "error" | "info" | "success" | "warning";
 
 export type Toast = {
-  id: number;
-  message: string;
-  type: ToastType;
+    id: number;
+    message: string;
+    type: ToastType;
 };
 
 export type Format = {
-  id: string;
-  label: string;
-  widthPx: number;
-  heightPx: number;
-  printWidthIn: number;
-  printHeightIn: number;
+    id: string;
+    label: string;
+    widthPx: number;
+    heightPx: number;
+    printWidthMm: number;
+    printHeightMm: number;
+    flagCode?: string;
 };
 
 export const PHOTO_COUNTS = [1, 2, 4, 6, 8, 10, 12] as const;
-export type PhotoCount = typeof PHOTO_COUNTS[number];
+export type PhotoCount = (typeof PHOTO_COUNTS)[number];
 
-export type Theme = 'light' | 'dark';
+export type QueuedPhoto = {
+    id: string;
+    imgSrc: string;
+};
+
+export type Theme = "light" | "dark";
 
 export type DialogType =
-  | 'customFormat'
-  | 'download'
-  | 'shortcuts'
-  | 'print'
-  | 'info'
-  | 'import'
-  | 'photoQueue'
-  | null;
+    | "customFormat"
+    | "download"
+    | "shortcuts"
+    | "print"
+    | "info"
+    | "import"
+    | "photoQueue"
+    | "settings"
+    | "confirmRetake"
+    | "countryRequirements"
+    | null;
 
-export type WizardStep = 'guidelines' | 'camera' | 'result';
+export type WizardStep = "guidelines" | "camera" | "result";
 
-export type FacingMode = 'user' | 'environment';
+export type FacingMode = "user" | "environment";
 
 // Supported passport/ID photo formats
 export const FORMATS: readonly Format[] = [
-  { id: 'us_2x2', label: 'US 2x2 in (600×600 px)', widthPx: 600, heightPx: 600, printWidthIn: 2, printHeightIn: 2 },
-  { id: 'eu_35x45', label: 'EU/UK 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
-  { id: 'ca_50x70', label: 'Canada 50×70 mm (~591×827 px)', widthPx: 591, heightPx: 827, printWidthIn: 50 / 25.4, printHeightIn: 70 / 25.4 },
-  { id: 'in_51x51', label: 'India 51×51 mm (~602×602 px)', widthPx: 602, heightPx: 602, printWidthIn: 51 / 25.4, printHeightIn: 51 / 25.4 },
-  { id: 'ro_35x45', label: 'Romania 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
-  { id: 'cn_33x48', label: 'China 33×48 mm (~390×567 px)', widthPx: 390, heightPx: 567, printWidthIn: 33 / 25.4, printHeightIn: 48 / 25.4 },
-  { id: 'ru_35x45', label: 'Russia 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
-  { id: 'au_35x45', label: 'Australia 35×45 mm (~413×531 px)', widthPx: 413, heightPx: 531, printWidthIn: 35 / 25.4, printHeightIn: 45 / 25.4 },
-  { id: 'br_50x70', label: 'Brazil 50×70 mm (~591×827 px)', widthPx: 591, heightPx: 827, printWidthIn: 50 / 25.4, printHeightIn: 70 / 25.4 },
-  { id: 'mx_25x30', label: 'Mexico 25×30 mm (~295×354 px)', widthPx: 295, heightPx: 354, printWidthIn: 25 / 25.4, printHeightIn: 30 / 25.4 }
+    {
+        id: "au_35x45",
+        label: "Australia",
+        widthPx: 413,
+        heightPx: 531,
+        printWidthMm: 35,
+        printHeightMm: 45,
+        flagCode: "AU",
+    },
+    {
+        id: "br_50x70",
+        label: "Brazil",
+        widthPx: 591,
+        heightPx: 827,
+        printWidthMm: 50,
+        printHeightMm: 70,
+        flagCode: "BR",
+    },
+    {
+        id: "ca_50x70",
+        label: "Canada",
+        widthPx: 591,
+        heightPx: 827,
+        printWidthMm: 50,
+        printHeightMm: 70,
+        flagCode: "CA",
+    },
+    {
+        id: "cn_33x48",
+        label: "China",
+        widthPx: 390,
+        heightPx: 567,
+        printWidthMm: 33,
+        printHeightMm: 48,
+        flagCode: "CN",
+    },
+    {
+        id: "eu_35x45",
+        label: "EU / Schengen / UK",
+        widthPx: 413,
+        heightPx: 531,
+        printWidthMm: 35,
+        printHeightMm: 45,
+        flagCode: "EU",
+    },
+    {
+        id: "in_51x51",
+        label: "India",
+        widthPx: 602,
+        heightPx: 602,
+        printWidthMm: 51,
+        printHeightMm: 51,
+        flagCode: "IN",
+    },
+    {
+        id: "jp_35x45",
+        label: "Japan",
+        widthPx: 413,
+        heightPx: 531,
+        printWidthMm: 35,
+        printHeightMm: 45,
+        flagCode: "JP",
+    },
+    {
+        id: "my_35x50",
+        label: "Malaysia",
+        widthPx: 413,
+        heightPx: 591,
+        printWidthMm: 35,
+        printHeightMm: 50,
+        flagCode: "MY",
+    },
+    {
+        id: "mx_25x30",
+        label: "Mexico",
+        widthPx: 295,
+        heightPx: 354,
+        printWidthMm: 25,
+        printHeightMm: 30,
+        flagCode: "MX",
+    },
+    {
+        id: "ru_35x45",
+        label: "Russia",
+        widthPx: 413,
+        heightPx: 531,
+        printWidthMm: 35,
+        printHeightMm: 45,
+        flagCode: "RU",
+    },
+    {
+        id: "us_2x2",
+        label: "US",
+        widthPx: 600,
+        heightPx: 600,
+        printWidthMm: 50.8,
+        printHeightMm: 50.8,
+        flagCode: "US",
+    },
 ];
-export type PredefinedFormatId = typeof FORMATS[number]['id'];
+export type PredefinedFormatId = (typeof FORMATS)[number]["id"];
 export type FormatId = PredefinedFormatId | string;
 
 export type NewFormatState = {
-  label: string;
-  widthPx: string;
-  heightPx: string;
-  printWidthMm: string;
-  printHeightMm: string;
+    label: string;
+    widthPx: string;
+    heightPx: string;
+    printWidthMm: string;
+    printHeightMm: string;
 };

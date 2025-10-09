@@ -1,0 +1,364 @@
+{
+  "common": {
+    "continue": "Continue",
+    "cancel": "Cancel"
+  },
+  "languages": {
+    "english": "English",
+    "french": "Français",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română"
+  },
+  "components": {
+    "header": {
+      "title": "Ruby Passport",
+      "subtitle": "Passport Photo Generator"
+    },
+    "app": {
+      "wizard": {
+        "guidelines": "Guidelines",
+        "camera": "Camera",
+        "result": "Result"
+      },
+      "printPreviewTitle": "Print Preview",
+      "printPreviewTitleWithName": "{{name}} - Print Preview",
+      "passportPortraitAlt": "Passport portrait"
+    },
+    "panels": {
+      "guidelines": {
+        "title": "Guidelines",
+        "subtitle": "Follow these for most country standards.",
+        "do_title": "Do",
+        "do_item_1": "• Keep your head centered and straight",
+        "do_item_2": "• Look directly at the camera",
+        "do_item_3": "• Maintain a neutral expression (mouth closed)",
+        "do_item_4": "• Remove glasses and headwear (unless religious)",
+        "do_item_5": "• Ensure eyes are clearly visible",
+        "do_item_6": "• Align face in oval, eyes on the line",
+        "dont_title": "Don't",
+        "dont_item_1": "• No smiling, tilting, or squinting",
+        "dont_item_2": "• No heavy makeup or filters",
+        "dont_item_3": "• Avoid hats, headphones, or accessories",
+        "dont_item_4": "• Avoid harsh shadows or backlight",
+        "lighting_title": "Lighting & Background",
+        "lighting_item_1": "• Use bright, even lighting from the front",
+        "lighting_item_2": "• Stand ~0.5 m from a plain, light background",
+        "lighting_item_3": "• Avoid strong shadows under chin or nose",
+        "lighting_item_4": "• Prefer mid-tone clothing (not white)",
+        "country_requirements_title": "Country-Specific Requirements",
+        "country_requirements_description": "View detailed requirements for all supported countries with search and official links.",
+        "view_country_requirements": "View Country Requirements",
+        "privacy_title": "Your Privacy Matters",
+        "privacy_body": "This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you're done, they're gone."
+      },
+      "camera": {
+        "back": "Back",
+        "back_aria": "Back to guidelines",
+        "preview": "Preview",
+        "switch_camera_tooltip": "Switch camera",
+        "switch_camera_button": "Switch camera",
+        "guide_align_face": "Align your face with the oval guide",
+        "guide_eyes_on_line": "Eyes on the horizontal line",
+        "starting_camera": "Starting camera…",
+        "camera_not_started": "Camera not started",
+        "starting_button": "Starting…",
+        "start_camera_button": "Start Camera",
+        "import_image_button": "Import Image",
+        "capture_photo_button": "Capture Photo",
+        "stop_button": "Stop"
+      },
+      "result": {
+        "title": "Result",
+        "edit_details_tooltip": "Edit details (name & watermark)",
+        "details_button": "Details",
+        "retake_button": "Retake",
+        "person_name_label": "Person's Name",
+        "optional_placeholder": "Optional",
+        "captured_alt": "Captured passport",
+        "processing": "Processing photo...",
+        "placeholder": "Capture or import a photo",
+        "download_button": "Download",
+        "print_button": "Print",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
+        "before_unload_prompt": "Are you sure you want to leave? Your generated photo will be lost."
+      }
+    },
+    "footer": {
+      "copyright": "© {{year}} Ruby Passport. All rights reserved.",
+      "copyright_mobile": "© {{year}} Ruby Passport.",
+      "madeWith": "Made with ❤️ by"
+    }
+  },
+  "tooltips": {
+    "formatSettings": "Format Settings (F)",
+    "changeFormat": "Change format or manage custom formats (F)",
+    "viewPhotoQueue": "View Photo Queue ({{count}})",
+    "photoBoothEnabled": "Photo Booth enabled (B)",
+    "enablePhotoBooth": "Enable Photo Booth (B)",
+    "changeLanguage": "Change Language",
+    "showInfo": "Show info dialog (I)",
+    "switchToDark": "Switch to dark theme (T)",
+    "toggleTheme": "Toggle theme",
+    "menu": "Menu",
+    "moreOptions": "More options",
+    "switchToLight": "Switch to light theme (T)",
+    "exitFullscreen": "Exit Fullscreen",
+    "enterFullscreen": "Enter Fullscreen",
+    "showShortcuts": "Show keyboard shortcuts (?)",
+    "showGuidelines": "Show Guidelines",
+    "hideGuidelines": "Hide Guidelines",
+    "showSettings": "Show settings dialog (S)"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Photo Booth mode enabled - photos will be queued for batch printing",
+    "photoBoothDisabled": "Photo Booth mode disabled - single photo mode",
+    "backOnline": "You are back online!",
+    "offline": "You are offline. Some features may be unavailable.",
+    "startingCamera": "Starting camera...",
+    "maxCameraResolution": "Max camera resolution: {{width}}x{{height}}",
+    "cameraStream": "Camera stream: {{width}}x{{height}}",
+    "highResAvailable": "High-resolution capture is available.",
+    "highResNotSupported": "High-resolution capture not supported. Using video stream.",
+    "cameraError": "Camera error: {{message}}",
+    "capturingHighRes": "Capturing high-resolution photo...",
+    "photoCaptured": "Photo captured successfully!",
+    "photoCaptureFailed": "Failed to process captured photo.",
+    "highResCaptureFailed": "High-res capture failed: {{message}}. Falling back to video frame.",
+    "photoFromStream": "Photo captured from video stream.",
+    "processedDownloaded": "Processed image downloaded!",
+    "originalDownloaded": "Original image downloaded!",
+    "fullscreenError": "Error attempting to enable full-screen mode: {{message}}",
+    "addedToQueue": "Added to queue",
+    "imageLoadFailed": "Failed to load image for processing.",
+    "cameraPermission": "Waiting for camera permissions...",
+    "customFormatLimit": "You can only have up to 4 custom formats.",
+    "invalidFormatDimensions": "Dimensions must be between 1 and 10000.",
+    "formatExists": "A format with these specifications already exists: {{label}}",
+    "photoQueueFull": "Photo queue is full (max {{max}}).",
+    "videoPlaybackError": "Could not start video playback.",
+    "videoPlaybackErrorMessage": "Could not start video playback: {{message}}",
+    "imageImportSuccess": "Image imported and cropped successfully!",
+    "printPreview": "Preparing print preview...",
+    "printWindowError": "Could not open print window. Please disable your pop-up blockers.",
+    "photoQueueCleared": "Photo queue cleared",
+    "photoRemovedFromQueue": "Photo removed from queue",
+    "checkCountryRequirements": "Good choice! Be sure to check the specific requirements for this format."
+  },
+  "dialogs": {
+    "confirmation": {
+      "close_aria": "Close confirmation dialog",
+      "retake_title": "Are you sure?",
+      "retake_description": "This will discard the current photo and return you to the camera. This action cannot be undone."
+    },
+    "format": {
+      "errorAllFields": "Please fill all custom format fields.",
+      "errorInvalidNumber": "Invalid number values for format. All dimensions must be positive."
+    },
+    "download": {
+      "title": "Download Options",
+      "close_aria": "Close download options dialog",
+      "description": "Choose which version of the photo you would like to download.",
+      "processed_button": "Download Processed Photo",
+      "original_button": "Download Original (Hi-Res)",
+      "original_tooltip_unavailable": "High-resolution original is not available for this photo.",
+      "original_tooltip_available": "Download the original, un-cropped photo.",
+      "original_unavailable_note": "A high-resolution original is only available for photos taken with the high-res camera option or from an imported file."
+    },
+    "info": {
+      "title": "Frequently Asked Questions",
+      "close_aria": "Close FAQ dialog",
+      "faqs": [
+        {
+          "q": "What is Ruby Passport?",
+          "a": "Ruby Passport is a modern web app for capturing and generating compliant passport/ID photos directly in your browser. It helps you create photos that meet specific size and alignment requirements for various countries."
+        },
+        {
+          "q": "Is my data secure?",
+          "a": "Yes. All photo processing happens locally in your browser. Your photos are never uploaded to a server, ensuring your privacy and security."
+        },
+        {
+          "q": "How accurate is the printing?",
+          "a": "The Print Preview feature generates a page with photos tiled to exact physical dimensions. For best results, ensure your printer settings are at 100% scale and \"fit to page\" is disabled."
+        },
+        {
+          "q": "Can I create custom photo formats?",
+          "a": "Absolutely. You can add, edit, and delete your own photo formats with precise pixel and physical print dimensions using the \"Format Settings\" (F) dialog."
+        },
+        {
+          "q": "Can I use an existing photo instead of the camera?",
+          "a": "Yes! You can import an image from your computer by clicking the 'Import' button or by dragging and dropping a file. If your image is larger than the selected format, you'll be able to drag it to reposition it for the perfect crop before it's processed."
+        },
+        {
+          "q": "What are the alignment guides for?",
+          "a": "The live guides on the camera view help you align your face correctly according to the selected format's requirements, ensuring your photo is compliant."
+        },
+        {
+          "q": "How do I turn off the alignment guides?",
+          "a": "You can toggle the visibility of the alignment guides (the oval, lines, and corner markers) in the camera preview and import dialog. Open the Settings dialog by clicking the gear icon in the header or by pressing 'S', then use the 'Show Align Guides' toggle on the General tab."
+        },
+        {
+          "q": "How can I change the app's language or theme?",
+          "a": "You can customize your experience in the Settings dialog, accessible from the header menu or by pressing 'S'. There you can change the display language and switch between light and dark themes."
+        },
+        {
+          "q": "Can I add a watermark to my photos?",
+          "a": "Yes. You can enable, disable, and customize the watermark text in the Settings dialog (press 'S'). The watermark settings are located under the \"General\" tab."
+        },
+        {
+          "q": "What is Photo Booth mode?",
+          "a": "Photo Booth mode allows you to capture multiple photos that are queued for batch printing on the same paper. Enable it with the Photo Booth icon (multiple images) in the header or by pressing \"B\". When photos are in the queue, this button shows the count and opens the queue dialog. Inside the dialog, you can rearrange photos by dragging them or delete individual photos by hovering over them. You can then print all queued photos together."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "close_aria": "Close shortcuts dialog",
+      "items": {
+        "show_help": "Show this help dialog",
+        "toggle_camera": "Start / Stop camera",
+        "capture": "Capture photo",
+        "import": "Import image",
+        "download": "Download result",
+        "retake": "Retake photo",
+        "toggle_watermark": "Toggle watermark",
+        "print": "Open print options",
+        "format_settings": "Open format settings",
+        "toggle_photobooth": "Toggle Photo Booth mode",
+        "toggle_theme": "Toggle theme",
+        "toggle_fullscreen": "Toggle fullscreen",
+        "show_info": "Show info dialog",
+        "show_settings": "Show settings dialog"
+      }
+    },
+    "settingsDialog": {
+      "title": "Settings",
+      "close_aria": "Close settings dialog",
+      "tabs_aria_label": "Settings tabs",
+      "general_tab": "General",
+      "experimental_tab": "Experimental",
+      "general_settings_header": "General Settings",
+      "language_label": "Language",
+      "theme_label": "Theme",
+      "theme_light": "Light",
+      "theme_dark": "Dark",
+      "theme_system": "System",
+      "show_align_guides_label": "Show Align Guides",
+      "show_align_guides_description": "Show or hide the alignment guides (oval, lines) on the camera.",
+      "enable_watermark_label": "Enable Watermark",
+      "enable_watermark_description": "Add a stylish watermark to your final photo.",
+      "watermark_text_placeholder": "Watermark Text",
+      "reset_watermark_tooltip": "Reset to default",
+      "experimental_body": "Experimental settings and features will go here.",
+      "language_description": "Choose the display language for the application.",
+      "theme_description": "Select your preferred interface theme."
+    },
+    "formatDialog": {
+      "title": "Format Settings",
+      "close_aria": "Close format settings dialog",
+      "tabs_aria_label": "Format settings tabs",
+      "select_format_tab": "Select Format",
+      "manage_custom_tab": "Manage Custom Formats",
+      "standard_formats_group": "Standard Formats",
+      "no_results": "No formats found matching your search.",
+      "custom_formats_group": "Custom Formats",
+      "search_placeholder": "Search formats...",
+      "edit_format_header": "Edit Format",
+      "add_format_header": "Add New Format",
+      "label_label": "Label",
+      "label_placeholder": "e.g. Custom 4x6",
+      "width_px_label": "Width (px)",
+      "width_px_placeholder": "e.g. 600",
+      "height_px_label": "Height (px)",
+      "height_px_placeholder": "e.g. 900",
+      "print_w_mm_label": "Print W (mm)",
+      "print_w_mm_placeholder": "e.g. 101.6",
+      "print_h_mm_label": "Print H (mm)",
+      "print_h_mm_placeholder": "e.g. 152.4",
+      "update_button": "Update Format",
+      "add_button": "Add Format",
+      "your_custom_formats_header": "Your Custom Formats",
+      "edit_format_tooltip": "Edit format",
+      "delete_format_tooltip": "Delete format",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)",
+      "custom_format_limit_reached": "You have reached the limit of 4 custom formats."
+    },
+    "photoQueue": {
+      "title": "Photo Booth Queue ({{count}})",
+      "clear_all_button": "Clear All",
+      "clear_queue_aria": "Clear photo queue",
+      "close_aria": "Close photo queue dialog",
+      "queued_photo_alt": "Queued photo {{index}}",
+      "remove_photo_aria": "Remove photo {{index}}",
+      "empty_title": "The queue is empty",
+      "empty_description": "Enable Photo Booth mode and capture some photos to see them here."
+    },
+    "print": {
+      "title": "Print Options",
+      "close_aria": "Close print options dialog",
+      "photos_per_page_label": "Photos per page",
+      "description": "Prints on a standard sheet. Your photo size is {{width}}×{{height}} in.",
+      "print_now_button": "Print Now"
+    },
+    "import": {
+      "title_reposition": "Reposition Image",
+      "title_import": "Import Image",
+      "close_aria": "Close dialog",
+      "guide_align": "Align face with the oval guide",
+      "guide_drag": "Drag to reposition",
+      "change_image_button": "Change Image",
+      "confirm_crop_button": "Confirm & Crop",
+      "drag_drop_text": "Drag & drop",
+      "drag_drop_subtext": "an image here",
+      "or": "or",
+      "choose_from_phone_button": "Choose from phone",
+      "choose_from_computer_button": "Choose from computer"
+    },
+    "countryRequirements": {
+      "title": "Country-Specific Requirements",
+      "close_aria": "Close country requirements dialog",
+      "search_placeholder": "Search countries...",
+      "no_results": "No countries found matching your search.",
+      "view_official": "View Official",
+      "background": "Background",
+      "head_size": "Head Size",
+      "notes": "Notes",
+      "disclaimer": "Requirements may change. Always verify with official government sources before submitting your photo.",
+      "us_name": "United States",
+      "us_background": "White background",
+      "us_notes": "Neutral expression or a natural smile is acceptable. No glasses.",
+      "eu_name": "EU / Schengen Area",
+      "eu_background": "Light gray or cream background",
+      "eu_notes": "Neutral expression, mouth closed. Common biometric standard.",
+      "ca_name": "Canada",
+      "ca_background": "White background",
+      "ca_notes": "Neutral expression required. No shadows on face or background.",
+      "au_name": "Australia",
+      "au_background": "Light gray background",
+      "au_notes": "Neutral expression, mouth closed. Good quality, no shadows.",
+      "jp_name": "Japan",
+      "jp_background": "White background",
+      "jp_notes": "Plain background (white or light blue). Strict positioning rules.",
+      "in_name": "India",
+      "in_background": "White background",
+      "in_notes": "Square format. Eyes open, neutral expression. Full face view.",
+      "cn_name": "China",
+      "cn_background": "White background",
+      "cn_notes": "No head covering unless for religious reasons. No shadows.",
+      "mx_name": "Mexico",
+      "mx_background": "White background",
+      "mx_notes": "Face and shoulders straight on. Neutral expression, no smile.",
+      "br_name": "Brazil",
+      "br_background": "White background",
+      "br_notes": "Recent photo (less than 6 months). Neutral expression.",
+      "my_name": "Malaysia",
+      "my_background": "White background",
+      "my_notes": "Dark-colored clothing that covers shoulders. No headwear.",
+      "ru_name": "Russia",
+      "ru_background": "White background",
+      "ru_notes": "Clear, in-focus image. Neutral expression. No headwear."
+    }
+  }
+}

@@ -1,6 +1,6 @@
 /* eslint-env serviceworker */
 
-const CACHE_NAME = 'rp-cache-v1';
+const CACHE_NAME = 'rp-cache-v2'; // Increment cache name on new builds
 
 // This list should be updated with your actual build files.
 // Build tools like Vite or Create React App can automate this.
@@ -62,27 +62,50 @@ self.addEventListener('activate', (event) => {
  * Fetch event: Serves assets from cache, falling back to the network.
  */
 self.addEventListener('fetch', (event) => {
-  // We only want to cache GET requests.
-  if (event.request.method !== 'GET') {
+  // We only want to handle GET requests.
+  if (event.request.method !== 'GET' || event.request.url.startsWith('chrome-extension://')) {
     return;
   }
 
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      // Network-first strategy
-      // If it's not in the cache, fetch it from the network.
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      // For navigation requests (e.g., loading a page), use a stale-while-revalidate strategy.
+      if (event.request.mode === 'navigate') {
+        try {
+          // Fetch from the network first.
+          const networkResponse = await fetch(event.request);
+          // Update the cache with the new version.
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        } catch (error) {
+          // If the network fails, try to serve from the cache.
+          const cachedResponse = await cache.match(event.request);
+          return cachedResponse;
+        }
+      }
+
+      // For other requests (assets like JS, CSS, images), use a cache-first strategy.
+      const cachedResponse = await cache.match(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      // If not in cache, fetch from the network, cache it, and then return it.
       try {
         const networkResponse = await fetch(event.request);
-        // If we get a response, cache it and return it.
-        // This keeps the cache up-to-date.
-        cache.put(event.request, networkResponse.clone());
+        // Don't cache opaque or error responses.
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+        const responseToCache = networkResponse.clone();
+          cache.put(event.request, responseToCache);
+        }
         return networkResponse;
       } catch (error) {
-        // If the network fails (e.g., user is offline),
-        // try to serve from the cache as a fallback.
-        console.log('Network request failed, trying cache.');
-        return cache.match(event.request);
+        // Handle fetch errors, e.g., for offline scenarios.
+        console.error('Fetch failed:', error);
+        // You could return a fallback response here if needed.
       }
-    })
+    })()
   );
 });

@@ -27,11 +27,11 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-900;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-lg border-4 border-solid border-gray-100 dark:bg-red-800 dark:border-gray-900;
+    @apply bg-gray-300 rounded-lg border-4 border-solid border-transparent dark:bg-red-800;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -40,11 +40,11 @@ body {
 
   /* For Firefox */
   * {
-    scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
+    scrollbar-color: theme('colors.gray.300') transparent;
   }
 
   .dark * {
-    scrollbar-color: theme('colors.red.800') theme('colors.gray.900');
+    scrollbar-color: theme('colors.red.800') transparent;
   }
 
   /* Global focus styles for accessibility */

@@ -1,0 +1,49 @@
+import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
+
+import translationDE from "./de.json";
+import translationEN from "./en.json";
+import translationES from "./es.json";
+import translationFR from "./fr.json";
+import translationRO from "./ro.json";
+
+// the translations
+const resources = {
+    de: {
+        translation: translationDE,
+    },
+    en: {
+        translation: translationEN,
+    },
+    fr: {
+        translation: translationFR,
+    },
+    ro: {
+        translation: translationRO,
+    },
+    es: {
+        translation: translationES,
+    },
+};
+
+i18n.use(LanguageDetector) // Detects user language
+    .use(initReactI18next) // Passes i18n down to react-i18next
+    .init({
+        resources,
+        fallbackLng: "en", // Use 'en' if detected language is not available
+        load: "languageOnly",
+        interpolation: {
+            escapeValue: false, // React already safes from xss
+        },
+        detection: {
+            order: ["localStorage", "navigator"],
+            caches: ["localStorage"],
+            convertDetectedLanguage: (lng) => {
+                // Normalize language codes to base language (en-US -> en, de-DE -> de, etc.)
+                return lng.split("-")[0];
+            },
+        },
+    });
+
+export default i18n;

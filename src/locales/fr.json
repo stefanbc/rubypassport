@@ -1,0 +1,361 @@
+{
+  "common": {
+    "continue": "Continuer",
+    "cancel": "Annuler"
+  },
+  "languages": {
+    "english": "English",
+    "french": "Français",
+    "german": "Deutsch",
+    "spanish": "Español",
+    "japanese": "日本語",
+    "romanian": "Română"
+  },
+  "components": {
+    "header": {
+      "title": "Passeport Ruby",
+      "subtitle": "Générateur de Photos d'Identité"
+    },
+    "app": {
+      "wizard": {
+        "guidelines": "Instructions",
+        "camera": "Appareil",
+        "result": "Résultat"
+      },
+      "printPreviewTitle": "Aperçu avant impression",
+      "printPreviewTitleWithName": "{{name}} - Aperçu avant impression",
+      "passportPortraitAlt": "Portrait pour passeport"
+    },
+    "panels": {
+      "guidelines": {
+        "title": "Instructions",
+        "subtitle": "Suivez ces règles pour la plupart des normes nationales.",
+        "do_title": "À faire",
+        "do_item_1": "• Gardez votre tête centrée et droite",
+        "do_item_2": "• Regardez directement l'appareil photo",
+        "do_item_3": "• Maintenez une expression neutre (bouche fermée)",
+        "do_item_4": "• Retirez lunettes et couvre-chefs (sauf religieux)",
+        "do_item_5": "• Assurez-vous que les yeux sont clairement visibles",
+        "do_item_6": "• Alignez le visage dans l'ovale, les yeux sur la ligne",
+        "dont_title": "À ne pas faire",
+        "dont_item_1": "• Pas de sourire, d'inclinaison ou de plissement des yeux",
+        "dont_item_2": "• Pas de maquillage lourd ni de filtres",
+        "dont_item_3": "• Évitez les chapeaux, écouteurs ou accessoires",
+        "dont_item_4": "• Évitez les ombres dures ou le contre-jour",
+        "lighting_title": "Éclairage et Arrière-plan",
+        "lighting_item_1": "• Utilisez un éclairage vif et uniforme de face",
+        "lighting_item_2": "• Tenez-vous à ~0,5 m d'un arrière-plan uni et clair",
+        "lighting_item_3": "• Évitez les ombres prononcées sous le menton ou le nez",
+        "lighting_item_4": "• Préférez des vêtements de teinte moyenne (pas blanc)",
+        "country_requirements_title": "Exigences par Pays",
+        "country_requirements_description": "Consultez les exigences détaillées pour tous les pays pris en charge avec recherche et liens officiels.",
+        "view_country_requirements": "Voir les Exigences par Pays",
+        "privacy_title": "Votre Confidentialité Compte",
+        "privacy_body": "Cette application est conçue en tenant compte de votre vie privée. Tout se passe directement dans votre navigateur — nous ne téléchargeons, stockons ou sauvegardons jamais vos images nulle part. Une fois que vous avez terminé, elles disparaissent."
+      },
+      "camera": {
+        "back": "Retour",
+        "back_aria": "Retour aux instructions",
+        "preview": "Aperçu",
+        "switch_camera_tooltip": "Changer de caméra",
+        "switch_camera_button": "Changer de caméra",
+        "guide_align_face": "Alignez votre visage avec le guide ovale",
+        "guide_eyes_on_line": "Yeux sur la ligne horizontale",
+        "starting_camera": "Démarrage de la caméra…",
+        "camera_not_started": "Caméra non démarrée",
+        "starting_button": "Démarrage…",
+        "start_camera_button": "Démarrer la Caméra",
+        "import_image_button": "Importer Image",
+        "capture_photo_button": "Capturer Photo",
+        "stop_button": "Arrêter"
+      },
+      "result": {
+        "title": "Résultat",
+        "edit_details_tooltip": "Modifier les détails (nom et filigrane)",
+        "details_button": "Détails",
+        "retake_button": "Reprendre",
+        "person_name_label": "Nom de la personne",
+        "optional_placeholder": "Optionnel",
+        "captured_alt": "Photo de passeport capturée",
+        "processing": "Traitement de la photo...",
+        "placeholder": "Capturez ou importez une photo",
+        "download_button": "Télécharger",
+        "print_button": "Imprimer",
+        "format_overlay": "{{label}} {{printWidthMm}}x{{printHeightMm}} mm (~{{widthPx}}x{{heightPx}}px)",
+        "before_unload_prompt": "Êtes-vous sûr de vouloir quitter ? Votre photo générée sera perdue."
+      }
+    },
+    "footer": {
+      "copyright": "© {{year}} Passeport Ruby. Tous droits réservés.",
+      "copyright_mobile": "© {{year}} Passeport Ruby.",
+      "madeWith": "Fait avec ❤️ par"
+    }
+  },
+  "tooltips": {
+    "formatSettings": "Paramètres de format (F)",
+    "changeFormat": "Changer de format ou gérer les formats personnalisés (F)",
+    "viewPhotoQueue": "Voir la file d'attente de photos ({{count}})",
+    "photoBoothEnabled": "Cabine photo activée (B)",
+    "enablePhotoBooth": "Activer la Cabine Photo (B)",
+    "changeLanguage": "Changer de langue",
+    "showInfo": "Afficher la boîte de dialogue d'information (I)",
+    "switchToDark": "Passer au thème sombre (T)",
+    "toggleTheme": "Basculer le thème",
+    "menu": "Menu",
+    "moreOptions": "Plus d'options",
+    "switchToLight": "Passer au thème clair (T)",
+    "exitFullscreen": "Quitter le mode plein écran",
+    "enterFullscreen": "Activer le mode plein écran",
+    "showShortcuts": "Afficher les raccourcis clavier (?)",
+    "showGuidelines": "Afficher les Instructions",
+    "hideGuidelines": "Masquer les Instructions",
+    "showSettings": "Afficher la boîte de dialogue des paramètres (S)"
+  },
+  "toasts": {
+    "photoBoothEnabled": "Mode Cabine Photo activé - les photos seront mises en file d'attente pour l'impression par lots",
+    "photoBoothDisabled": "Mode Cabine Photo désactivé - mode photo unique",
+    "backOnline": "Vous êtes de retour en ligne !",
+    "offline": "Vous êtes hors ligne. Certaines fonctionnalités peuvent être indisponibles.",
+    "startingCamera": "Démarrage de la caméra...",
+    "maxCameraResolution": "Résolution maximale de la caméra : {{width}}x{{height}}",
+    "cameraStream": "Flux de la caméra : {{width}}x{{height}}",
+    "highResAvailable": "La capture haute résolution est disponible.",
+    "highResNotSupported": "Capture haute résolution non supportée. Utilisation du flux vidéo.",
+    "cameraError": "Erreur de caméra : {{message}}",
+    "capturingHighRes": "Capture de photo haute résolution...",
+    "photoCaptured": "Photo capturée avec succès !",
+    "photoCaptureFailed": "Échec du traitement de la photo capturée.",
+    "highResCaptureFailed": "Échec de la capture haute résolution : {{message}}. Retour au flux vidéo.",
+    "photoFromStream": "Photo capturée à partir du flux vidéo.",
+    "processedDownloaded": "Image traitée téléchargée !",
+    "originalDownloaded": "Image originale téléchargée !",
+    "fullscreenError": "Erreur lors de la tentative d'activation du mode plein écran : {{message}}",
+    "addedToQueue": "Ajouté à la file d'attente ({{count}})",
+    "imageLoadFailed": "Échec du chargement de l'image pour le traitement.",
+    "cameraPermission": "En attente des permissions de la caméra...",
+    "customFormatLimit": "Vous ne pouvez avoir que jusqu'à 4 formats personnalisés.",
+    "invalidFormatDimensions": "Les dimensions doivent être comprises entre 1 et 10000.",
+    "formatExists": "Un format avec ces spécifications existe déjà : {{label}}",
+    "videoPlaybackError": "Impossible de démarrer la lecture vidéo.",
+    "videoPlaybackErrorMessage": "Impossible de démarrer la lecture vidéo : {{message}}",
+    "imageImportSuccess": "Image importée et recadrée avec succès !",
+    "printPreview": "Préparation de l'aperçu avant impression...",
+    "printWindowError": "Impossible d'ouvrir la fenêtre d'impression. Veuillez désactiver vos bloqueurs de pop-up.",
+    "checkCountryRequirements": "Bon choix ! Assurez-vous de vérifier les exigences spécifiques pour ce format."
+  },
+  "dialogs": {
+    "confirmation": {
+      "close_aria": "Fermer la boîte de dialogue de confirmation",
+      "retake_title": "Êtes-vous sûr ?",
+      "retake_description": "Ceci va annuler la photo actuelle et vous ramener à la caméra. Cette action est irréversible."
+    },
+    "format": {
+      "errorAllFields": "Veuillez remplir tous les champs de format personnalisé.",
+      "errorInvalidNumber": "Valeurs numériques invalides pour le format. Toutes les dimensions doivent être positives."
+    },
+    "download": {
+      "title": "Options de Téléchargement",
+      "close_aria": "Fermer la boîte de dialogue des options de téléchargement",
+      "description": "Choisissez la version de la photo que vous souhaitez télécharger.",
+      "processed_button": "Télécharger la Photo Traitée",
+      "original_button": "Télécharger l'Original (Haute Rés.)",
+      "original_tooltip_unavailable": "L'original haute résolution n'est pas disponible pour cette photo.",
+      "original_tooltip_available": "Télécharger la photo originale, non recadrée.",
+      "original_unavailable_note": "Un original haute résolution n'est disponible que pour les photos prises avec l'option caméra haute résolution ou à partir d'un fichier importé."
+    },
+    "info": {
+      "title": "Foire Aux Questions",
+      "close_aria": "Fermer la boîte de dialogue FAQ",
+      "faqs": [
+        {
+          "q": "Qu'est-ce que Passeport Ruby ?",
+          "a": "Passeport Ruby est une application web moderne pour capturer et générer des photos d'identité/passeport conformes directement dans votre navigateur. Elle vous aide à créer des photos qui respectent les exigences spécifiques de taille et d'alignement pour divers pays."
+        },
+        {
+          "q": "Mes données sont-elles sécurisées ?",
+          "a": "Oui. Tout le traitement des photos se fait localement dans votre navigateur. Vos photos ne sont jamais téléchargées sur un serveur, garantissant votre confidentialité et votre sécurité."
+        },
+        {
+          "q": "Quelle est la précision de l'impression ?",
+          "a": "La fonction 'Aperçu avant impression' génère une page avec des photos disposées aux dimensions physiques exactes. Pour de meilleurs résultats, assurez-vous que les paramètres de votre imprimante sont à une échelle de 100 % et que 'ajuster à la page' est désactivé."
+        },
+        {
+          "q": "Puis-je créer des formats de photos personnalisés ?",
+          "a": "Absolument. Vous pouvez ajouter, modifier et supprimer vos propres formats de photos avec des dimensions précises en pixels et d'impression physique en utilisant la boîte de dialogue « Paramètres de format » (F)."
+        },
+        {
+          "q": "Puis-je utiliser une photo existante au lieu de la caméra ?",
+          "a": "Oui ! Vous pouvez importer une image depuis votre ordinateur en cliquant sur le bouton 'Importer' ou en faisant glisser et déposer un fichier. Si votre image est plus grande que le format sélectionné, vous pourrez la faire glisser pour la repositionner pour un recadrage parfait avant qu'elle ne soit traitée."
+        },
+        {
+          "q": "À quoi servent les guides d'alignement ?",
+          "a": "Les guides en direct sur la vue de la caméra vous aident à aligner correctement votre visage conformément aux exigences du format sélectionné, garantissant que votre photo est conforme."
+        },
+        {
+          "q": "Comment puis-je désactiver les guides d'alignement ?",
+          "a": "Vous pouvez activer ou désactiver la visibilité des guides d'alignement (l'ovale, les lignes et les marqueurs d'angle) dans l'aperçu de la caméra et la boîte de dialogue d'importation. Ouvrez la boîte de dialogue 'Paramètres' en cliquant sur l'icône d'engrenage dans l'en-tête ou en appuyant sur 'S', puis utilisez le bouton 'Afficher les Guides d'Alignement' dans l'onglet 'Général'."
+        },
+        {
+          "q": "Comment puis-je changer la langue ou le thème de l'application ?",
+          "a": "Vous pouvez personnaliser votre expérience dans la boîte de dialogue 'Paramètres', accessible depuis le menu de l'en-tête ou en appuyant sur 'S'. Là, vous pouvez changer la langue d'affichage et basculer entre les thèmes clair et sombre."
+        },
+        {
+          "q": "Puis-je ajouter un filigrane à mes photos ?",
+          "a": "Oui. Vous pouvez activer, désactiver et personnaliser le texte du filigrane dans la boîte de dialogue 'Paramètres' (appuyez sur 'S'). Les paramètres de filigrane se trouvent sous l'onglet « Général »."
+        },
+        {
+          "q": "Qu'est-ce que le mode Cabine Photo ?",
+          "a": "Le mode Cabine Photo vous permet de capturer plusieurs photos qui sont mises en file d'attente pour une impression par lots sur le même papier. Activez-le avec l'icône de Cabine Photo (images multiples) dans l'en-tête ou en appuyant sur « B ». Lorsque des photos sont dans la file d'attente, ce bouton affiche le compte et ouvre la boîte de dialogue de la file d'attente. À l'intérieur de la boîte de dialogue, vous pouvez réorganiser les photos en les faisant glisser ou supprimer des photos individuelles en les survolant. Vous pouvez ensuite imprimer toutes les photos en file d'attente ensemble."
+        }
+      ]
+    },
+    "shortcuts": {
+      "title": "Raccourcis Clavier",
+      "close_aria": "Fermer la boîte de dialogue des raccourcis",
+      "items": {
+        "show_help": "Afficher cette boîte de dialogue d'aide",
+        "toggle_camera": "Démarrer / Arrêter la caméra",
+        "capture": "Capturer une photo",
+        "import": "Importer une image",
+        "download": "Télécharger le résultat",
+        "retake": "Reprendre la photo",
+        "toggle_watermark": "Activer/Désactiver le filigrane",
+        "print": "Ouvrir les options d'impression",
+        "format_settings": "Ouvrir les paramètres de format",
+        "toggle_photobooth": "Activer/Désactiver le mode Cabine Photo",
+        "toggle_theme": "Basculer le thème",
+        "toggle_fullscreen": "Activer/Désactiver le mode plein écran",
+        "show_info": "Afficher la boîte de dialogue d'information",
+        "show_settings": "Afficher la boîte de dialogue des paramètres"
+      }
+    },
+    "settingsDialog": {
+      "title": "Paramètres",
+      "close_aria": "Fermer la boîte de dialogue des paramètres",
+      "tabs_aria_label": "Onglets des paramètres",
+      "general_tab": "Général",
+      "experimental_tab": "Expérimental",
+      "general_settings_header": "Paramètres Généraux",
+      "language_label": "Langue",
+      "theme_label": "Thème",
+      "theme_light": "Clair",
+      "theme_dark": "Sombre",
+      "theme_system": "Système",
+      "show_align_guides_label": "Afficher les Guides d'Alignement",
+      "show_align_guides_description": "Afficher ou masquer les guides d'alignement (ovale, lignes) sur la caméra.",
+      "enable_watermark_label": "Activer le Filigrane",
+      "enable_watermark_description": "Ajoutez un filigrane élégant à votre photo finale.",
+      "watermark_text_placeholder": "Texte du Filigrane",
+      "reset_watermark_tooltip": "Réinitialiser par défaut",
+      "experimental_body": "Les paramètres et fonctionnalités expérimentales iront ici.",
+      "language_description": "Choisissez la langue d'affichage de l'application.",
+      "theme_description": "Sélectionnez votre thème d'interface préféré."
+    },
+    "formatDialog": {
+      "title": "Paramètres de Format",
+      "close_aria": "Fermer la boîte de dialogue des paramètres de format",
+      "tabs_aria_label": "Onglets des paramètres de format",
+      "select_format_tab": "Sélectionner Format",
+      "manage_custom_tab": "Gérer les Formats Personnalisés",
+      "standard_formats_group": "Formats Standards",
+      "no_results": "Aucun format correspondant à votre recherche.",
+      "custom_formats_group": "Formats Personnalisés",
+      "search_placeholder": "Rechercher des formats...",
+      "edit_format_header": "Modifier Format",
+      "add_format_header": "Ajouter Nouveau Format",
+      "label_label": "Étiquette",
+      "label_placeholder": "ex. Personnalisé 4x6",
+      "width_px_label": "Largeur (px)",
+      "width_px_placeholder": "ex. 600",
+      "height_px_label": "Hauteur (px)",
+      "height_px_placeholder": "ex. 900",
+      "print_w_mm_label": "Largeur Impression (mm)",
+      "print_w_mm_placeholder": "ex. 101,6",
+      "print_h_mm_label": "Hauteur Impression (mm)",
+      "print_h_mm_placeholder": "ex. 152,4",
+      "update_button": "Mettre à Jour le Format",
+      "add_button": "Ajouter Format",
+      "your_custom_formats_header": "Vos Formats Personnalisés",
+      "edit_format_tooltip": "Modifier le format",
+      "delete_format_tooltip": "Supprimer le format",
+      "custom_format_display": "{{label}} ({{width}}x{{height}} px)",
+      "format_dimensions_display": "{{printWidth}}x{{printHeight}} mm (~{{width}}x{{height}}px)",
+      "custom_format_limit_reached": "Vous avez atteint la limite de 4 formats personnalisés."
+    },
+    "photoQueue": {
+      "title": "File d'attente Cabine Photo ({{count}})",
+      "clear_all_button": "Tout Effacer",
+      "clear_queue_aria": "Effacer la file d'attente de photos",
+      "close_aria": "Fermer la boîte de dialogue de la file d'attente de photos",
+      "queued_photo_alt": "Photo en file d'attente {{index}}",
+      "remove_photo_aria": "Retirer la photo {{index}}",
+      "empty_title": "La file d'attente est vide",
+      "empty_description": "Activez le mode Cabine Photo et capturez des photos pour les voir ici."
+    },
+    "print": {
+      "title": "Options d'Impression",
+      "close_aria": "Fermer la boîte de dialogue des options d'impression",
+      "photos_per_page_label": "Photos par page",
+      "description": "Imprime sur une feuille standard. Votre taille de photo est {{width}}×{{height}} po.",
+      "print_now_button": "Imprimer Maintenant"
+    },
+    "import": {
+      "title_reposition": "Repositionner l'Image",
+      "title_import": "Importer Image",
+      "close_aria": "Fermer la boîte de dialogue",
+      "guide_align": "Alignez le visage avec le guide ovale",
+      "guide_drag": "Glisser pour repositionner",
+      "change_image_button": "Changer d'Image",
+      "confirm_crop_button": "Confirmer et Recadrer",
+      "drag_drop_text": "Glissez et déposez",
+      "drag_drop_subtext": "une image ici",
+      "or": "ou",
+      "choose_from_phone_button": "Choisir depuis le téléphone",
+      "choose_from_computer_button": "Choisir depuis l'ordinateur"
+    },
+    "countryRequirements": {
+      "title": "Exigences par Pays",
+      "close_aria": "Fermer la boîte de dialogue des exigences par pays",
+      "search_placeholder": "Rechercher des pays...",
+      "no_results": "Aucun pays trouvé correspondant à votre recherche.",
+      "view_official": "Voir Officiel",
+      "background": "Arrière-plan",
+      "head_size": "Taille de la Tête",
+      "notes": "Notes",
+      "disclaimer": "Les exigences peuvent changer. Vérifiez toujours avec les sources gouvernementales officielles avant de soumettre votre photo.",
+      "us_name": "États-Unis",
+      "us_background": "Arrière-plan blanc",
+      "us_notes": "Expression neutre ou sourire naturel acceptable. Pas de lunettes.",
+      "eu_name": "UE / Espace Schengen",
+      "eu_background": "Arrière-plan gris clair ou crème",
+      "eu_notes": "Expression neutre, bouche fermée. Norme biométrique commune.",
+      "ca_name": "Canada",
+      "ca_background": "Arrière-plan blanc",
+      "ca_notes": "Expression neutre requise. Pas d'ombres sur le visage ou l'arrière-plan.",
+      "au_name": "Australie",
+      "au_background": "Arrière-plan gris clair",
+      "au_notes": "Expression neutre, bouche fermée. Bonne qualité, pas d'ombres.",
+      "jp_name": "Japon",
+      "jp_background": "Arrière-plan blanc",
+      "jp_notes": "Arrière-plan uni (blanc ou bleu clair). Règles de positionnement strictes.",
+      "in_name": "Inde",
+      "in_background": "Arrière-plan blanc",
+      "in_notes": "Format carré. Yeux ouverts, expression neutre. Vue de face complète.",
+      "cn_name": "Chine",
+      "cn_background": "Arrière-plan blanc",
+      "cn_notes": "Pas de couvre-chef sauf pour des raisons religieuses. Pas d'ombres.",
+      "mx_name": "Mexique",
+      "mx_background": "Arrière-plan blanc",
+      "mx_notes": "Visage et épaules de face. Expression neutre, pas de sourire.",
+      "br_name": "Brésil",
+      "br_background": "Arrière-plan blanc",
+      "br_notes": "Photo récente (moins de 6 mois). Expression neutre.",
+      "my_name": "Malaisie",
+      "my_background": "Arrière-plan blanc",
+      "my_notes": "Vêtements de couleur foncée couvrant les épaules. Pas de couvre-chef.",
+      "ru_name": "Russie",
+      "ru_background": "Arrière-plan blanc",
+      "ru_notes": "Image claire et nette. Expression neutre. Pas de couvre-chef."
+    }
+  }
+}
