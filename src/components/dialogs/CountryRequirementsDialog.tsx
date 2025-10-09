@@ -1,5 +1,5 @@
 import { ExternalLink, Globe, Search, X } from "lucide-react";
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, Flag, Input } from "@/components/ui";
 import { useStore } from "@/store";
@@ -37,7 +37,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "32-36mm",
                 notes: t("dialogs.countryRequirements.eu_notes"),
                 officialLink:
-                    "https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/document-security_en",
+                    "https://home-affairs.ec.europa.eu/document/download/71052552-a6e7-4581-9857-04fb5ace6bc5_en?filename=icao_photograph_guidelines_en.pdf",
             };
         case "ca_50x70":
             return {
@@ -54,7 +54,8 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 background: t("dialogs.countryRequirements.au_background"),
                 headSize: "32-36mm",
                 notes: t("dialogs.countryRequirements.au_notes"),
-                officialLink: "https://www.passports.gov.au/passport-photos",
+                officialLink:
+                    "https://www.passports.gov.au/help/passport-photos",
             };
         case "jp_35x45":
             return {
@@ -63,7 +64,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "32-36mm",
                 notes: t("dialogs.countryRequirements.jp_notes"),
                 officialLink:
-                    "https://www.mofa.go.jp/ca/cp/page22e_000925.html",
+                    "https://www.mofa.go.jp/mofaj/toko/passport/ic_photo.html",
             };
         case "in_51x51":
             return {
@@ -72,7 +73,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "25-35mm",
                 notes: t("dialogs.countryRequirements.in_notes"),
                 officialLink:
-                    "https://www.passportindia.gov.in/AppOnlineProject/online/photoUpload",
+                    "https://www.passportindia.gov.in/AppOnlineProject/pdf/ApplicationformInstructionBooklet-V3.0.pdf",
             };
         case "cn_33x48":
             return {
@@ -81,7 +82,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "28-33mm",
                 notes: t("dialogs.countryRequirements.cn_notes"),
                 officialLink:
-                    "https://www.nia.gov.cn/en/2017-06/12/content_2071774.htm",
+                    "https://alexandria.china-consulate.gov.cn/eng/lsyw/201207/P020210817711100537834.pdf",
             };
         case "mx_25x30":
             return {
@@ -90,7 +91,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "22-25mm",
                 notes: t("dialogs.countryRequirements.mx_notes"),
                 officialLink:
-                    "https://consulmex.sre.gob.mx/montreal/index.php/es/servicios-a-mexicanos/pasaportes",
+                    "https://embamex.sre.gob.mx/guyana/images/pdf/visareqnew.pdf",
             };
         case "br_50x70":
             return {
@@ -99,7 +100,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "31-36mm",
                 notes: t("dialogs.countryRequirements.br_notes"),
                 officialLink:
-                    "https://www.gov.br/mre/pt-br/assuntos/passaportes/fotografia",
+                    "https://www.gov.br/mre/pt-br/consulado-chicago/brazilian-documents/consular-services/passport-1/passport-photo-2013-specifications",
             };
         case "my_35x50":
             return {
@@ -108,7 +109,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "32-36mm",
                 notes: t("dialogs.countryRequirements.my_notes"),
                 officialLink:
-                    "https://www.imi.gov.my/index.php/perkhidmatan-kami/pasport-dokumen-perjalanan/",
+                    "https://www.kln.gov.my/documents/9375064/0/PASSPORT+PHOTO+SPECIFICATION+AND+SAMPLE+MALAYSIA.pdf/ba82dbb2-48ae-4a3e-876a-f6545b52bb4f",
             };
         case "ru_35x45":
             return {
@@ -117,7 +118,7 @@ const getCountryData = (formatId: string, t: (key: string) => string) => {
                 headSize: "32-36mm",
                 notes: t("dialogs.countryRequirements.ru_notes"),
                 officialLink:
-                    "https://www.mid.ru/en/consular-services/passport-services/",
+                    "https://pusan.mid.ru/en/visa/requirements_russian_visa_photo_specifications/",
             };
         default:
             return {
@@ -240,7 +241,7 @@ export function CountryRequirementsDialog({
                                     country.format.id === selectedFormatId;
                                 return (
                                     <div
-                                    key={country.format.id}
+                                        key={country.format.id}
                                         ref={(el) => {
                                             if (isSelected) {
                                                 selectedCountryRef.current = el;
@@ -251,82 +252,83 @@ export function CountryRequirementsDialog({
                                                 ? "border-red-500 ring-2 ring-red-500/30 shadow-lg"
                                                 : "border-gray-200 dark:border-zinc-700/50 hover:shadow-md"
                                         }`}
-                                >
-                                    <div className="flex items-start justify-between pb-3 border-b border-red-200/80 dark:border-red-900/20">
-                                        <div className="flex items-center gap-3">
-                                            <Flag
-                                                code={
-                                                    country.format.flagCode ||
-                                                    ""
-                                                }
-                                                className="w-8 h-auto"
-                                            />
+                                    >
+                                        <div className="flex items-start justify-between pb-3 border-b border-red-200/80 dark:border-red-900/20">
+                                            <div className="flex items-center gap-3">
+                                                <Flag
+                                                    code={
+                                                        country.format
+                                                            .flagCode || ""
+                                                    }
+                                                    className="w-8 h-auto"
+                                                />
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 leading-tight">
+                                                        {country.name}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {
+                                                            country.format
+                                                                .printWidthMm
+                                                        }
+                                                        ×
+                                                        {
+                                                            country.format
+                                                                .printHeightMm
+                                                        }
+                                                        mm
+                                                        {country.format.id ===
+                                                            "us_2x2" &&
+                                                            ` (2×2")`}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <a
+                                                href={country.officialLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-shrink-0 flex items-center gap-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-xs font-medium bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full py-1 px-3 transition-colors"
+                                            >
+                                                {t(
+                                                    "dialogs.countryRequirements.view_official",
+                                                )}
+                                                <ExternalLink size={14} />
+                                            </a>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3 text-sm pt-3">
+                                            <div className="md:border-r md:border-gray-200 md:dark:border-zinc-700/50 md:pr-4">
+                                                <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
+                                                    {t(
+                                                        "dialogs.countryRequirements.background",
+                                                    )}
+                                                </h4>
+                                                <p className="text-gray-700 dark:text-gray-300">
+                                                    {country.background}
+                                                </p>
+                                            </div>
+                                            <div className="md:border-r md:border-gray-200 md:dark:border-zinc-700/50 md:pr-4">
+                                                <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
+                                                    {t(
+                                                        "dialogs.countryRequirements.head_size",
+                                                    )}
+                                                </h4>
+                                                <p className="text-gray-700 dark:text-gray-300">
+                                                    {country.headSize}
+                                                </p>
+                                            </div>
                                             <div>
-                                                <h3 className="font-semibold text-gray-900 dark:text-gray-100 leading-tight">
-                                                    {country.name}
-                                                </h3>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {
-                                                        country.format
-                                                            .printWidthMm
-                                                    }
-                                                    ×
-                                                    {
-                                                        country.format
-                                                            .printHeightMm
-                                                    }
-                                                    mm
-                                                    {country.format.id ===
-                                                        "us_2x2" && ` (2×2")`}
+                                                <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
+                                                    {t(
+                                                        "dialogs.countryRequirements.notes",
+                                                    )}
+                                                </h4>
+                                                <p className="text-gray-700 dark:text-gray-300">
+                                                    {country.notes}
                                                 </p>
                                             </div>
                                         </div>
-                                        <a
-                                            href={country.officialLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-shrink-0 flex items-center gap-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-xs font-medium bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full py-1 px-3 transition-colors"
-                                        >
-                                            {t(
-                                                "dialogs.countryRequirements.view_official",
-                                            )}
-                                            <ExternalLink size={14} />
-                                        </a>
                                     </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3 text-sm pt-3">
-                                        <div className="md:border-r md:border-gray-200 md:dark:border-zinc-700/50 md:pr-4">
-                                            <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
-                                                {t(
-                                                    "dialogs.countryRequirements.background",
-                                                )}
-                                            </h4>
-                                            <p className="text-gray-700 dark:text-gray-300">
-                                                {country.background}
-                                            </p>
-                                        </div>
-                                        <div className="md:border-r md:border-gray-200 md:dark:border-zinc-700/50 md:pr-4">
-                                            <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
-                                                {t(
-                                                    "dialogs.countryRequirements.head_size",
-                                                )}
-                                            </h4>
-                                            <p className="text-gray-700 dark:text-gray-300">
-                                                {country.headSize}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">
-                                                {t(
-                                                    "dialogs.countryRequirements.notes",
-                                                )}
-                                            </h4>
-                                            <p className="text-gray-700 dark:text-gray-300">
-                                                {country.notes}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
                                 );
                             })
                         )}

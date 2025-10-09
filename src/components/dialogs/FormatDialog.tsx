@@ -222,7 +222,9 @@ export function FormatDialog({
                                             size={48}
                                         />
                                         <p className="text-gray-500 dark:text-gray-400">
-                                            {t("dialogs.formatDialog.no_results")}
+                                            {t(
+                                                "dialogs.formatDialog.no_results",
+                                            )}
                                         </p>
                                     </div>
                                 ) : (
@@ -237,7 +239,9 @@ export function FormatDialog({
                                         >
                                             <FormatGrid
                                                 formats={filteredPredefined}
-                                                selectedFormatId={selectedFormatId}
+                                                selectedFormatId={
+                                                    selectedFormatId
+                                                }
                                                 onSelect={handleSelectFormat}
                                             />
                                         </Accordion>
@@ -254,8 +258,12 @@ export function FormatDialog({
                                             >
                                                 <FormatGrid
                                                     formats={filteredCustom}
-                                                    selectedFormatId={selectedFormatId}
-                                                    onSelect={handleSelectFormat}
+                                                    selectedFormatId={
+                                                        selectedFormatId
+                                                    }
+                                                    onSelect={
+                                                        handleSelectFormat
+                                                    }
                                                 />
                                             </Accordion>
                                         )}

@@ -169,7 +169,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                                 value={lang.value}
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    <Flag code={lang.flagCode} />
+                                                    <Flag
+                                                        code={lang.flagCode}
+                                                    />
                                                     <span>{lang.label}</span>
                                                 </div>
                                             </SelectItem>
@@ -185,14 +187,22 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         htmlFor={themeId}
                                         className="font-semibold text-gray-800 dark:text-gray-200"
                                     >
-                                        {t("dialogs.settingsDialog.theme_label")}
+                                        {t(
+                                            "dialogs.settingsDialog.theme_label",
+                                        )}
                                     </Label>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                         Select your preferred interface theme.
                                     </p>
                                 </div>
-                                <Select value={theme} onValueChange={toggleTheme}>
-                                    <SelectTrigger id={themeId} className="w-full">
+                                <Select
+                                    value={theme}
+                                    onValueChange={toggleTheme}
+                                >
+                                    <SelectTrigger
+                                        id={themeId}
+                                        className="w-full"
+                                    >
                                         <SelectValue placeholder="Select theme" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -310,7 +320,10 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                             role="tabpanel"
                             className="h-full flex flex-col items-center justify-center text-center"
                         >
-                            <Construction className="mx-auto text-gray-400 mb-4" size={48} />
+                            <Construction
+                                className="mx-auto text-gray-400 mb-4"
+                                size={48}
+                            />
                             <p className="text-gray-500 dark:text-gray-400">
                                 {t("dialogs.settingsDialog.experimental_body")}
                             </p>
