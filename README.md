@@ -4,7 +4,7 @@
 
 Ruby Passport is a modern, privacy-focused web app for capturing and generating compliant passport/ID photos directly in your browser. It's built with privacy as a core principle—all image processing happens on your device, ensuring your photos are never uploaded to a server.
 
-<img width="1920" height="1080" alt="rubypassport vercel app_" src="https://github.com/user-attachments/assets/9efe35ff-af28-4cc9-9406-5f26d1d1baa9" />
+<img width="1920" height="1080" alt="rubypassport vercel app_ (1)" src="https://github.com/user-attachments/assets/a937dafb-1197-4e44-824c-5df408cea9a7" />
 
 ## Table of Contents
 
@@ -70,8 +70,8 @@ Prerequisites:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/ruby-passport.git
-    cd ruby-passport
+    git clone https://github.com/stefanbc/rubypassport.git
+    cd rubypassport
     ```
 
 2.  **Install dependencies:**
