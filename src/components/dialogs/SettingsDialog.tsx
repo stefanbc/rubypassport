@@ -146,8 +146,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         )}
                                     </Label>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Choose the display language for the
-                                        application.
+                                        {t(
+                                            "dialogs.settingsDialog.language_description",
+                                        )}
                                     </p>
                                 </div>
                                 <Select
@@ -192,7 +193,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         )}
                                     </Label>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Select your preferred interface theme.
+                                        {t(
+                                            "dialogs.settingsDialog.theme_description",
+                                        )}
                                     </p>
                                 </div>
                                 <Select
@@ -238,8 +241,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         )}
                                     </Label>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Show or hide the alignment guides (oval,
-                                        lines) on the camera.
+                                        {t(
+                                            "dialogs.settingsDialog.show_align_guides_description",
+                                        )}
                                     </p>
                                 </div>
                                 <div className="flex items-center sm:justify-start">
@@ -266,8 +270,9 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         )}
                                     </Label>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Add a stylish watermark to your final
-                                        photo.
+                                        {t(
+                                            "dialogs.settingsDialog.enable_watermark_description",
+                                        )}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4">

@@ -177,7 +177,7 @@ export function CameraView({
                             {isCameraLoading ? (
                                 <>
                                     <Loader2
-                                        size={32}
+                                        size={48}
                                         className="animate-spin mb-2 text-red-500"
                                     />
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -189,7 +189,7 @@ export function CameraView({
                             ) : (
                                 <>
                                     <CameraOff
-                                        size={42}
+                                        size={48}
                                         className="mx-auto mb-2 opacity-70"
                                     />
                                     <p className="select-none text-sm text-gray-500 dark:text-gray-400">
