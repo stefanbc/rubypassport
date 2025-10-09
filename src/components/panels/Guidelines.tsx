@@ -1,10 +1,14 @@
-import { CircleCheckBig, CircleX, ShieldCheck, Sun } from "lucide-react";
+import { CircleCheckBig, CircleX, Globe, ShieldCheck, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Footer } from "@/components/layout/Footer";
-import { Accordion } from "@/components/ui";
+import { Accordion, Button } from "@/components/ui";
 import { useStore } from "@/store";
 
-export function Guidelines() {
+type GuidelinesProps = {
+    onViewCountryRequirements: () => void;
+};
+
+export function Guidelines({ onViewCountryRequirements }: GuidelinesProps) {
     const { t } = useTranslation();
     const { isMobile, isTablet } = useStore();
 
@@ -94,11 +98,35 @@ export function Guidelines() {
                     </ul>
                 </Accordion>
 
+                {/* Country Requirements Button */}
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-md p-3">
+                    <h5 className="font-semibold mb-1.5 text-gray-800 dark:text-gray-100 flex items-center gap-1.5">
+                        <Globe className="text-red-500 dark:text-red-400 inline-block w-4 h-4" />
+                        {t(
+                            "components.panels.guidelines.country_requirements_title",
+                        )}
+                    </h5>
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-1.5">
+                        {t(
+                            "components.panels.guidelines.country_requirements_description",
+                        )}
+                    </p>
+                    <Button
+                        onClick={onViewCountryRequirements}
+                        className="flex items-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white"
+                    >
+                        <Globe size={16} />
+                        {t(
+                            "components.panels.guidelines.view_country_requirements",
+                        )}
+                    </Button>
+                </div>
+
                 <div className="flex-grow" />
 
                 <div className="rounded-md bg-red-50 dark:bg-zinc-800/60 border border-red-100 dark:border-red-900/40 p-3 mt-auto">
                     <h5 className="font-semibold mb-1.5 text-gray-800 dark:text-gray-100 flex items-center gap-1.5">
-                        <ShieldCheck className="inline-block w-4 h-4 text-blue-500" />
+                        <ShieldCheck className="inline-block w-4 h-4 text-red-500" />
                         {t("components.panels.guidelines.privacy_title")}
                     </h5>
                     <p className="text-xs text-gray-700 dark:text-gray-300">

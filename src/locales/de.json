@@ -46,6 +46,9 @@
         "lighting_item_2": "• ~0,5 m Abstand zu hellem, einfarbigem Hintergrund",
         "lighting_item_3": "• Keine starken Schatten unter Kinn oder Nase",
         "lighting_item_4": "• Mittelhelle Kleidung bevorzugen (nicht weiß)",
+        "country_requirements_title": "Länderspezifische Anforderungen",
+        "country_requirements_description": "Sehen Sie sich detaillierte Anforderungen für alle unterstützten Länder mit Suche und offiziellen Links an.",
+        "view_country_requirements": "Länderanforderungen anzeigen",
         "privacy_title": "Ihre Privatsphäre ist wichtig",
         "privacy_body": "Diese App respektiert Ihre Privatsphäre. Alles geschieht lokal in Ihrem Browser. Ihre Bilder werden niemals hochgeladen oder gespeichert."
       },
@@ -139,7 +142,8 @@
     "printPreview": "Druckvorschau wird vorbereitet...",
     "printWindowError": "Druckfenster konnte nicht geöffnet werden. Bitte deaktivieren Sie Ihre Pop-up-Blocker.",
     "photoQueueCleared": "Fotowarteschlange geleert",
-    "photoRemovedFromQueue": "Foto aus der Warteschlange entfernt"
+    "photoRemovedFromQueue": "Foto aus der Warteschlange entfernt",
+    "checkCountryRequirements": "Gute Wahl! Überprüfen Sie unbedingt die spezifischen Anforderungen für dieses Format."
   },
   "dialogs": {
     "confirmation": {
@@ -240,10 +244,14 @@
       "theme_dark": "Dunkel",
       "theme_system": "System",
       "show_align_guides_label": "Hilfslinien anzeigen",
+      "show_align_guides_description": "Zeigen oder verbergen Sie die Ausrichtungshilfen (Oval, Linien) auf der Kamera.",
       "enable_watermark_label": "Wasserzeichen aktivieren",
+      "enable_watermark_description": "Fügen Sie Ihrem endgültigen Foto ein stilvolles Wasserzeichen hinzu.",
       "watermark_text_placeholder": "Wasserzeichen-Text",
       "reset_watermark_tooltip": "Auf Standard zurücksetzen",
-      "experimental_body": "Experimentelle Einstellungen und Funktionen werden hier angezeigt."
+      "experimental_body": "Experimentelle Einstellungen und Funktionen werden hier angezeigt.",
+      "language_description": "Wählen Sie die Anzeigesprache für die Anwendung.",
+      "theme_description": "Wählen Sie Ihr bevorzugtes Oberflächen-Design."
     },
     "formatDialog": {
       "title": "Formateinstellungen",
@@ -252,6 +260,7 @@
       "select_format_tab": "Format auswählen",
       "manage_custom_tab": "Benutzerdefinierte Formate verwalten",
       "standard_formats_group": "Standardformate",
+      "no_results": "Keine Formate gefunden, die Ihrer Suche entsprechen.",
       "custom_formats_group": "Benutzerdefinierte Formate",
       "search_placeholder": "Format suchen...",
       "edit_format_header": "Format bearbeiten",
@@ -305,6 +314,50 @@
       "or": "oder",
       "choose_from_phone_button": "Vom Telefon auswählen",
       "choose_from_computer_button": "Vom Computer auswählen"
+    },
+    "countryRequirements": {
+      "title": "Länderspezifische Anforderungen",
+      "close_aria": "Länderanforderungen-Dialog schließen",
+      "search_placeholder": "Länder suchen...",
+      "no_results": "Keine Länder gefunden, die Ihrer Suche entsprechen.",
+      "view_official": "Offizielle anzeigen",
+      "background": "Hintergrund",
+      "head_size": "Kopfgröße",
+      "notes": "Hinweise",
+      "disclaimer": "Anforderungen können sich ändern. Überprüfen Sie immer mit offiziellen Regierungsquellen, bevor Sie Ihr Foto einreichen.",
+      "us_name": "Vereinigte Staaten",
+      "us_background": "Weißer Hintergrund",
+      "us_notes": "Neutraler Gesichtsausdruck oder ein natürliches Lächeln ist akzeptabel. Keine Brille.",
+      "eu_name": "EU / Schengen-Raum",
+      "eu_background": "Hellgrauer oder cremefarbener Hintergrund",
+      "eu_notes": "Neutraler Gesichtsausdruck, Mund geschlossen. Allgemeiner biometrischer Standard.",
+      "ca_name": "Kanada",
+      "ca_background": "Weißer Hintergrund",
+      "ca_notes": "Neutraler Gesichtsausdruck erforderlich. Keine Schatten im Gesicht oder Hintergrund.",
+      "au_name": "Australien",
+      "au_background": "Hellgrauer Hintergrund",
+      "au_notes": "Neutraler Gesichtsausdruck, Mund geschlossen. Gute Qualität, keine Schatten.",
+      "jp_name": "Japan",
+      "jp_background": "Weißer Hintergrund",
+      "jp_notes": "Einfacher Hintergrund (weiß oder hellblau). Strenge Positionierungsregeln.",
+      "in_name": "Indien",
+      "in_background": "Weißer Hintergrund",
+      "in_notes": "Quadratisches Format. Augen offen, neutraler Ausdruck. Vollständige Gesichtsansicht.",
+      "cn_name": "China",
+      "cn_background": "Weißer Hintergrund",
+      "cn_notes": "Keine Kopfbedeckung außer aus religiösen Gründen. Keine Schatten.",
+      "mx_name": "Mexiko",
+      "mx_background": "Weißer Hintergrund",
+      "mx_notes": "Gesicht und Schultern geradeaus. Neutraler Ausdruck, kein Lächeln.",
+      "br_name": "Brasilien",
+      "br_background": "Weißer Hintergrund",
+      "br_notes": "Aktuelles Foto (weniger als 6 Monate). Neutraler Ausdruck.",
+      "my_name": "Malaysia",
+      "my_background": "Weißer Hintergrund",
+      "my_notes": "Dunkle Kleidung, die die Schultern bedeckt. Keine Kopfbedeckung.",
+      "ru_name": "Russland",
+      "ru_background": "Weißer Hintergrund",
+      "ru_notes": "Klares, scharfes Bild. Neutraler Ausdruck. Keine Kopfbedeckung."
     }
   }
 }

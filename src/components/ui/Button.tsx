@@ -19,7 +19,7 @@ const buttonVariants = cva(
                     "bg-gray-600 text-white hover:bg-gray-700 dark:bg-zinc-700 dark:hover:bg-zinc-600",
                 ghost: "text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700",
                 link: "text-red-600 underline-offset-4 hover:underline dark:text-red-400",
-                icon: "text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800",
+                icon: "text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800",
             },
             size: {
                 default: "h-10 px-4 py-3",

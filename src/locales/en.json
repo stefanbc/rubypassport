@@ -47,6 +47,9 @@
         "lighting_item_2": "• Stand ~0.5 m from a plain, light background",
         "lighting_item_3": "• Avoid strong shadows under chin or nose",
         "lighting_item_4": "• Prefer mid-tone clothing (not white)",
+        "country_requirements_title": "Country-Specific Requirements",
+        "country_requirements_description": "View detailed requirements for all supported countries with search and official links.",
+        "view_country_requirements": "View Country Requirements",
         "privacy_title": "Your Privacy Matters",
         "privacy_body": "This app is designed with your privacy in mind. Everything happens right in your browser — we never upload, store, or save your images anywhere. Once you're done, they're gone."
       },
@@ -140,7 +143,8 @@
     "printPreview": "Preparing print preview...",
     "printWindowError": "Could not open print window. Please disable your pop-up blockers.",
     "photoQueueCleared": "Photo queue cleared",
-    "photoRemovedFromQueue": "Photo removed from queue"
+    "photoRemovedFromQueue": "Photo removed from queue",
+    "checkCountryRequirements": "Good choice! Be sure to check the specific requirements for this format."
   },
   "dialogs": {
     "confirmation": {
@@ -241,10 +245,14 @@
       "theme_dark": "Dark",
       "theme_system": "System",
       "show_align_guides_label": "Show Align Guides",
+      "show_align_guides_description": "Show or hide the alignment guides (oval, lines) on the camera.",
       "enable_watermark_label": "Enable Watermark",
+      "enable_watermark_description": "Add a stylish watermark to your final photo.",
       "watermark_text_placeholder": "Watermark Text",
       "reset_watermark_tooltip": "Reset to default",
-      "experimental_body": "Experimental settings and features will go here."
+      "experimental_body": "Experimental settings and features will go here.",
+      "language_description": "Choose the display language for the application.",
+      "theme_description": "Select your preferred interface theme."
     },
     "formatDialog": {
       "title": "Format Settings",
@@ -253,6 +261,7 @@
       "select_format_tab": "Select Format",
       "manage_custom_tab": "Manage Custom Formats",
       "standard_formats_group": "Standard Formats",
+      "no_results": "No formats found matching your search.",
       "custom_formats_group": "Custom Formats",
       "search_placeholder": "Search formats...",
       "edit_format_header": "Edit Format",
@@ -306,6 +315,50 @@
       "or": "or",
       "choose_from_phone_button": "Choose from phone",
       "choose_from_computer_button": "Choose from computer"
+    },
+    "countryRequirements": {
+      "title": "Country-Specific Requirements",
+      "close_aria": "Close country requirements dialog",
+      "search_placeholder": "Search countries...",
+      "no_results": "No countries found matching your search.",
+      "view_official": "View Official",
+      "background": "Background",
+      "head_size": "Head Size",
+      "notes": "Notes",
+      "disclaimer": "Requirements may change. Always verify with official government sources before submitting your photo.",
+      "us_name": "United States",
+      "us_background": "White background",
+      "us_notes": "Neutral expression or a natural smile is acceptable. No glasses.",
+      "eu_name": "EU / Schengen Area",
+      "eu_background": "Light gray or cream background",
+      "eu_notes": "Neutral expression, mouth closed. Common biometric standard.",
+      "ca_name": "Canada",
+      "ca_background": "White background",
+      "ca_notes": "Neutral expression required. No shadows on face or background.",
+      "au_name": "Australia",
+      "au_background": "Light gray background",
+      "au_notes": "Neutral expression, mouth closed. Good quality, no shadows.",
+      "jp_name": "Japan",
+      "jp_background": "White background",
+      "jp_notes": "Plain background (white or light blue). Strict positioning rules.",
+      "in_name": "India",
+      "in_background": "White background",
+      "in_notes": "Square format. Eyes open, neutral expression. Full face view.",
+      "cn_name": "China",
+      "cn_background": "White background",
+      "cn_notes": "No head covering unless for religious reasons. No shadows.",
+      "mx_name": "Mexico",
+      "mx_background": "White background",
+      "mx_notes": "Face and shoulders straight on. Neutral expression, no smile.",
+      "br_name": "Brazil",
+      "br_background": "White background",
+      "br_notes": "Recent photo (less than 6 months). Neutral expression.",
+      "my_name": "Malaysia",
+      "my_background": "White background",
+      "my_notes": "Dark-colored clothing that covers shoulders. No headwear.",
+      "ru_name": "Russia",
+      "ru_background": "White background",
+      "ru_notes": "Clear, in-focus image. Neutral expression. No headwear."
     }
   }
 }

@@ -41,7 +41,7 @@ i18n.use(LanguageDetector) // Detects user language
             caches: ["localStorage"],
             convertDetectedLanguage: (lng) => {
                 // Normalize language codes to base language (en-US -> en, de-DE -> de, etc.)
-                return lng.split('-')[0];
+                return lng.split("-")[0];
             },
         },
     });

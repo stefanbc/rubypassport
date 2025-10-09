@@ -89,6 +89,15 @@ export function FormatDialog({
         setSearchQuery("");
     };
 
+    const handleSelectFormat = (id: string) => {
+        setSelectedFormatId(id);
+        const format = allFormats.find((f) => f.id === id);
+        // Show a hint if a standard format is selected
+        if (format && !format.id.startsWith("custom_")) {
+            addToast(t("toasts.checkCountryRequirements"), "info", 3000);
+        }
+    };
+
     const handleAdd = () => {
         if (isCustomFormatLimitReached) {
             addToast(t("toasts.customFormatLimit"), "warning");
@@ -205,37 +214,52 @@ export function FormatDialog({
                             </div>
 
                             <div className="flex-grow overflow-y-auto space-y-4 -mr-2 pr-2">
-                                <Accordion
-                                    title={t(
-                                        "dialogs.formatDialog.standard_formats_group",
-                                    )}
-                                    isInitiallyCollapsed={false}
-                                    titleClassName="text-base font-semibold text-gray-700 dark:text-gray-300"
-                                    className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0"
-                                >
-                                    <FormatGrid
-                                        formats={filteredPredefined}
-                                        selectedFormatId={selectedFormatId}
-                                        onSelect={setSelectedFormatId}
-                                    />
-                                </Accordion>
-                                {filteredCustom.length > 0 && (
-                                    <Accordion
-                                        title={t(
-                                            "dialogs.formatDialog.custom_formats_group",
-                                        )}
-                                        // Collapse custom formats by default if there are many
-                                        isInitiallyCollapsed={
-                                            customFormatsList.length > 2
-                                        }
-                                        className="border-b-0"
-                                    >
-                                        <FormatGrid
-                                            formats={filteredCustom}
-                                            selectedFormatId={selectedFormatId}
-                                            onSelect={setSelectedFormatId}
+                                {filteredPredefined.length === 0 &&
+                                filteredCustom.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <SlidersHorizontal
+                                            className="mx-auto text-gray-400 mb-4"
+                                            size={48}
                                         />
-                                    </Accordion>
+                                        <p className="text-gray-500 dark:text-gray-400">
+                                            {t("dialogs.formatDialog.no_results")}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Accordion
+                                            title={t(
+                                                "dialogs.formatDialog.standard_formats_group",
+                                            )}
+                                            isInitiallyCollapsed={false}
+                                            titleClassName="text-base font-semibold text-gray-700 dark:text-gray-300"
+                                            className="border-b border-gray-200 dark:border-zinc-700/50 pb-2 last:border-b-0"
+                                        >
+                                            <FormatGrid
+                                                formats={filteredPredefined}
+                                                selectedFormatId={selectedFormatId}
+                                                onSelect={handleSelectFormat}
+                                            />
+                                        </Accordion>
+                                        {filteredCustom.length > 0 && (
+                                            <Accordion
+                                                title={t(
+                                                    "dialogs.formatDialog.custom_formats_group",
+                                                )}
+                                                // Collapse custom formats by default if there are many
+                                                isInitiallyCollapsed={
+                                                    customFormatsList.length > 2
+                                                }
+                                                className="border-b-0"
+                                            >
+                                                <FormatGrid
+                                                    formats={filteredCustom}
+                                                    selectedFormatId={selectedFormatId}
+                                                    onSelect={handleSelectFormat}
+                                                />
+                                            </Accordion>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -488,7 +512,7 @@ export function FormatDialog({
                                                                             format,
                                                                         )
                                                                     }
-                                                                    className="text-blue-400 hover:text-blue-300 p-1 rounded-full hover:bg-blue-900/50 transition-colors"
+                                                                    className="text-red-400 hover:text-red-300 p-1 rounded-full hover:bg-red-900/30 transition-colors"
                                                                     title={t(
                                                                         "dialogs.formatDialog.edit_format_tooltip",
                                                                     )}

@@ -47,6 +47,9 @@
         "lighting_item_2": "• Tenez-vous à ~0,5 m d'un arrière-plan uni et clair",
         "lighting_item_3": "• Évitez les ombres prononcées sous le menton ou le nez",
         "lighting_item_4": "• Préférez des vêtements de teinte moyenne (pas blanc)",
+        "country_requirements_title": "Exigences par Pays",
+        "country_requirements_description": "Consultez les exigences détaillées pour tous les pays pris en charge avec recherche et liens officiels.",
+        "view_country_requirements": "Voir les Exigences par Pays",
         "privacy_title": "Votre Confidentialité Compte",
         "privacy_body": "Cette application est conçue en tenant compte de votre vie privée. Tout se passe directement dans votre navigateur — nous ne téléchargeons, stockons ou sauvegardons jamais vos images nulle part. Une fois que vous avez terminé, elles disparaissent."
       },
@@ -137,7 +140,8 @@
     "videoPlaybackErrorMessage": "Impossible de démarrer la lecture vidéo : {{message}}",
     "imageImportSuccess": "Image importée et recadrée avec succès !",
     "printPreview": "Préparation de l'aperçu avant impression...",
-    "printWindowError": "Impossible d'ouvrir la fenêtre d'impression. Veuillez désactiver vos bloqueurs de pop-up."
+    "printWindowError": "Impossible d'ouvrir la fenêtre d'impression. Veuillez désactiver vos bloqueurs de pop-up.",
+    "checkCountryRequirements": "Bon choix ! Assurez-vous de vérifier les exigences spécifiques pour ce format."
   },
   "dialogs": {
     "confirmation": {
@@ -238,10 +242,14 @@
       "theme_dark": "Sombre",
       "theme_system": "Système",
       "show_align_guides_label": "Afficher les Guides d'Alignement",
+      "show_align_guides_description": "Afficher ou masquer les guides d'alignement (ovale, lignes) sur la caméra.",
       "enable_watermark_label": "Activer le Filigrane",
+      "enable_watermark_description": "Ajoutez un filigrane élégant à votre photo finale.",
       "watermark_text_placeholder": "Texte du Filigrane",
       "reset_watermark_tooltip": "Réinitialiser par défaut",
-      "experimental_body": "Les paramètres et fonctionnalités expérimentales iront ici."
+      "experimental_body": "Les paramètres et fonctionnalités expérimentales iront ici.",
+      "language_description": "Choisissez la langue d'affichage de l'application.",
+      "theme_description": "Sélectionnez votre thème d'interface préféré."
     },
     "formatDialog": {
       "title": "Paramètres de Format",
@@ -250,6 +258,7 @@
       "select_format_tab": "Sélectionner Format",
       "manage_custom_tab": "Gérer les Formats Personnalisés",
       "standard_formats_group": "Formats Standards",
+      "no_results": "Aucun format correspondant à votre recherche.",
       "custom_formats_group": "Formats Personnalisés",
       "search_placeholder": "Rechercher des formats...",
       "edit_format_header": "Modifier Format",
@@ -303,6 +312,50 @@
       "or": "ou",
       "choose_from_phone_button": "Choisir depuis le téléphone",
       "choose_from_computer_button": "Choisir depuis l'ordinateur"
+    },
+    "countryRequirements": {
+      "title": "Exigences par Pays",
+      "close_aria": "Fermer la boîte de dialogue des exigences par pays",
+      "search_placeholder": "Rechercher des pays...",
+      "no_results": "Aucun pays trouvé correspondant à votre recherche.",
+      "view_official": "Voir Officiel",
+      "background": "Arrière-plan",
+      "head_size": "Taille de la Tête",
+      "notes": "Notes",
+      "disclaimer": "Les exigences peuvent changer. Vérifiez toujours avec les sources gouvernementales officielles avant de soumettre votre photo.",
+      "us_name": "États-Unis",
+      "us_background": "Arrière-plan blanc",
+      "us_notes": "Expression neutre ou sourire naturel acceptable. Pas de lunettes.",
+      "eu_name": "UE / Espace Schengen",
+      "eu_background": "Arrière-plan gris clair ou crème",
+      "eu_notes": "Expression neutre, bouche fermée. Norme biométrique commune.",
+      "ca_name": "Canada",
+      "ca_background": "Arrière-plan blanc",
+      "ca_notes": "Expression neutre requise. Pas d'ombres sur le visage ou l'arrière-plan.",
+      "au_name": "Australie",
+      "au_background": "Arrière-plan gris clair",
+      "au_notes": "Expression neutre, bouche fermée. Bonne qualité, pas d'ombres.",
+      "jp_name": "Japon",
+      "jp_background": "Arrière-plan blanc",
+      "jp_notes": "Arrière-plan uni (blanc ou bleu clair). Règles de positionnement strictes.",
+      "in_name": "Inde",
+      "in_background": "Arrière-plan blanc",
+      "in_notes": "Format carré. Yeux ouverts, expression neutre. Vue de face complète.",
+      "cn_name": "Chine",
+      "cn_background": "Arrière-plan blanc",
+      "cn_notes": "Pas de couvre-chef sauf pour des raisons religieuses. Pas d'ombres.",
+      "mx_name": "Mexique",
+      "mx_background": "Arrière-plan blanc",
+      "mx_notes": "Visage et épaules de face. Expression neutre, pas de sourire.",
+      "br_name": "Brésil",
+      "br_background": "Arrière-plan blanc",
+      "br_notes": "Photo récente (moins de 6 mois). Expression neutre.",
+      "my_name": "Malaisie",
+      "my_background": "Arrière-plan blanc",
+      "my_notes": "Vêtements de couleur foncée couvrant les épaules. Pas de couvre-chef.",
+      "ru_name": "Russie",
+      "ru_background": "Arrière-plan blanc",
+      "ru_notes": "Image claire et nette. Expression neutre. Pas de couvre-chef."
     }
   }
 }

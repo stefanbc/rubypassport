@@ -130,100 +130,109 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                         value="general"
                         className="flex-grow overflow-y-auto p-4 sm:p-6"
                     >
-                        <div role="tabpanel" className="h-full">
-                            <div className="space-y-4">
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                        <div
+                            role="tabpanel"
+                            className="h-full divide-y divide-gray-200 dark:divide-zinc-700/60"
+                        >
+                            {/* Language Setting */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 py-4 first:pt-0 last:pb-0">
+                                <div>
                                     <Label
-                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={languageId}
+                                        className="font-semibold text-gray-800 dark:text-gray-200"
                                     >
                                         {t(
                                             "dialogs.settingsDialog.language_label",
                                         )}
                                     </Label>
-                                    <Select
-                                        value={i18n.language}
-                                        onValueChange={(value) =>
-                                            i18n.changeLanguage(value)
-                                        }
-                                    >
-                                        <SelectTrigger
-                                            id={languageId}
-                                            className="w-full sm:flex-1"
-                                        >
-                                            <SelectValue placeholder="Select language" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {languages.map((lang) => (
-                                                <SelectItem
-                                                    key={lang.value}
-                                                    value={lang.value}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <span>
-                                                            <Flag
-                                                                code={
-                                                                    lang.flagCode
-                                                                }
-                                                            />
-                                                        </span>
-                                                        <span>
-                                                            {lang.label}
-                                                        </span>
-                                                    </div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Choose the display language for the
+                                        application.
+                                    </p>
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                <Select
+                                    value={i18n.language}
+                                    onValueChange={(value) =>
+                                        i18n.changeLanguage(value)
+                                    }
+                                >
+                                    <SelectTrigger
+                                        id={languageId}
+                                        className="w-full"
+                                    >
+                                        <SelectValue placeholder="Select language" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {languages.map((lang) => (
+                                            <SelectItem
+                                                key={lang.value}
+                                                value={lang.value}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <Flag code={lang.flagCode} />
+                                                    <span>{lang.label}</span>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Theme Setting */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 py-4 first:pt-0 last:pb-0">
+                                <div>
                                     <Label
-                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={themeId}
+                                        className="font-semibold text-gray-800 dark:text-gray-200"
                                     >
-                                        {t(
-                                            "dialogs.settingsDialog.theme_label",
-                                        )}
+                                        {t("dialogs.settingsDialog.theme_label")}
                                     </Label>
-                                    <Select
-                                        value={theme}
-                                        onValueChange={toggleTheme}
-                                    >
-                                        <SelectTrigger
-                                            id={themeId}
-                                            className="w-full sm:flex-1"
-                                        >
-                                            <SelectValue placeholder="Select theme" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {themes.map((themeOption) => (
-                                                <SelectItem
-                                                    key={themeOption.value}
-                                                    value={themeOption.value}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <themeOption.icon
-                                                            size={14}
-                                                            className="opacity-70"
-                                                        />
-                                                        <span>
-                                                            {themeOption.label}
-                                                        </span>
-                                                    </div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Select your preferred interface theme.
+                                    </p>
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                <Select value={theme} onValueChange={toggleTheme}>
+                                    <SelectTrigger id={themeId} className="w-full">
+                                        <SelectValue placeholder="Select theme" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {themes.map((themeOption) => (
+                                            <SelectItem
+                                                key={themeOption.value}
+                                                value={themeOption.value}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <themeOption.icon
+                                                        size={14}
+                                                        className="opacity-70"
+                                                    />
+                                                    <span>
+                                                        {themeOption.label}
+                                                    </span>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Align Guides Setting */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 py-4 first:pt-0 last:pb-0">
+                                <div className="flex flex-col justify-center">
                                     <Label
-                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={showAlignGuidesId}
+                                        className="font-semibold text-gray-800 dark:text-gray-200"
                                     >
                                         {t(
                                             "dialogs.settingsDialog.show_align_guides_label",
                                         )}
                                     </Label>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Show or hide the alignment guides (oval,
+                                        lines) on the camera.
+                                    </p>
+                                </div>
+                                <div className="flex items-center sm:justify-start">
                                     <ToggleSwitch
                                         checked={showAlignGuides}
                                         onCheckedChange={setShowAlignGuides}
@@ -233,15 +242,25 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         id={showAlignGuidesId}
                                     />
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                            </div>
+
+                            {/* Watermark Setting */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 py-4 first:pt-0 last:pb-0">
+                                <div>
                                     <Label
-                                        className="text-gray-600 dark:text-gray-300 text-sm sm:w-32 select-none"
                                         htmlFor={watermarkEnabledId}
+                                        className="font-semibold text-gray-800 dark:text-gray-200"
                                     >
                                         {t(
                                             "dialogs.settingsDialog.enable_watermark_label",
                                         )}
                                     </Label>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Add a stylish watermark to your final
+                                        photo.
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-4">
                                     <ToggleSwitch
                                         checked={watermarkEnabled}
                                         onCheckedChange={setWatermarkEnabled}
@@ -250,7 +269,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                         )}
                                         id={watermarkEnabledId}
                                     />
-                                    <div className="relative w-full sm:flex-1">
+                                    <div className="relative w-full">
                                         <Input
                                             type="text"
                                             value={watermarkText}
@@ -291,8 +310,8 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                             role="tabpanel"
                             className="h-full flex flex-col items-center justify-center text-center"
                         >
-                            <p className="text-sm text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center gap-2">
-                                <Construction size={32} />
+                            <Construction className="mx-auto text-gray-400 mb-4" size={48} />
+                            <p className="text-gray-500 dark:text-gray-400">
                                 {t("dialogs.settingsDialog.experimental_body")}
                             </p>
                         </div>

@@ -47,6 +47,9 @@
         "lighting_item_2": "• Stai la ~0.5m de un fundal simplu, deschis",
         "lighting_item_3": "• Evită umbrele sub bărbie sau nas",
         "lighting_item_4": "• Haine în tonuri medii (nu albe)",
+        "country_requirements_title": "Cerințe Specifice pe Țări",
+        "country_requirements_description": "Vezi cerințele detaliate pentru toate țările suportate cu căutare și linkuri oficiale.",
+        "view_country_requirements": "Vezi Cerințele pe Țări",
         "privacy_title": "Confidențialitatea ta contează",
         "privacy_body": "Această aplicație îți respectă confidențialitatea. Totul se întâmplă local în browser. Imaginile tale nu sunt niciodată încărcate sau salvate."
       },
@@ -140,7 +143,8 @@
     "printPreview": "Se pregătește previzualizarea pentru tipărire...",
     "printWindowError": "Nu s-a putut deschide fereastra de tipărire. Te rugăm să dezactivezi blocarea pop-up-urilor.",
     "photoQueueCleared": "Coada de fotografii a fost golită",
-    "photoRemovedFromQueue": "Fotografia a fost eliminată din coadă"
+    "photoRemovedFromQueue": "Fotografia a fost eliminată din coadă",
+    "checkCountryRequirements": "Alegere bună! Asigură-te că verifici cerințele specifice pentru acest format."
   },
   "dialogs": {
     "confirmation": {
@@ -241,10 +245,14 @@
       "theme_dark": "Întunecat",
       "theme_system": "Sistem",
       "show_align_guides_label": "Afișează ghidajele de aliniere",
+      "show_align_guides_description": "Afișați sau ascundeți ghidajele de aliniere (oval, linii) pe cameră.",
       "enable_watermark_label": "Activează watermark",
+      "enable_watermark_description": "Adăugați un watermark stilat fotografiei finale.",
       "watermark_text_placeholder": "Text watermark",
       "reset_watermark_tooltip": "Resetează la implicit",
-      "experimental_body": "Setările și funcționalitățile experimentale vor apărea aici."
+      "experimental_body": "Setările și funcționalitățile experimentale vor apărea aici.",
+      "language_description": "Alegeți limba de afișare pentru aplicație.",
+      "theme_description": "Selectați tema de interfață preferată."
     },
     "formatDialog": {
       "title": "Setări format",
@@ -253,6 +261,7 @@
       "select_format_tab": "Selectează format",
       "manage_custom_tab": "Formate personalizate",
       "standard_formats_group": "Formate standard",
+      "no_results": "Nu s-au găsit formate care să corespundă căutării tale.",
       "custom_formats_group": "Formate personalizate",
       "search_placeholder": "Caută formate...",
       "edit_format_header": "Editează format",
@@ -306,6 +315,50 @@
       "or": "sau",
       "choose_from_phone_button": "Alege de pe telefon",
       "choose_from_computer_button": "Alege de pe computer"
+    },
+    "countryRequirements": {
+      "title": "Cerințe Specifice pe Țări",
+      "close_aria": "Închide dialogul cerințelor pe țări",
+      "search_placeholder": "Caută țări...",
+      "no_results": "Nu s-au găsit țări care să corespundă căutării tale.",
+      "view_official": "Vezi Oficial",
+      "background": "Fundal",
+      "head_size": "Dimensiunea Capului",
+      "notes": "Note",
+      "disclaimer": "Cerințele se pot schimba. Verifică întotdeauna cu sursele guvernamentale oficiale înainte de a trimite fotografia.",
+      "us_name": "Statele Unite",
+      "us_background": "Fundal alb",
+      "us_notes": "Expresie neutră sau un zâmbet natural este acceptabil. Fără ochelari.",
+      "eu_name": "UE / Spațiul Schengen",
+      "eu_background": "Fundal gri deschis sau crem",
+      "eu_notes": "Expresie neutră, gura închisă. Standard biometric comun.",
+      "ca_name": "Canada",
+      "ca_background": "Fundal alb",
+      "ca_notes": "Expresie neutră necesară. Fără umbre pe față sau fundal.",
+      "au_name": "Australia",
+      "au_background": "Fundal gri deschis",
+      "au_notes": "Expresie neutră, gura închisă. Calitate bună, fără umbre.",
+      "jp_name": "Japonia",
+      "jp_background": "Fundal alb",
+      "jp_notes": "Fundal simplu (alb sau albastru deschis). Reguli stricte de poziționare.",
+      "in_name": "India",
+      "in_background": "Fundal alb",
+      "in_notes": "Format pătrat. Ochii deschiși, expresie neutră. Vedere completă a feței.",
+      "cn_name": "China",
+      "cn_background": "Fundal alb",
+      "cn_notes": "Fără acoperământ pentru cap, cu excepția motivelor religioase. Fără umbre.",
+      "mx_name": "Mexic",
+      "mx_background": "Fundal alb",
+      "mx_notes": "Fața și umerii drept înainte. Expresie neutră, fără zâmbet.",
+      "br_name": "Brazilia",
+      "br_background": "Fundal alb",
+      "br_notes": "Fotografie recentă (mai puțin de 6 luni). Expresie neutră.",
+      "my_name": "Malaysia",
+      "my_background": "Fundal alb",
+      "my_notes": "Îmbrăcăminte de culoare închisă care acoperă umerii. Fără acoperământ pentru cap.",
+      "ru_name": "Rusia",
+      "ru_background": "Fundal alb",
+      "ru_notes": "Imagine clară, focalizată. Expresie neutră. Fără acoperământ pentru cap."
     }
   }
 }

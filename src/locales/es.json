@@ -47,6 +47,9 @@
         "lighting_item_2": "• A ~0.5m de un fondo liso y claro",
         "lighting_item_3": "• Evitar sombras fuertes bajo el mentón o nariz",
         "lighting_item_4": "• Preferir ropa de tono medio (no blanca)",
+        "country_requirements_title": "Requisitos por País",
+        "country_requirements_description": "Consulta los requisitos detallados para todos los países soportados con búsqueda y enlaces oficiales.",
+        "view_country_requirements": "Ver Requisitos por País",
         "privacy_title": "Tu Privacidad es Importante",
         "privacy_body": "Esta app respeta tu privacidad. Todo sucede en tu navegador. Tus imágenes nunca se suben ni se guardan."
       },
@@ -137,7 +140,8 @@
     "videoPlaybackErrorMessage": "Fallo en reproducción de video: {{message}}",
     "imageImportSuccess": "¡Imagen importada y recortada con éxito!",
     "printPreview": "Preparando vista previa de impresión...",
-    "printWindowError": "No se pudo abrir la ventana de impresión. Por favor, deshabilita tus bloqueadores de ventanas emergentes."
+    "printWindowError": "No se pudo abrir la ventana de impresión. Por favor, deshabilita tus bloqueadores de ventanas emergentes.",
+    "checkCountryRequirements": "¡Buena elección! Asegúrate de revisar los requisitos específicos para este formato."
   },
   "dialogs": {
     "confirmation": {
@@ -238,10 +242,14 @@
       "theme_dark": "Oscuro",
       "theme_system": "Sistema",
       "show_align_guides_label": "Mostrar guías de alineación",
+      "show_align_guides_description": "Muestra u oculta las guías de alineación (óvalo, líneas) en la cámara.",
       "enable_watermark_label": "Habilitar Marca de Agua",
+      "enable_watermark_description": "Añade una elegante marca de agua a tu foto final.",
       "watermark_text_placeholder": "Texto de Marca de Agua",
       "reset_watermark_tooltip": "Restablecer a predeterminado",
-      "experimental_body": "La configuración y las características experimentales irán aquí."
+      "experimental_body": "La configuración y las características experimentales irán aquí.",
+      "language_description": "Elige el idioma de visualización de la aplicación.",
+      "theme_description": "Selecciona tu tema de interfaz preferido."
     },
     "formatDialog": {
       "title": "Configuración de Formato",
@@ -250,6 +258,7 @@
       "select_format_tab": "Seleccionar Formato",
       "manage_custom_tab": "Gestionar Formatos Personalizados",
       "standard_formats_group": "Formatos Estándar",
+      "no_results": "No se encontraron formatos que coincidan con tu búsqueda.",
       "custom_formats_group": "Formatos Personalizados",
       "search_placeholder": "Buscar formatos...",
       "edit_format_header": "Editar Formato",
@@ -303,6 +312,50 @@
       "or": "o",
       "choose_from_phone_button": "Elegir desde el teléfono",
       "choose_from_computer_button": "Elegir desde la computadora"
+    },
+    "countryRequirements": {
+      "title": "Requisitos por País",
+      "close_aria": "Cerrar diálogo de requisitos por país",
+      "search_placeholder": "Buscar países...",
+      "no_results": "No se encontraron países que coincidan con tu búsqueda.",
+      "view_official": "Ver Oficial",
+      "background": "Fondo",
+      "head_size": "Tamaño de Cabeza",
+      "notes": "Notas",
+      "disclaimer": "Los requisitos pueden cambiar. Siempre verifica con fuentes gubernamentales oficiales antes de enviar tu foto.",
+      "us_name": "Estados Unidos",
+      "us_background": "Fondo blanco",
+      "us_notes": "Expresión neutra o sonrisa natural es aceptable. Sin gafas.",
+      "eu_name": "UE / Espacio Schengen",
+      "eu_background": "Fondo gris claro o crema",
+      "eu_notes": "Expresión neutra, boca cerrada. Estándar biométrico común.",
+      "ca_name": "Canadá",
+      "ca_background": "Fondo blanco",
+      "ca_notes": "Se requiere expresión neutra. Sin sombras en la cara o el fondo.",
+      "au_name": "Australia",
+      "au_background": "Fondo gris claro",
+      "au_notes": "Expresión neutra, boca cerrada. Buena calidad, sin sombras.",
+      "jp_name": "Japón",
+      "jp_background": "Fondo blanco",
+      "jp_notes": "Fondo liso (blanco o azul claro). Reglas de posicionamiento estrictas.",
+      "in_name": "India",
+      "in_background": "Fondo blanco",
+      "in_notes": "Formato cuadrado. Ojos abiertos, expresión neutra. Vista facial completa.",
+      "cn_name": "China",
+      "cn_background": "Fondo blanco",
+      "cn_notes": "No cubrir la cabeza a menos que sea por motivos religiosos. Sin sombras.",
+      "mx_name": "México",
+      "mx_background": "Fondo blanco",
+      "mx_notes": "Cara y hombros de frente. Expresión neutra, sin sonrisa.",
+      "br_name": "Brasil",
+      "br_background": "Fondo blanco",
+      "br_notes": "Foto reciente (menos de 6 meses). Expresión neutra.",
+      "my_name": "Malasia",
+      "my_background": "Fondo blanco",
+      "my_notes": "Ropa de color oscuro que cubra los hombros. No usar sombrero.",
+      "ru_name": "Rusia",
+      "ru_background": "Fondo blanco",
+      "ru_notes": "Imagen clara y enfocada. Expresión neutra. No usar sombrero."
     }
   }
 }

@@ -1,6 +1,7 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CountryRequirementsDialog } from "@/components/dialogs/CountryRequirementsDialog";
 import { DownloadOptionsDialog } from "@/components/dialogs/DownloadOptionsDialog";
 import { FormatDialog } from "@/components/dialogs/FormatDialog";
 import { ImportDialog } from "@/components/dialogs/ImportDialog";
@@ -1150,7 +1151,13 @@ function AppContent() {
                                 {/* Guidelines Step */}
                                 <div className="w-1/3 px-1 flex flex-col h-full min-h-0">
                                     <div className="flex-grow overflow-y-auto">
-                                        <Guidelines />
+                                        <Guidelines
+                                            onViewCountryRequirements={() =>
+                                                setActiveDialog(
+                                                    "countryRequirements",
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <button
                                         type="button"
@@ -1199,7 +1206,13 @@ function AppContent() {
                         <div
                             className={`grid ${isTablet ? "md:grid-cols-2" : "md:grid-cols-3"} gap-4 items-stretch h-full`}
                         >
-                            {!isTablet && <Guidelines />}
+                            {!isTablet && (
+                                <Guidelines
+                                    onViewCountryRequirements={() =>
+                                        setActiveDialog("countryRequirements")
+                                    }
+                                />
+                            )}
 
                             <div className="relative h-full min-h-0">
                                 {isTablet && (
@@ -1268,7 +1281,13 @@ function AppContent() {
                     ${guidelinesCollapsed ? "-translate-x-full -ml-4" : "translate-x-0 ml-0"}
                   `}
                                 >
-                                    <Guidelines />
+                                    <Guidelines
+                                        onViewCountryRequirements={() =>
+                                            setActiveDialog(
+                                                "countryRequirements",
+                                            )
+                                        }
+                                    />
                                 </div>
                             </>
                         )}
@@ -1327,6 +1346,11 @@ function AppContent() {
 
             <InfoDialog
                 isOpen={activeDialog === "info"}
+                onClose={() => setActiveDialog(null)}
+            />
+
+            <CountryRequirementsDialog
+                isOpen={activeDialog === "countryRequirements"}
                 onClose={() => setActiveDialog(null)}
             />
 

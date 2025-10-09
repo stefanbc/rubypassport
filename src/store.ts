@@ -64,6 +64,7 @@ interface AppState {
         | "photoQueue"
         | "settings"
         | "confirmRetake"
+        | "countryRequirements"
         | null;
 
     wizardStep: WizardStep;
