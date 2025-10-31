@@ -1,5 +1,4 @@
 import {
-    Construction,
     FlaskConical,
     Moon,
     RotateCcw,
@@ -43,11 +42,15 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
         setWatermarkText,
         showAlignGuides,
         setShowAlignGuides,
+        captureCountdownEnabled,
+        setCaptureCountdownEnabled,
+        isMobile,
     } = useStore();
     const languageId = useId();
     const themeId = useId();
     const watermarkEnabledId = useId();
     const showAlignGuidesId = useId();
+    const captureCountdownId = useId();
 
     const [activeTab, setActiveTab] = useState<"general" | "experimental">(
         "general",
@@ -145,11 +148,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             "dialogs.settingsDialog.language_label",
                                         )}
                                     </Label>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {t(
-                                            "dialogs.settingsDialog.language_description",
-                                        )}
-                                    </p>
+                                    {!isMobile && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {t(
+                                                "dialogs.settingsDialog.language_description",
+                                            )}
+                                        </p>
+                                    )}
                                 </div>
                                 <Select
                                     value={i18n.language}
@@ -192,11 +197,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             "dialogs.settingsDialog.theme_label",
                                         )}
                                     </Label>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {t(
-                                            "dialogs.settingsDialog.theme_description",
-                                        )}
-                                    </p>
+                                    {!isMobile && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {t(
+                                                "dialogs.settingsDialog.theme_description",
+                                            )}
+                                        </p>
+                                    )}
                                 </div>
                                 <Select
                                     value={theme}
@@ -240,11 +247,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             "dialogs.settingsDialog.show_align_guides_label",
                                         )}
                                     </Label>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {t(
-                                            "dialogs.settingsDialog.show_align_guides_description",
-                                        )}
-                                    </p>
+                                    {!isMobile && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {t(
+                                                "dialogs.settingsDialog.show_align_guides_description",
+                                            )}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="flex items-center sm:justify-start">
                                     <ToggleSwitch
@@ -269,11 +278,13 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                                             "dialogs.settingsDialog.enable_watermark_label",
                                         )}
                                     </Label>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {t(
-                                            "dialogs.settingsDialog.enable_watermark_description",
-                                        )}
-                                    </p>
+                                    {!isMobile && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {t(
+                                                "dialogs.settingsDialog.enable_watermark_description",
+                                            )}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <ToggleSwitch
@@ -323,15 +334,40 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                     >
                         <div
                             role="tabpanel"
-                            className="h-full flex flex-col items-center justify-center text-center"
+                            className="h-full divide-y divide-gray-200 dark:divide-zinc-700/60"
                         >
-                            <Construction
-                                className="mx-auto text-gray-400 mb-4"
-                                size={48}
-                            />
-                            <p className="text-gray-500 dark:text-gray-400">
-                                {t("dialogs.settingsDialog.experimental_body")}
-                            </p>
+                            {/* Capture Countdown Setting */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 py-4 first:pt-0 last:pb-0">
+                                <div className="flex flex-col justify-center">
+                                    <Label
+                                        htmlFor={captureCountdownId}
+                                        className="font-semibold text-gray-800 dark:text-gray-200"
+                                    >
+                                        {t(
+                                            "dialogs.settingsDialog.enable_capture_countdown_label",
+                                        )}
+                                    </Label>
+                                    {!isMobile && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {t(
+                                                "dialogs.settingsDialog.enable_capture_countdown_description",
+                                            )}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex items-center sm:justify-start">
+                                    <ToggleSwitch
+                                        checked={captureCountdownEnabled}
+                                        onCheckedChange={
+                                            setCaptureCountdownEnabled
+                                        }
+                                        aria-label={t(
+                                            "dialogs.settingsDialog.enable_capture_countdown_label",
+                                        )}
+                                        id={captureCountdownId}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </TabsContent>
                 </Tabs>

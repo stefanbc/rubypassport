@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import type { ElementType } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Dialog } from "@/components/ui";
 
@@ -10,6 +11,8 @@ interface ConfirmationDialogProps {
     description: string;
     confirmText?: string;
     cancelText?: string;
+    hideCancelButton?: boolean;
+    icon?: ElementType;
 }
 
 export function ConfirmationDialog({
@@ -20,6 +23,8 @@ export function ConfirmationDialog({
     description,
     confirmText,
     cancelText,
+    hideCancelButton,
+    icon,
 }: ConfirmationDialogProps) {
     const { t } = useTranslation();
 
@@ -33,22 +38,24 @@ export function ConfirmationDialog({
             isOpen={isOpen}
             onClose={onClose}
             title={title}
-            icon={AlertTriangle}
+            icon={icon || AlertTriangle}
             closeAriaLabel={t("dialogs.confirmation.close_aria")}
             maxWidth="max-w-md"
         >
             <div className="p-6 sm:p-8 bg-white dark:bg-zinc-800/50">
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-8">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-8 whitespace-pre-line">
                     {description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <Button
-                        variant="secondary"
-                        onClick={onClose}
-                        className="flex-1"
-                    >
-                        {cancelText || t("common.cancel")}
-                    </Button>
+                    {cancelText && !hideCancelButton && (
+                        <Button
+                            variant="secondary"
+                            onClick={onClose}
+                            className="flex-1"
+                        >
+                            {cancelText || t("common.cancel")}
+                        </Button>
+                    )}
                     <Button
                         variant="destructive"
                         onClick={handleConfirm}

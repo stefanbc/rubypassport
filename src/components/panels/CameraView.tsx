@@ -76,27 +76,8 @@ export function CameraView({
                 <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">
                     {t("components.panels.camera.preview")}
                 </h2>
-                <div className="relative flex items-center gap-2">
-                    {isCameraOn && (isMobile || isTablet) && (
-                        <button
-                            type="button"
-                            onClick={onSwitchCamera}
-                            className={`flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors rounded-md ${isMobile ? "p-2.5" : "py-2 px-3"}`}
-                            title={t(
-                                "components.panels.camera.switch_camera_tooltip",
-                            )}
-                        >
-                            <RefreshCw size={isMobile ? 18 : 16} />
-                            {!isMobile && (
-                                <span>
-                                    {t(
-                                        "components.panels.camera.switch_camera_button",
-                                    )}
-                                </span>
-                            )}
-                        </button>
-                    )}
-                </div>
+                {/* Placeholder to keep title centered */}
+                {isMobile && onBack && <div className="w-8" />}
             </div>
 
             <div
@@ -261,7 +242,19 @@ export function CameraView({
                                     "components.panels.camera.capture_photo_button",
                                 )}
                             />
-                            <div className="w-20" />
+                            <button
+                                type="button"
+                                onClick={onSwitchCamera}
+                                className="w-16 h-16 flex items-center justify-center rounded-full bg-black/20 dark:bg-white/10 text-white"
+                                title={t(
+                                    "components.panels.camera.switch_camera_tooltip",
+                                )}
+                                aria-label={t(
+                                    "components.panels.camera.switch_camera_button",
+                                )}
+                            >
+                                <RefreshCw size={28} />
+                            </button>
                         </>
                     )}
                 </div>
@@ -308,6 +301,16 @@ export function CameraView({
                             <>
                                 <button
                                     type="button"
+                                    onClick={onStopCamera}
+                                    className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                    title={t(
+                                        "components.panels.camera.stop_button",
+                                    )}
+                                >
+                                    <CameraOff size={20} />
+                                </button>
+                                <button
+                                    type="button"
                                     onClick={onCapturePhoto}
                                     className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded hover:bg-red-700 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
                                 >
@@ -316,13 +319,18 @@ export function CameraView({
                                         "components.panels.camera.capture_photo_button",
                                     )}
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={onStopCamera}
-                                    className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
-                                >
-                                    {t("components.panels.camera.stop_button")}
-                                </button>
+                                {isCameraOn && !isMobile && !isTablet && (
+                                    <button
+                                        type="button"
+                                        onClick={onSwitchCamera}
+                                        className="px-4 py-3 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors transition-transform duration-150 hover:-translate-y-0.5 shadow-lg cursor-pointer"
+                                        title={t(
+                                            "components.panels.camera.switch_camera_tooltip",
+                                        )}
+                                    >
+                                        <RefreshCw size={20} />
+                                    </button>
+                                )}
                             </>
                         )}
                     </div>

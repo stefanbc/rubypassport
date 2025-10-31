@@ -33,7 +33,7 @@ export function Footer() {
                             Stefan
                         </a>
                     </span>
-                    <span className="hidden sm:inline text-gray-300 dark:text-zinc-700">
+                    <span className="hidden sm:inline text-red-200/80 dark:text-red-900/20">
                         |
                     </span>
                     <div className="flex items-center gap-x-3">

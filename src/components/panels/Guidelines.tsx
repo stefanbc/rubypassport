@@ -1,18 +1,25 @@
 import { CircleCheckBig, CircleX, Globe, ShieldCheck, Sun } from "lucide-react";
+import { CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Footer } from "@/components/layout/Footer";
-import { Accordion, Button } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { useStore } from "@/store";
 
 type GuidelinesProps = {
     onViewCountryRequirements: () => void;
+    onShowPrivacy: () => void;
 };
 
-export function Guidelines({ onViewCountryRequirements }: GuidelinesProps) {
+export function Guidelines({
+    onViewCountryRequirements,
+    onShowPrivacy,
+}: GuidelinesProps) {
     const { t } = useTranslation();
-    const { isMobile, isTablet } = useStore();
-
-    const isInitiallyCollapsed = isMobile || isTablet;
+    const { isMobile } = useStore();
+    const [openSection, setOpenSection] = useState<"do" | "dont" | "lighting">(
+        "do",
+    );
+    const verticalTextStyle: CSSProperties = { writingMode: "sideways-lr" };
 
     return (
         <div
@@ -20,122 +27,202 @@ export function Guidelines({ onViewCountryRequirements }: GuidelinesProps) {
                 !isMobile && "shadow-xl hover:shadow-2xl"
             }`}
         >
-            <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 mb-1 select-none">
-                {t("components.panels.guidelines.title")}
-            </h2>
+            <div className="flex justify-between items-center mb-1">
+                <h2 className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400 select-none">
+                    {t("components.panels.guidelines.title")}
+                </h2>
+                <button
+                    type="button"
+                    onClick={onShowPrivacy}
+                    className={`flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 bg-gray-100/50 dark:bg-zinc-800/60 border border-gray-200/80 dark:border-zinc-700/60 hover:bg-gray-200/70 dark:hover:bg-zinc-700/80 transition-colors rounded-md ${isMobile ? "p-2.5" : "py-2 px-3"}`}
+                    title={t("components.panels.guidelines.privacy_title")}
+                >
+                    <ShieldCheck size={isMobile ? 18 : 16} />
+                    {!isMobile && (
+                        <span>
+                            {t(
+                                "components.panels.guidelines.privacy_button_text",
+                            )}
+                        </span>
+                    )}
+                </button>
+            </div>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
                 {t("components.panels.guidelines.subtitle")}
             </p>
 
-            <div className="space-y-2 flex-grow flex flex-col overflow-y-auto -mr-2 pr-2">
-                <Accordion
-                    title={t("components.panels.guidelines.do_title")}
-                    isInitiallyCollapsed={false}
-                    titleClassName="font-medium text-gray-700 dark:text-gray-200"
-                    className="border-b-0"
-                    titlePrefix={
-                        <CircleCheckBig
-                            size={16}
-                            className="text-green-500 dark:text-green-400"
-                        />
-                    }
+            <div className="flex-grow flex flex-col md:flex-row gap-2 overflow-y-auto -mr-2 pr-2">
+                {/* Do's Column */}
+                <div
+                    className={`flex rounded-md transition-all duration-300 ${openSection === "do" ? "flex-1 bg-green-50/50 dark:bg-green-900/20" : "flex-initial bg-gray-100/50 dark:bg-zinc-800/50"}`}
                 >
-                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 pl-1">
-                        <li>{t("components.panels.guidelines.do_item_1")}</li>
-                        <li>{t("components.panels.guidelines.do_item_2")}</li>
-                        <li>{t("components.panels.guidelines.do_item_3")}</li>
-                        <li>{t("components.panels.guidelines.do_item_4")}</li>
-                        <li>{t("components.panels.guidelines.do_item_5")}</li>
-                        <li>{t("components.panels.guidelines.do_item_6")}</li>
-                    </ul>
-                </Accordion>
-
-                <Accordion
-                    title={t("components.panels.guidelines.dont_title")}
-                    isInitiallyCollapsed={isInitiallyCollapsed}
-                    titleClassName="font-medium text-gray-700 dark:text-gray-200"
-                    className="border-b-0"
-                    titlePrefix={
-                        <CircleX
-                            size={16}
-                            className="text-red-500 dark:text-red-400"
-                        />
-                    }
-                >
-                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 pl-1">
-                        <li>{t("components.panels.guidelines.dont_item_1")}</li>
-                        <li>{t("components.panels.guidelines.dont_item_2")}</li>
-                        <li>{t("components.panels.guidelines.dont_item_3")}</li>
-                        <li>{t("components.panels.guidelines.dont_item_4")}</li>
-                    </ul>
-                </Accordion>
-
-                <Accordion
-                    title={t("components.panels.guidelines.lighting_title")}
-                    isInitiallyCollapsed={true}
-                    titleClassName="font-medium text-gray-700 dark:text-gray-200 flex items-center gap-2"
-                    className="border-b-0"
-                    titlePrefix={
-                        <Sun
-                            size={16}
-                            className="text-yellow-500 dark:text-yellow-300"
-                        />
-                    }
-                >
-                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 pl-1">
-                        <li>
-                            {t("components.panels.guidelines.lighting_item_1")}
-                        </li>
-                        <li>
-                            {t("components.panels.guidelines.lighting_item_2")}
-                        </li>
-                        <li>
-                            {t("components.panels.guidelines.lighting_item_3")}
-                        </li>
-                        <li>
-                            {t("components.panels.guidelines.lighting_item_4")}
-                        </li>
-                    </ul>
-                </Accordion>
-
-                {/* Country Requirements Button */}
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-md p-3">
-                    <h5 className="font-semibold mb-1.5 text-gray-800 dark:text-gray-100 flex items-center gap-1.5">
-                        <Globe className="text-red-500 dark:text-red-400 inline-block w-4 h-4" />
-                        {t(
-                            "components.panels.guidelines.country_requirements_title",
-                        )}
-                    </h5>
-                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-1.5">
-                        {t(
-                            "components.panels.guidelines.country_requirements_description",
-                        )}
-                    </p>
-                    <Button
-                        onClick={onViewCountryRequirements}
-                        className="flex items-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white"
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center rounded-l-md p-1.5 transition-colors ${openSection === "do" ? "bg-green-100/80 dark:bg-green-800/40" : "hover:bg-gray-200/60 dark:hover:bg-zinc-700/60"}`}
+                        onClick={() => setOpenSection("do")}
+                        aria-expanded={openSection === "do"}
                     >
-                        <Globe size={16} />
-                        {t(
-                            "components.panels.guidelines.view_country_requirements",
-                        )}
-                    </Button>
+                        <h3
+                            className="font-semibold text-green-800 dark:text-green-200 uppercase tracking-wider"
+                            style={verticalTextStyle}
+                        >
+                            {t("components.panels.guidelines.do_title")}
+                        </h3>
+                    </button>
+                    <div
+                        className={`transition-all duration-300 ease-in-out ${openSection === "do" ? "w-64 opacity-100" : "w-0 opacity-0"}`}
+                    >
+                        <div className="overflow-hidden">
+                            {openSection === "do" && (
+                                <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 p-3">
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleCheckBig className="w-3 h-3 mt-0.5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.do_item_1",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleCheckBig className="w-3 h-3 mt-0.5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.do_item_2",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleCheckBig className="w-3 h-3 mt-0.5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.do_item_3",
+                                            )}
+                                        </span>
+                                    </li>
+                                </ul>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex-grow" />
-
-                <div className="rounded-md bg-red-50 dark:bg-zinc-800/60 border border-red-100 dark:border-red-900/40 p-3 mt-auto">
-                    <h5 className="font-semibold mb-1.5 text-gray-800 dark:text-gray-100 flex items-center gap-1.5">
-                        <ShieldCheck className="inline-block w-4 h-4 text-red-500" />
-                        {t("components.panels.guidelines.privacy_title")}
-                    </h5>
-                    <p className="text-xs text-gray-700 dark:text-gray-300">
-                        {t("components.panels.guidelines.privacy_body")}
-                    </p>
+                {/* Don'ts Column */}
+                <div
+                    className={`flex rounded-md transition-all duration-300 ${openSection === "dont" ? "flex-1 bg-red-50/50 dark:bg-red-900/20" : "flex-initial bg-gray-100/50 dark:bg-zinc-800/50"}`}
+                >
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center rounded-l-md p-1.5 transition-colors ${openSection === "dont" ? "bg-red-100/80 dark:bg-red-800/40" : "hover:bg-gray-200/60 dark:hover:bg-zinc-700/60"}`}
+                        onClick={() => setOpenSection("dont")}
+                        aria-expanded={openSection === "dont"}
+                    >
+                        <h3
+                            className="font-semibold text-red-800 dark:text-red-200 uppercase tracking-wider"
+                            style={verticalTextStyle}
+                        >
+                            {t("components.panels.guidelines.dont_title")}
+                        </h3>
+                    </button>
+                    <div
+                        className={`transition-all duration-300 ease-in-out ${openSection === "dont" ? "w-64 opacity-100" : "w-0 opacity-0"}`}
+                    >
+                        <div className="overflow-hidden">
+                            {openSection === "dont" && (
+                                <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 p-3">
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleX className="w-3 h-3 mt-0.5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.dont_item_1",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleX className="w-3 h-3 mt-0.5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.dont_item_2",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <CircleX className="w-3 h-3 mt-0.5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.dont_item_3",
+                                            )}
+                                        </span>
+                                    </li>
+                                </ul>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
-                {isMobile && <Footer />}
+                {/* Lighting Column */}
+                <div
+                    className={`flex rounded-md transition-all duration-300 ${openSection === "lighting" ? "flex-1 bg-yellow-50/50 dark:bg-yellow-900/20" : "flex-initial bg-gray-100/50 dark:bg-zinc-800/50"}`}
+                >
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center rounded-l-md p-1.5 transition-colors ${openSection === "lighting" ? "bg-yellow-100/80 dark:bg-yellow-800/40" : "hover:bg-gray-200/60 dark:hover:bg-zinc-700/60"}`}
+                        onClick={() => setOpenSection("lighting")}
+                        aria-expanded={openSection === "lighting"}
+                    >
+                        <h3
+                            className="font-semibold text-yellow-800 dark:text-yellow-200 uppercase tracking-wider"
+                            style={verticalTextStyle}
+                        >
+                            {t("components.panels.guidelines.lighting_title")}
+                        </h3>
+                    </button>
+                    <div
+                        className={`transition-all duration-300 ease-in-out ${openSection === "lighting" ? "w-64 opacity-100" : "w-0 opacity-0"}`}
+                    >
+                        <div className="overflow-hidden">
+                            {openSection === "lighting" && (
+                                <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 p-3">
+                                    <li className="flex items-start gap-1.5">
+                                        <Sun className="w-3 h-3 mt-0.5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.lighting_item_1",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <Sun className="w-3 h-3 mt-0.5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.lighting_item_2",
+                                            )}
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-1.5">
+                                        <Sun className="w-3 h-3 mt-0.5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                                        <span>
+                                            {t(
+                                                "components.panels.guidelines.lighting_item_3",
+                                            )}
+                                        </span>
+                                    </li>
+                                </ul>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {/* Country Requirements Button */}
+            <Button
+                variant="outline"
+                onClick={onViewCountryRequirements}
+                className="flex items-center justify-center gap-2 w-full mt-4 text-red-600 dark:text-red-400"
+            >
+                <Globe size={16} />
+                {t("components.panels.guidelines.view_country_requirements")}
+            </Button>
+
+            {isMobile && <Footer />}
         </div>
     );
 }

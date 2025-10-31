@@ -37,6 +37,7 @@ export type DialogType =
     | "settings"
     | "confirmRetake"
     | "countryRequirements"
+    | "privacy"
     | null;
 
 export type WizardStep = "guidelines" | "camera" | "result";

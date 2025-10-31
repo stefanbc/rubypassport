@@ -1,4 +1,4 @@
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, ShieldCheck } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CountryRequirementsDialog } from "@/components/dialogs/CountryRequirementsDialog";
@@ -42,6 +42,10 @@ function AppContent() {
         selectedFormatId,
         watermarkEnabled,
         watermarkText,
+        captureCountdownEnabled,
+        isProcessingImage,
+        capturedImage,
+        captureQueue,
         baseImage,
         stream,
         isCameraOn,
@@ -96,6 +100,8 @@ function AppContent() {
         printWidthMm: "",
         printHeightMm: "",
     });
+    const [countdown, setCountdown] = useState<number | null>(null);
+    const [showFlash, setShowFlash] = useState(false);
 
     const [guidelinesCollapsed, setGuidelinesCollapsed] = useState(true);
     const allFormats: Format[] = [...FORMATS, ...customFormats];
@@ -500,6 +506,56 @@ function AppContent() {
         setWizardStep,
     ]);
 
+    const executeCapture = useCallback(() => {
+        // This function contains the original capture logic
+        // It's called after the countdown, or immediately if countdown is disabled.
+        capturePhoto().catch((error) => {
+            console.error("Failed to execute capture:", error);
+            addToast(t("toasts.photoCaptureFailed"), "error");
+        });
+
+        // Trigger flash effect if camera is user-facing
+        if (facingMode === "user") {
+            setShowFlash(true);
+            setTimeout(() => setShowFlash(false), 150);
+        }
+    }, [capturePhoto, facingMode, addToast, t]);
+
+    // --- Fix for countdown timer closure issue ---
+    // Always use the latest executeCapture in the countdown interval
+    const executeCaptureRef = useRef(executeCapture);
+    useEffect(() => {
+        executeCaptureRef.current = executeCapture;
+    }, [executeCapture]);
+
+    const initiateCapture = useCallback(() => {
+        if (isProcessingImage || countdown !== null) return;
+
+        if (captureCountdownEnabled) {
+            setCountdown(3);
+            let timer: NodeJS.Timeout;
+            timer = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev === null || prev <= 1) {
+                        clearInterval(timer);
+                        // Use ref to always get the latest executeCapture
+                        setTimeout(() => executeCaptureRef.current(), 0);
+                        return null;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        } else {
+            executeCapture();
+        }
+    }, [
+        isProcessingImage,
+        captureCountdownEnabled,
+        executeCapture,
+        setCountdown,
+        countdown,
+    ]);
+
     const downloadProcessedImage = useCallback(() => {
         const { capturedImage, personName, selectedFormatId, customFormats } =
             useStore.getState();
@@ -627,35 +683,28 @@ function AppContent() {
                     break;
                 case "c":
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    isCameraOn ? stopCamera() : void startCamera();
+                    isCameraOn ? stopCamera() : startCamera();
                     break;
                 case " ":
                     if (isCameraOn) {
                         e.preventDefault(); // Prevent page scroll
-                        capturePhoto();
+                        initiateCapture();
                     }
                     break;
                 case "u":
                     if (!isCameraOn) setActiveDialog("import");
                     break;
                 case "d":
-                    if (useStore.getState().capturedImage)
-                        setActiveDialog("download");
+                    if (capturedImage) setActiveDialog("download");
                     break;
                 case "r":
-                    if (useStore.getState().capturedImage) retakePhoto();
+                    if (capturedImage) setActiveDialog("confirmRetake");
                     break;
                 case "w":
-                    if (useStore.getState().capturedImage)
-                        setWatermarkEnabled(
-                            !useStore.getState().watermarkEnabled,
-                        );
+                    if (capturedImage) setWatermarkEnabled(!watermarkEnabled);
                     break;
                 case "p":
-                    if (
-                        useStore.getState().capturedImage ||
-                        useStore.getState().captureQueue.length > 0
-                    )
+                    if (capturedImage || captureQueue.length > 0)
                         setActiveDialog("print");
                     break;
                 case "f":
@@ -668,9 +717,7 @@ function AppContent() {
                     toggleTheme();
                     break;
                 case "b":
-                    setMultiCaptureEnabled(
-                        !useStore.getState().multiCaptureEnabled,
-                    );
+                    setMultiCaptureEnabled(!multiCaptureEnabled);
                     break;
                 case "s":
                     setActiveDialog("settings");
@@ -688,7 +735,7 @@ function AppContent() {
         activeDialog,
         startCamera,
         stopCamera,
-        capturePhoto,
+        initiateCapture,
         retakePhoto,
         toggleFullscreen,
         setActiveDialog,
@@ -1112,6 +1159,24 @@ function AppContent() {
         <div
             className={`h-screen bg-gradient-to-br from-gray-50 via-red-100 to-red-200 dark:from-black dark:via-black dark:to-red-950 flex flex-col ${!isMobile ? "justify-center items-center" : ""}`}
         >
+            {/* Countdown Timer Overlay */}
+            {countdown !== null && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div
+                        key={countdown}
+                        className="text-9xl font-bold text-white animate-ping-once"
+                        style={{ textShadow: "0 0 20px rgba(0,0,0,0.5)" }}
+                    >
+                        {countdown}
+                    </div>
+                </div>
+            )}
+
+            {/* Flash Effect Overlay */}
+            {showFlash && (
+                <div className="fixed inset-0 z-50 bg-white animate-fade-out" />
+            )}
+
             <div
                 className={`max-w-screen-2xl mx-auto w-full flex flex-col p-4 md:p-6 lg:p-8 min-h-0 ${isMobile ? "flex-grow" : ""} ${activeDialog ? "blur-sm backdrop-blur-sm" : ""} transition-all duration-300`}
             >
@@ -1157,6 +1222,9 @@ function AppContent() {
                                                     "countryRequirements",
                                                 )
                                             }
+                                            onShowPrivacy={() =>
+                                                setActiveDialog("privacy")
+                                            }
                                         />
                                     </div>
                                     <button
@@ -1174,7 +1242,7 @@ function AppContent() {
                                         videoRef={videoRef}
                                         onStartCamera={() => startCamera()}
                                         onStopCamera={stopCamera}
-                                        onCapturePhoto={capturePhoto}
+                                        onCapturePhoto={initiateCapture}
                                         onImportClick={() =>
                                             setActiveDialog("import")
                                         }
@@ -1210,6 +1278,9 @@ function AppContent() {
                                 <Guidelines
                                     onViewCountryRequirements={() =>
                                         setActiveDialog("countryRequirements")
+                                    }
+                                    onShowPrivacy={() =>
+                                        setActiveDialog("privacy")
                                     }
                                 />
                             )}
@@ -1247,7 +1318,7 @@ function AppContent() {
                                     videoRef={videoRef}
                                     onStartCamera={() => startCamera()}
                                     onStopCamera={stopCamera}
-                                    onCapturePhoto={capturePhoto}
+                                    onCapturePhoto={initiateCapture}
                                     onImportClick={() =>
                                         setActiveDialog("import")
                                     }
@@ -1286,6 +1357,9 @@ function AppContent() {
                                             setActiveDialog(
                                                 "countryRequirements",
                                             )
+                                        }
+                                        onShowPrivacy={() =>
+                                            setActiveDialog("privacy")
                                         }
                                     />
                                 </div>
@@ -1362,6 +1436,17 @@ function AppContent() {
                 description={t("dialogs.confirmation.retake_description")}
                 confirmText={t("components.panels.result.retake_button")}
                 cancelText={t("common.cancel")}
+            />
+
+            <ConfirmationDialog
+                isOpen={activeDialog === "privacy"}
+                onClose={() => setActiveDialog(null)}
+                onConfirm={() => setActiveDialog(null)}
+                title={t("components.panels.guidelines.privacy_title")}
+                description={t("components.panels.guidelines.privacy_body")}
+                icon={ShieldCheck}
+                confirmText={t("common.continue")}
+                hideCancelButton={true}
             />
 
             <SettingsDialog

@@ -46,6 +46,7 @@ interface AppState {
     watermarkEnabled: boolean;
     watermarkText: string;
     showAlignGuides: boolean;
+    captureCountdownEnabled: boolean;
     hasVisited: boolean;
 
     // Transient state
@@ -65,6 +66,7 @@ interface AppState {
         | "settings"
         | "confirmRetake"
         | "countryRequirements"
+        | "privacy"
         | null;
 
     wizardStep: WizardStep;
@@ -96,6 +98,7 @@ interface AppActions {
     setWatermarkEnabled: (enabled: boolean) => void;
     setWatermarkText: (text: string) => void;
     setShowAlignGuides: (show: boolean) => void;
+    setCaptureCountdownEnabled: (enabled: boolean) => void;
     setHasVisited: (hasVisited: boolean) => void;
     // Multi-capture Actions
     setMultiCaptureEnabled: (enabled: boolean) => void;
@@ -138,6 +141,7 @@ const initialState: AppState = {
     watermarkEnabled: false,
     watermarkText: "💎 RUBY PASSPORT",
     showAlignGuides: true,
+    captureCountdownEnabled: false,
     hasVisited: false,
 
     isProcessingImage: false,
@@ -213,6 +217,8 @@ export const useStore = create<AppState & AppActions>()(
                 set({ watermarkEnabled: enabled }),
             setWatermarkText: (text) => set({ watermarkText: text }),
             setShowAlignGuides: (show) => set({ showAlignGuides: show }),
+            setCaptureCountdownEnabled: (enabled) =>
+                set({ captureCountdownEnabled: enabled }),
             setHasVisited: (hasVisited) => set({ hasVisited }),
             // Multi-capture Actions
             setMultiCaptureEnabled: (enabled) =>
@@ -299,6 +305,7 @@ export const useStore = create<AppState & AppActions>()(
                 watermarkEnabled: state.watermarkEnabled,
                 watermarkText: state.watermarkText,
                 showAlignGuides: state.showAlignGuides,
+                captureCountdownEnabled: state.captureCountdownEnabled,
                 theme: state.theme,
                 hasVisited: state.hasVisited,
             }),
